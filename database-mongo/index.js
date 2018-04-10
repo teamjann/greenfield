@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/test');
+mongoose.connect('mongodb://me:me@ds241019.mlab.com:41019/greenfield-dev');
 
 var db = mongoose.connection;
 
@@ -11,12 +11,38 @@ db.once('open', function() {
   console.log('mongoose connected successfully');
 });
 
-var itemSchema = mongoose.Schema({
-  quantity: Number,
-  description: String
+var courseSchema = mongoose.Schema({
+  _id: mongoose.Schema.Types.ObjectId,
+  name: String,
+  upvotes: Number,
+  description: {
+    createdOn: Date,
+    instructor: String,
+    price: Number,
+    videoUrl: String
+  },
+  courseUrl: String
 });
 
-var Item = mongoose.model('Item', itemSchema);
+var categorySchema = mongoose.Schema({
+  _id: mongoose.Schema.Types.ObjectId,
+  name: String,
+  courses: [courseSchema]
+});
+
+var userSchema = mongoose.Schema({
+  _id: mongoose.Schema.Types.ObjectId,
+  email: String,
+  password: String,
+  coursesUpvoted: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Course' }]
+});
+
+
+
+var Course = mongoose.model('Course', courseSchema);
+var Category = mongoose.model('Category', categorySchema);
+var User = mongoose.model('User', userSchema);
+
 
 var selectAll = function(callback) {
   Item.find({}, function(err, items) {
