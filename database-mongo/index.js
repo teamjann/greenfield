@@ -49,6 +49,19 @@ const insertNewCourse = function (newCourse) {
     .catch(err => console.log(err));
 };
 
+const retrieveCourses = function () {
+  return Course.find({})
+    .select()
+    .then(allCoursesArray => allCoursesArray)
+    .catch(err => console.log(err));
+};
+
+const insertNewCategory = function (newCategory) {
+  new Category(newCategory)
+    .save()
+    .then(() => console.log('New category successfully added!'))
+    .catch(err => console.log(err));
+};
 // Uncomment me later!
 // const gatherCategoryNames = function (callback) {
 //   Category.find()
@@ -73,3 +86,5 @@ const insertNewCourse = function (newCourse) {
 
 // module.exports.selectAll = selectAll;
 module.exports.insertNewCourse = insertNewCourse;
+module.exports.retrieveCourses = retrieveCourses;
+module.exports.insertNewCategory = insertNewCategory;

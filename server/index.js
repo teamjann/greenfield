@@ -11,7 +11,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 app.post('/api/categories/id/courses', (req, res) => {
   const courseToInsert = req.body.courseToInsert;
-  console.log(courseToInsert);
+  // console.log(courseToInsert);
 
   new Promise((resolve, reject) => {
     resolve(db.insertNewCourse(courseToInsert));
@@ -23,15 +23,29 @@ app.post('/api/categories/id/courses', (req, res) => {
     });
 });
 
-// app.get('/items', (req, res) => {
-//   items.selectAll((err, data) => {
-//     if (err) {
-//       res.sendStatus(500);
-//     } else {
-//       res.json(data);
-//     }
-//   });
-// });
+app.get('/api/categories/id/courses', (req, res) => {
+  new Promise((resolve, reject) => {
+    resolve(db.retrieveCourses());
+  })
+    .then(courses => res.status(200).json(courses))
+    .catch((err) => {
+      console.log(err);
+      res.status(500).end();
+    });
+});
+
+app.post('/api/categories', (req, res) => {
+  const categoryToInsert = req.body.categoryToInsert;
+
+  new Promise((resolve, reject) => {
+    resolve(db.insertNewCategory(categoryToInsert));
+  })
+    .then(() => res.status(201).end())
+    .catch((err) => {
+      console.log(err);
+      res.status(500).end();
+    });
+});
 
 app.listen(3000, () => {
   console.log('listening on port 3000!');
