@@ -10,7 +10,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.post('/api/categories/id/courses', (req, res) => {
-  const courseToInsert = req.body.courseToInsert;
+  const courseToInsert = req.body;
   // console.log(courseToInsert);
 
   new Promise((resolve, reject) => {
@@ -35,12 +35,49 @@ app.get('/api/categories/id/courses', (req, res) => {
 });
 
 app.post('/api/categories', (req, res) => {
-  const categoryToInsert = req.body.categoryToInsert;
+  const categoryToInsert = req.body;
 
   new Promise((resolve, reject) => {
     resolve(db.insertNewCategory(categoryToInsert));
   })
     .then(() => res.status(201).end())
+    .catch((err) => {
+      console.log(err);
+      res.status(500).end();
+    });
+});
+
+app.get('/api/categories', (req, res) => {
+  new Promise((resolve, reject) => {
+    resolve(db.retrieveCategories());
+  })
+    .then(categories => res.status(200).json(categories))
+    .catch((err) => {
+      console.log(err);
+      res.status(500).end();
+    });
+});
+
+app.post('/api/users', (req, res) => {
+  const userToInsert = req.body;
+
+  new Promise((resolve, reject) => {
+    resolve(db.insertNewUser(userToInsert));
+  })
+    .then(() => res.status(201).end())
+    .catch((err) => {
+      console.log(err);
+      res.status(500).end();
+    });
+});
+
+app.get('/api/users/:id', (req, res) => {
+  const userToRetrieve = req.params.id;
+
+  new Promise((resolve, reject) => {
+    resolve(db.retrieveUser(userToRetrieve));
+  })
+    .then(user => res.status(200).json(user))
     .catch((err) => {
       console.log(err);
       res.status(500).end();

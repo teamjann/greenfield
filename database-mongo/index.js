@@ -52,7 +52,7 @@ const insertNewCourse = function (newCourse) {
 const retrieveCourses = function () {
   return Course.find({})
     .select()
-    .then(allCoursesArray => allCoursesArray)
+    .then(allCourses => allCourses)
     .catch(err => console.log(err));
 };
 
@@ -62,29 +62,30 @@ const insertNewCategory = function (newCategory) {
     .then(() => console.log('New category successfully added!'))
     .catch(err => console.log(err));
 };
-// Uncomment me later!
-// const gatherCategoryNames = function (callback) {
-//   Category.find()
-//     .map(category => category.name)
-//     .then()
-//     .catch();
 
-// const newCourse = new Course({
-//   name: 'test',
-//   upvotes: 0,
-//   description: { instructor: 'Bill', price: 20 },
-// });
+const retrieveCategories = function () {
+  return Category.find({})
+    .select('name')
+    .then(allCategoriesArray => allCategoriesArray)
+    .catch(err => console.log(err));
+};
 
-// Category.select({}, function(err, items) {
-//   if(err) {
-//     callback(err, null);
-//   } else {
-//     callback(null, items);
-//   }
-// });
-// };
+const insertNewUser = function (newUser) {
+  new User(newUser)
+    .save()
+    .then(() => console.log('New user sucessfully added!'))
+    .catch(err => console.log(err));
+};
 
-// module.exports.selectAll = selectAll;
+const retrieveUser = function (userEmail) {
+  return User.findOne({ email: userEmail })
+    .then(user => user)
+    .catch(err => console.log(err));
+};
+
 module.exports.insertNewCourse = insertNewCourse;
 module.exports.retrieveCourses = retrieveCourses;
 module.exports.insertNewCategory = insertNewCategory;
+module.exports.retrieveCategories = retrieveCategories;
+module.exports.insertNewUser = insertNewUser;
+module.exports.retrieveUser = retrieveUser;
