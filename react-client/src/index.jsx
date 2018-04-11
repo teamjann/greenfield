@@ -53,7 +53,7 @@ class App extends React.Component {
   render () {
     return (<div>
       <Navigation />
-      <CategoryListView />
+      <CategoryView />
     </div>)
   }
 }
@@ -79,6 +79,86 @@ class Navigation extends React.Component {
       </nav>
     )
   }
+}
+
+const CategoryView = (props) => {
+  return {
+    <div>
+      <h3>Category: </h3>
+      <CategoryViewCourse />
+    </div>
+  }
+}
+
+class CategoryViewCourse extends React.Component {
+  constructor (props) {
+    super(props);
+    this.state = {
+      upVoteCount = 0,
+      // downVoteCount = 0
+    }
+  }
+  render {
+    return (
+      <div class="make me a card">
+        <h3>Course Title</h3>
+        <span>Price: $</span>
+        <span>Upvote Count</span>
+        <p>
+        Description Text
+        </p>
+        // Display course detail view onClick
+      </div>
+    )
+  }
+}
+
+class CourseDetailView extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+  render () {
+    return (
+      <div>
+        <div>
+          <button>Back</button>
+          <h3>Course Title</h3>
+          <span>Hosted: </span>
+          <span>Price: </span>
+        </div>
+        <div>
+          <iframe></iframe>
+          <p>Decription: Bacon sausage pork steak.</p>
+        </div>
+      </div>
+    )
+  }
+}
+
+class LoginModal extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      email: '',
+      password: ''
+    }
+    render () {
+      return (
+        <div>
+          <button>Close</button>
+          <form>
+            <label>Username</label>
+            <input type="email" />
+            <label>Password</label>
+            <input type="password"/>
+          </form>
+          <button>Sign In</button>
+          <button>Sign Up</button>
+        </div>
+      )
+    }
+  }
+
 }
 
 ReactDOM.render(<App />, document.getElementById('app'));
