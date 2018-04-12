@@ -9,12 +9,13 @@ app.use(express.static(`${__dirname}/../react-client/dist`));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.post('/api/categories/id/courses', (req, res) => {
+app.post('/api/categories/:id/courses', (req, res) => {
+  const categoryToInsertCourse = req.params.id;
   const courseToInsert = req.body;
   // console.log(courseToInsert);
 
   new Promise((resolve, reject) => {
-    resolve(db.insertNewCourse(courseToInsert));
+    resolve(db.insertNewCourse(courseToInsert, categoryToInsertCourse));
   })
     .then(() => res.status(201).end())
     .catch((err) => {
@@ -23,9 +24,10 @@ app.post('/api/categories/id/courses', (req, res) => {
     });
 });
 
-app.get('/api/categories/id/courses', (req, res) => {
+app.get('/api/categories/:id/courses', (req, res) => {
+  const categoryToRetrieveCourses = req.params.id;
   new Promise((resolve, reject) => {
-    resolve(db.retrieveCourses());
+    resolve(db.retrieveCourses(categoryToRetrieveCourses)); // send down specific course
   })
     .then(courses => res.status(200).json(courses))
     .catch((err) => {

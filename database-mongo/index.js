@@ -42,16 +42,17 @@ const Course = mongoose.model('Course', courseSchema);
 const Category = mongoose.model('Category', categorySchema);
 const User = mongoose.model('User', userSchema);
 
-const insertNewCourse = function (newCourse) {
+const insertNewCourse = function (newCourse, categoryId) {
+  // needs work...
   new Course(newCourse)
     .save()
     .then(() => console.log('New course successfully added!'))
     .catch(err => console.log(err));
 };
 
-const retrieveCourses = function () {
-  return Course.find({})
-    .select()
+const retrieveCourses = function (categoryId) {
+  return Category.find({ _id: categoryId })
+    .select('courses')
     .then(allCourses => allCourses)
     .catch(err => console.log(err));
 };
