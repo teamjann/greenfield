@@ -12,23 +12,24 @@ db.once('open', () => {
   console.log('mongoose connected successfully');
 });
 
-const courseSchema = mongoose.Schema({
-  _id: { type: mongoose.Schema.Types.ObjectId, auto: true },
-  name: String,
-  upvotes: Number,
-  description: {
-    createdOn: Date,
-    instructor: String,
-    price: Number,
-    videoUrl: String,
-  },
-  courseUrl: String,
-});
-
 const categorySchema = mongoose.Schema({
   _id: { type: mongoose.Schema.Types.ObjectId, auto: true },
   name: String,
-  courses: [courseSchema],
+  courses: [
+    {
+      _id: { type: mongoose.Schema.Types.ObjectId, auto: true },
+      name: String,
+      upvotes: Number,
+      description: {
+        createdOn: Date,
+        instructor: String,
+        price: Number,
+        videoUrl: String,
+        description: String,
+      },
+      courseUrl: String,
+    },
+  ],
 });
 
 const userSchema = mongoose.Schema({
@@ -38,20 +39,25 @@ const userSchema = mongoose.Schema({
   coursesUpvoted: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Course' }],
 });
 
-const Course = mongoose.model('Course', courseSchema);
 const Category = mongoose.model('Category', categorySchema);
 const User = mongoose.model('User', userSchema);
 
-const insertNewCourse = function (newCourse, categoryId) {
+const retrieveCategory = function (categoryId) {
+  return Category.findOne({ _id: categoryId })
+    .then(category => category)
+    .catch(err => console.log(err));
+};
+
+const insertNewCourse = function (courseToBeAdded, categoryId) {
   // needs work...
-  new Course(newCourse)
+  return Category.findOneAndUpdate({ _id: categoryId }, { $push: { courses: courseToBeAdded } })
     .save()
     .then(() => console.log('New course successfully added!'))
     .catch(err => console.log(err));
 };
 
 const retrieveCourses = function (categoryId) {
-  return Category.find({ _id: categoryId })
+  return Category.findOne({ _id: categoryId })
     .select('courses')
     .then(allCourses => allCourses)
     .catch(err => console.log(err));
@@ -66,7 +72,7 @@ const insertNewCategory = function (newCategory) {
 
 const retrieveCategories = function () {
   return Category.find({})
-    .select('name')
+    .select('name', 'id')
     .then(allCategoriesArray => allCategoriesArray)
     .catch(err => console.log(err));
 };

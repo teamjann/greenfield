@@ -40,17 +40,13 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    $.ajax({
-      url: '/items',
-      success: (data) => {
+    axios
+      .get('/api/categories')
+      .then(res =>
         this.setState({
-          items: data
-        })
-      },
-      error: (err) => {
-        console.log('err', err);
-      }
-    });
+          categories: res,
+        }))
+      .catch(err => console.log(err));
   }
 
   render() {
