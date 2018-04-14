@@ -7,7 +7,6 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      // This is mock data
       categories: [
         {
           _id: 1,
