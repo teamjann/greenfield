@@ -18,7 +18,7 @@ class Navigation extends React.Component {
           {this.props.categories.map(category => <option>{category.name}</option>)}
         </select>
         <button>Sign In</button>
-        <button>Sign Out</button>
+        <button>Sign Up</button>
         <button>Log Out</button>
       </nav>
     );
