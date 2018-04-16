@@ -5,11 +5,13 @@ import Navigation from './components/Navigation.jsx';
 import CategoryView from './components/CategoryView.jsx';
 import CourseDetailView from './components/CourseDetailView.jsx';
 import LoginModal from './components/LoginModal.jsx';
+import SignupModal from './components/SignupModal.jsx';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      signupModalTriggered: false,
       categories: [
         {
           _id: 1,
@@ -23,7 +25,7 @@ class App extends React.Component {
                 createdOn: '01.01.2001',
                 instructor: 'Nick Fray',
                 price: 8,
-                videoUrl: 'http://www.awesomecatpics.com',
+                videoUrl: 'http://via.placeholder.com/350x150',
                 text: 'party',
               },
               courseUrl: 'http://www.awesomedogpics.com',
@@ -40,6 +42,8 @@ class App extends React.Component {
         },
       ],
     };
+
+    this.handleSignupClick = this.handleSignupClick.bind(this);
   }
 
   componentDidMount() {
@@ -52,13 +56,28 @@ class App extends React.Component {
       .catch(err => console.log(err));
   }
 
+  handleSignupClick() {
+    this.setState({ signupModalTriggered: true });
+  }
+
   render() {
+    if (this.state.signupModalTriggered) {
+      return (
+        <div>
+          <Navigation
+            handleSignupClick={this.handleSignupClick}
+            categories={this.state.categories}
+          />
+          <SignupModal />
+        </div>
+      );
+    }
+
     return (
       <div>
-        <Navigation categories={this.state.categories} />
+        <Navigation handleSignupClick={this.handleSignupClick} categories={this.state.categories} />
         <CategoryView categories={this.state.categories} />
         <CourseDetailView course={this.state.categories[0].courses[0]} />
-        <LoginModal />
       </div>
     );
   }
