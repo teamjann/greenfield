@@ -12,6 +12,7 @@ class App extends React.Component {
     super(props);
     this.state = {
       signupModalTriggered: false,
+      currentUser: {},
       categories: [
         {
           _id: 1,
@@ -44,6 +45,7 @@ class App extends React.Component {
     };
 
     this.handleSignupClick = this.handleSignupClick.bind(this);
+    this.addCurrentUser = this.addCurrentUser.bind(this);
   }
 
   componentDidMount() {
@@ -60,6 +62,10 @@ class App extends React.Component {
     this.setState({ signupModalTriggered: true });
   }
 
+  addCurrentUser(user) {
+    this.setState({ currentUser: user });
+  }
+
   render() {
     if (this.state.signupModalTriggered) {
       return (
@@ -68,7 +74,7 @@ class App extends React.Component {
             handleSignupClick={this.handleSignupClick}
             categories={this.state.categories}
           />
-          <SignupModal />
+          <SignupModal addCurrentUser={this.addCurrentUser} />
         </div>
       );
     }

@@ -8,6 +8,15 @@ class SignupModal extends React.Component {
       password: '',
       secondPassword: '',
     };
+    this.handleSignup = this.handleSignup.bind(this);
+  }
+
+  handleSignup() {
+    if (this.state.password === this.state.secondPassword) {
+      this.props.addCurrentUser(this.state);
+    } else {
+      window.alert('The passwords need to match!');
+    }
   }
 
   render() {
@@ -22,7 +31,7 @@ class SignupModal extends React.Component {
           <label>Retype Password</label>
           <input type="password" />
         </form>
-        <button>Sign Up</button>
+        <button onClick={this.handleSignup}>Sign Up</button>
       </div>
     );
   }
