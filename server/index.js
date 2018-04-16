@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const db = require('../database-mongo');
+const path = require('path');
 
 const app = express();
 
@@ -8,6 +9,10 @@ const app = express();
 app.use(express.static(`${__dirname}/../react-client/dist`));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+
+app.get('/', (req, res) => {
+  res.sendFile(path.join(`${__dirname}/../react-client/dist/index.html`));
+});
 
 app.post('/api/categories/:id/courses', (req, res) => {
   const categoryToInsertCourse = req.params.id;
