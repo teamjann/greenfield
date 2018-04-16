@@ -11,7 +11,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.get('/', (req, res) => {
-  res.sendFile(path.join(`${__dirname}/../react-client/dist/index.html`));
+  // res.sendFile(path.join(`${__dirname}/../react-client/dist/index.html`));
+  res.sendFile(path.resolve(__dirname, 'public', 'index.html'));
 });
 
 app.post('/api/categories/:id/courses', (req, res) => {
