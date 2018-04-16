@@ -7,7 +7,6 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      // This is mock data Nick changed it
       categories: [
         {
           _id: 1,
@@ -108,7 +107,7 @@ class CategoryViewCourse extends React.Component {
         <span>Instructor: {this.props.course.description.instructor}</span>
         <span>Upvote Count: {this.state.upVoteCount}</span>
         <p>{this.props.course.description.text}</p>
-        // Display course detail view onClick
+      // Display course detail view onClick
       </div>
     );
   }
