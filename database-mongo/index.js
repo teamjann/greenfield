@@ -96,9 +96,16 @@ const retrieveUser = function (userEmail) {
     .catch(err => console.log(err));
 };
 
+const retrieveUsers = function (userEmail) {
+  return User.find()
+    .then(users => users)
+    .catch(err => console.log(err));
+};
+
 module.exports.insertNewCourse = insertNewCourse;
 module.exports.retrieveCourses = retrieveCourses;
 module.exports.insertNewCategory = insertNewCategory;
 module.exports.retrieveCategories = retrieveCategories;
 module.exports.insertNewUser = insertNewUser;
 module.exports.retrieveUser = retrieveUser;
+module.exports.retrieveUsers = retrieveUsers;

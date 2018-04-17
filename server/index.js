@@ -89,6 +89,17 @@ app.get('/api/users/:id', (req, res) => {
     });
 });
 
+app.get('/api/users', (req, res) => {
+  new Promise((resolve, reject) => {
+    resolve(db.retrieveUsers());
+  })
+    .then(users => res.status(200).json(users))
+    .catch((err) => {
+      console.log(err);
+      res.status(500).end();
+    });
+});
+
 app.listen(3000, () => {
   console.log('listening on port 3000!');
 });
