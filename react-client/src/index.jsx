@@ -40,7 +40,7 @@ class App extends React.Component {
       users: [
         {
           _id: 1,
-          name: 'johncrogers@test.com',
+          email: 'johncrogers@test.com',
           password: '1234',
           coursesUpvoted: [],
         },
@@ -88,7 +88,6 @@ class App extends React.Component {
       .catch(err => console.log(err));
   }
 
-
   handleLoginClick() {
     this.setState({ loginModalTriggered: true, signupModalTriggered: false });
   }
@@ -96,7 +95,7 @@ class App extends React.Component {
   handleSignupClick() {
     this.setState({ signupModalTriggered: true, loginModalTriggered: false });
   }
-        
+
   getCoursesforCategory(category) {
     axios
       .get(`/api/categories/${category._id}/courses`)

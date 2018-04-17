@@ -16,7 +16,7 @@ class SignupModal extends React.Component {
 
   handleSignup() {
     if (this.state.password === this.state.secondPassword) {
-      this.props.addCurrentUser({ name: this.state.email, password: this.state.password });
+      this.props.addCurrentUser({ email: this.state.email, password: this.state.password });
       this.setState({
         email: '',
         password: '',
