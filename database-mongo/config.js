@@ -14,8 +14,19 @@ module.exports = function (passprot) {
 }
 
 passport.use('local-signup', new LocalStrategy({
+  passReqToCallBack: true
+},
+  (req, email, password, cb) => {
+    new Promise((resolve, reject) => {
+      resolve(db.retrieveUser(email));
+    })
+      .then(user => done(null, false, req.flash('signupMessage', 'Email taken.')))
+      .catch(() => {
+        db.insertNewUser(email)
+        done(null, email)
+      });
+  }
+))
 
 
-
-}))
 
