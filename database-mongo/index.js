@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://me:me@ds241019.mlab.com:41019/greenfield-dev');
+mongoose.connect('mongodb://nn:nn@ds251598.mlab.com:51598/netninja');
 // mongoose.connect('mongodb://localhost/greenfield');
+// put back in mongodb://me:me@ds241019.mlab.com:41019/greenfield-dev
 
 const db = mongoose.connection;
 
@@ -73,16 +74,20 @@ const insertNewCategory = function (newCategory) {
 
 const retrieveCategories = function () {
   return Category.find({})
-    .select('name', 'id')
+    .select('name id')
     .then(allCategoriesArray => allCategoriesArray)
     .catch(err => console.log(err));
 };
 
 const insertNewUser = function (newUser) {
-  new User(newUser)
-    .save()
-    .then(() => console.log('New user sucessfully added!'))
-    .catch(err => console.log(err));
+  return User.findOne({ email: newUser.email })
+    .then(user => console.log(user.email, ' allready exists'))
+    .catch(() => {
+      new User(newUser)
+        .save()
+        .then(() => console.log('New user sucessfully added!'))
+        .catch(err => console.log(err));
+    })
 };
 
 const retrieveUser = function (userEmail) {
