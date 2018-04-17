@@ -38,7 +38,7 @@ class App extends React.Component {
       users: [
         {
           _id: 1,
-          name: 'johncrogers',
+          name: 'johncrogers@test.com',
           password: '1234',
           coursesUpvoted: [],
         },
@@ -48,7 +48,6 @@ class App extends React.Component {
     this.handleSignupClick = this.handleSignupClick.bind(this);
     this.addCurrentUser = this.addCurrentUser.bind(this);
     this.handleLoginClick = this.handleLoginClick.bind(this);
-    this.logUserIn = this.logUserIn.bind(this);
   }
 
   componentDidMount() {
@@ -62,11 +61,11 @@ class App extends React.Component {
   }
 
   handleLoginClick() {
-    this.setState({ loginModalTriggered: true });
+    this.setState({ loginModalTriggered: true, signupModalTriggered: false });
   }
 
   handleSignupClick() {
-    this.setState({ signupModalTriggered: true });
+    this.setState({ signupModalTriggered: true, loginModalTriggered: false });
   }
 
   addCurrentUser(user) {
@@ -77,14 +76,13 @@ class App extends React.Component {
       .catch(err => console.log(err));
   }
 
-  logUserIn(user) {}
-
   render() {
     if (this.state.signupModalTriggered) {
       return (
         <div>
           <Navigation
             handleSignupClick={this.handleSignupClick}
+            handleLoginClick={this.handleLoginClick}
             categories={this.state.categories}
           />
           <SignupModal addCurrentUser={this.addCurrentUser} />
@@ -95,16 +93,21 @@ class App extends React.Component {
         <div>
           <Navigation
             handleSignupClick={this.handleSignupClick}
+            handleLoginClick={this.handleLoginClick}
             categories={this.state.categories}
           />
-          <LoginModal logUserIn={this.logUserIn} />
+          <LoginModal users={this.state.users} addCurrentUser={this.addCurrentUser} />
         </div>
       );
     }
 
     return (
       <div>
-        <Navigation handleSignupClick={this.handleSignupClick} categories={this.state.categories} />
+        <Navigation
+          handleSignupClick={this.handleSignupClick}
+          handleLoginClick={this.handleLoginClick}
+          categories={this.state.categories}
+        />
         <CategoryView categories={this.state.categories} />
         <CourseDetailView course={this.state.categories[0].courses[0]} />
       </div>
