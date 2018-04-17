@@ -84,7 +84,6 @@ class App extends React.Component {
       .catch(err => console.log(err));
   }
 
-
   handleLoginClick() {
     this.setState({ loginModalTriggered: true, signupModalTriggered: false });
   }
@@ -130,7 +129,7 @@ class App extends React.Component {
             handleLoginClick={this.handleLoginClick}
             categories={this.state.categories}
           />
-          <SignupModal addCurrentUser={this.addCurrentUser} />
+          {/* <SignupModal addCurrentUser={this.addCurrentUser} /> */}
         </div>
       );
     } else if (this.state.loginModalTriggered) {
@@ -141,21 +140,23 @@ class App extends React.Component {
             handleLoginClick={this.handleLoginClick}
             categories={this.state.categories}
           />
-          <LoginModal users={this.state.users} addCurrentUser={this.addCurrentUser} />
+          {/* <LoginModal users={this.state.users} addCurrentUser={this.addCurrentUser} /> */}
         </div>
       );
     }
 
     return (
-      <div>
-        <Navigation
-          handleSignupClick={this.handleSignupClick}
-          handleLoginClick={this.handleLoginClick}
-          categories={this.state.categories}
-        />
-        <CategoryView categories={this.state.categories} />
-        <CourseDetailView course={this.state.categories[0].courses[0]} />
-      </div>
+      <Router>
+        <div>
+          <Navigation
+            handleSignupClick={this.handleSignupClick}
+            handleLoginClick={this.handleLoginClick}
+            categories={this.state.categories}
+          />
+          <CategoryView categories={this.state.categories} />
+          <CourseDetailView course={this.state.categories[0].courses[0]} />
+        </div>
+      </Router>
     );
   }
 }
