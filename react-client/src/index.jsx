@@ -62,6 +62,10 @@ class App extends React.Component {
     //   .catch(err => console.log(err));
   }
 
+  handleLoginClick() {
+    this.setState({ loginModalTriggered: true, signupModalTriggered: false });
+  }
+
   handleSignupClick() {
     this.setState({ signupModalTriggered: true });
   }
@@ -84,14 +88,6 @@ class App extends React.Component {
       .catch(err => console.log(err));
   }
 
-  handleLoginClick() {
-    this.setState({ loginModalTriggered: true, signupModalTriggered: false });
-  }
-
-  handleSignupClick() {
-    this.setState({ signupModalTriggered: true, loginModalTriggered: false });
-  }
-  
   getCoursesforCategory(category) {
     axios
       .get(`/api/categories/${category._id}/courses`)
