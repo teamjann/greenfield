@@ -64,6 +64,10 @@ class App extends React.Component {
 
   addCurrentUser(user) {
     this.setState({ currentUser: user });
+    axios
+      .post('/api/users', user)
+      .then(res => console.log(res))
+      .catch(err => console.log(err));
   }
 
   render() {

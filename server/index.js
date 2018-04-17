@@ -5,7 +5,6 @@ const path = require('path');
 
 const app = express();
 
-// UNCOMMENT FOR REACT
 app.use(express.static(`${__dirname}/../react-client/dist`));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
