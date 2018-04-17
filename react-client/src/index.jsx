@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Route, Link, BrowserRouter as Router } from 'react-router-dom';
 import axios from 'axios';
 import Navigation from './components/Navigation.jsx';
 import CategoryView from './components/CategoryView.jsx';
@@ -11,6 +12,7 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      currentCourses: [],
       signupModalTriggered: false,
       currentUser: {},
       categories: [
@@ -29,7 +31,7 @@ class App extends React.Component {
                 videoUrl: 'http://via.placeholder.com/350x150',
                 text: 'party',
               },
-              courseUrl: 'http://www.awesomedogpics.com',
+              courseUrl: 'https://www.udemy.com/understand-javascript/',
             },
           ],
         },
@@ -49,13 +51,13 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    axios
-      .get('/api/categories')
-      .then(res =>
-        this.setState({
-          categories: res,
-        }))
-      .catch(err => console.log(err));
+    // axios
+    //   .get('/api/categories')
+    //   .then(res =>
+    //     this.setState({
+    //       categories: res,
+    //     }))
+    //   .catch(err => console.log(err));
   }
 
   handleSignupClick() {
@@ -67,6 +69,44 @@ class App extends React.Component {
     axios
       .post('/api/users', user)
       .then(res => console.log(res))
+      .catch(err => console.log(err));
+  }
+
+  getAllCategories() {
+    axios
+      .get('/api/categories')
+      .then(res =>
+        this.setState({
+          categories: res,
+        }))
+      .catch(err => console.log(err));
+  }
+
+  getCoursesforCategory(category) {
+    axios
+      .get(`/api/categories/${category._id}/courses`)
+      .then(res =>
+        this.setState({
+          currentCourses: res,
+        }))
+      .catch(err => console.log(err));
+  }
+
+  createNewCategory(category) {
+    axios
+      .post('/api/categories', (newCategory: category))
+      .then((res) => {
+        this.getAllCategories();
+      })
+      .catch(err => console.log(err));
+  }
+
+  createNewCourse(category, course) {
+    axios
+      .post(`/api/categories/${category._id}/courses`, (newCourse: course))
+      .then((res) => {
+        this.getCoursesforCategory(category);
+      })
       .catch(err => console.log(err));
   }
 

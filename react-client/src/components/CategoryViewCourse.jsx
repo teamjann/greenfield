@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-// import { Route, Link, BrowserRouter as Router } from 'react-router-dom';
+import { Route, Link, BrowserRouter as Router } from 'react-router-dom';
+import CourseDetailView from './CourseDetailView.jsx';
 
 class CategoryViewCourse extends React.Component {
   constructor(props) {
