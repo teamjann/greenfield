@@ -15,8 +15,7 @@ app.get('/', (req, res) => {
 
 app.post('/api/categories/:id/courses', (req, res) => {
   const categoryToInsertCourse = req.params.id;
-  const courseToInsert = req.body;
-  // console.log(courseToInsert);
+  const courseToInsert = req.body.newCourse;
 
   new Promise((resolve, reject) => {
     resolve(db.insertNewCourse(courseToInsert, categoryToInsertCourse));
@@ -41,7 +40,7 @@ app.get('/api/categories/:id/courses', (req, res) => {
 });
 
 app.post('/api/categories', (req, res) => {
-  const categoryToInsert = req.body;
+  const categoryToInsert = req.body.newCategory;
 
   new Promise((resolve, reject) => {
     resolve(db.insertNewCategory(categoryToInsert));
