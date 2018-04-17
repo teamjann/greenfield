@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://me:me@ds241019.mlab.com:41019/greenfield-dev');
-// mongoose.connect('mongodb://localhost/greenfield');
+// mongoose.connect('mongodb://me:me@ds241019.mlab.com:41019/greenfield-dev');
+mongoose.connect('mongodb://localhost/greenfield');
 
 const db = mongoose.connection;
 
