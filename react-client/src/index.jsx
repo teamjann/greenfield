@@ -50,6 +50,33 @@ class App extends React.Component {
   }
 
   componentDidMount() {
+
+    // axios
+    //   .get('/api/categories')
+    //   .then(res =>
+    //     this.setState({
+    //       categories: res,
+    //     }))
+    //   .catch(err => console.log(err));
+  }
+
+  handleLoginClick() {
+    this.setState({ loginModalTriggered: true, signupModalTriggered: false });
+  }
+
+  handleSignupClick() {
+    this.setState({ signupModalTriggered: true });
+  }
+
+  addCurrentUser(user) {
+    this.setState({ currentUser: user });
+    axios
+      .post('/api/users', user)
+      .then(res => console.log(res))
+      .catch(err => console.log(err));
+  }
+
+  getAllCategories() {
     axios
       .get('/api/categories')
       .then(res =>
@@ -59,8 +86,24 @@ class App extends React.Component {
       .catch(err => console.log(err));
   }
 
-  handleSignupClick() {
-    this.setState({ signupModalTriggered: true });
+
+  getCoursesforCategory(category) {
+    axios
+      .get(`/api/categories/${category._id}/courses`)
+      .then(res =>
+        this.setState({
+          currentCourses: res,
+        }))
+      .catch(err => console.log(err));
+  }
+
+  createNewCategory(category) {
+    axios
+      .post('/api/categories', (newCategory: category))
+      .then((res) => {
+        this.getAllCategories();
+      })
+      .catch(err => console.log(err));
   }
 
   addCurrentUser(user) {
