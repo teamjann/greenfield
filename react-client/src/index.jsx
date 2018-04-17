@@ -12,6 +12,7 @@ class App extends React.Component {
     super(props);
     this.state = {
       signupModalTriggered: false,
+      loginModalTriggered: false,
       currentUser: {},
       categories: [
         {
@@ -46,6 +47,8 @@ class App extends React.Component {
 
     this.handleSignupClick = this.handleSignupClick.bind(this);
     this.addCurrentUser = this.addCurrentUser.bind(this);
+    this.handleLoginClick = this.handleLoginClick.bind(this);
+    this.logUserIn = this.logUserIn.bind(this);
   }
 
   componentDidMount() {
@@ -56,6 +59,10 @@ class App extends React.Component {
           categories: res,
         }))
       .catch(err => console.log(err));
+  }
+
+  handleLoginClick() {
+    this.setState({ loginModalTriggered: true });
   }
 
   handleSignupClick() {
@@ -70,6 +77,8 @@ class App extends React.Component {
       .catch(err => console.log(err));
   }
 
+  logUserIn(user) {}
+
   render() {
     if (this.state.signupModalTriggered) {
       return (
@@ -79,6 +88,16 @@ class App extends React.Component {
             categories={this.state.categories}
           />
           <SignupModal addCurrentUser={this.addCurrentUser} />
+        </div>
+      );
+    } else if (this.state.loginModalTriggered) {
+      return (
+        <div>
+          <Navigation
+            handleSignupClick={this.handleSignupClick}
+            categories={this.state.categories}
+          />
+          <LoginModal logUserIn={this.logUserIn} />
         </div>
       );
     }
