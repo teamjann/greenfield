@@ -1,7 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import axios from 'axios';
-import List from './components/List.jsx';
+import Navigation from './components/Navigation.jsx';
+import CategoryView from './components/CategoryView.jsx';
+import CourseDetailView from './components/CourseDetailView.jsx';
+import LoginModal from './components/LoginModal.jsx';
 
 class App extends React.Component {
   constructor(props) {
@@ -32,7 +35,7 @@ class App extends React.Component {
         {
           _id: 1,
           name: 'johncrogers',
-          passwrod: '1234',
+          password: '1234',
           coursesUpvoted: [],
         },
       ],
