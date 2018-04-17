@@ -17,7 +17,7 @@ class Navigation extends React.Component {
         <select placeholder="select a catergory">
           {this.props.categories.map(category => <option>{category.name}</option>)}
         </select>
-        <button>Sign In</button>
+        <button onClick={this.props.handleLoginClick}>Log In</button>
         <button onClick={this.props.handleSignupClick}>Sign Up</button>
         <button>Log Out</button>
       </nav>
