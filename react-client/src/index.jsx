@@ -1,6 +1,6 @@
+
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Route, Link, BrowserRouter as Router } from 'react-router-dom';
 import axios from 'axios';
 import Navigation from './components/Navigation.jsx';
 import CategoryView from './components/CategoryView.jsx';
@@ -12,9 +12,7 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentCourses: [],
       signupModalTriggered: false,
-      loginModalTriggered: false,
       currentUser: {},
       categories: [
         {
@@ -32,7 +30,7 @@ class App extends React.Component {
                 videoUrl: 'http://via.placeholder.com/350x150',
                 text: 'party',
               },
-              courseUrl: 'https://www.udemy.com/understand-javascript/',
+              courseUrl: 'http://www.awesomedogpics.com',
             },
           ],
         },
@@ -40,7 +38,7 @@ class App extends React.Component {
       users: [
         {
           _id: 1,
-          name: 'johncrogers@test.com',
+          name: 'johncrogers',
           password: '1234',
           coursesUpvoted: [],
         },
@@ -49,10 +47,10 @@ class App extends React.Component {
 
     this.handleSignupClick = this.handleSignupClick.bind(this);
     this.addCurrentUser = this.addCurrentUser.bind(this);
-    this.handleLoginClick = this.handleLoginClick.bind(this);
   }
 
   componentDidMount() {
+
     // axios
     //   .get('/api/categories')
     //   .then(res =>
@@ -88,6 +86,7 @@ class App extends React.Component {
       .catch(err => console.log(err));
   }
 
+
   getCoursesforCategory(category) {
     axios
       .get(`/api/categories/${category._id}/courses`)
@@ -107,12 +106,11 @@ class App extends React.Component {
       .catch(err => console.log(err));
   }
 
-  createNewCourse(category, course) {
+  addCurrentUser(user) {
+    this.setState({ currentUser: user });
     axios
-      .post(`/api/categories/${category._id}/courses`, (newCourse: course))
-      .then((res) => {
-        this.getCoursesforCategory(category);
-      })
+      .post('/api/users', user)
+      .then(res => console.log(res))
       .catch(err => console.log(err));
   }
 
@@ -122,32 +120,16 @@ class App extends React.Component {
         <div>
           <Navigation
             handleSignupClick={this.handleSignupClick}
-            handleLoginClick={this.handleLoginClick}
             categories={this.state.categories}
           />
           <SignupModal addCurrentUser={this.addCurrentUser} />
-        </div>
-      );
-    } else if (this.state.loginModalTriggered) {
-      return (
-        <div>
-          <Navigation
-            handleSignupClick={this.handleSignupClick}
-            handleLoginClick={this.handleLoginClick}
-            categories={this.state.categories}
-          />
-          <LoginModal users={this.state.users} addCurrentUser={this.addCurrentUser} />
         </div>
       );
     }
 
     return (
       <div>
-        <Navigation
-          handleSignupClick={this.handleSignupClick}
-          handleLoginClick={this.handleLoginClick}
-          categories={this.state.categories}
-        />
+        <Navigation handleSignupClick={this.handleSignupClick} categories={this.state.categories} />
         <CategoryView categories={this.state.categories} />
         <CourseDetailView course={this.state.categories[0].courses[0]} />
       </div>
