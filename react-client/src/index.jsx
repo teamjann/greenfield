@@ -71,6 +71,7 @@ class App extends React.Component {
   }
 
   addCurrentUser(user) {
+    // The order here will need to be switched when validation server-side is working!
     this.setState({ currentUser: user });
     axios
       .post('/api/users', user)
