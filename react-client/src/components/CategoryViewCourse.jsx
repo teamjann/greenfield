@@ -15,14 +15,23 @@ class CategoryViewCourse extends React.Component {
     return (
       <Router>
         <div className="card">
-          <h3>
-            {/* Link will be dynamic based on course id/ */}
-            <Link to="/courses/courseid"> Course Title: {this.props.course.name} </Link>
-          </h3>
-          <span>Price: ${this.props.course.description.price}</span>
-          <span>Instructor: {this.props.course.description.instructor}</span>
-          <span>Upvote Count: {this.state.upVoteCount}</span>
-          <p>{this.props.course.description.text}</p>
+          <div className="card-body">
+            <h3 className="card-title">
+              {/* Link will be dynamic based on course id/ */}
+              <Link to="/courses/courseid"> {this.props.course.name} </Link>
+            </h3>
+            <h6 className="card-subtitle text-muted">
+              Instructor: {this.props.course.description.instructor}
+            </h6>
+            <span className="card-text text-right">
+              Price: ${this.props.course.description.price}
+            </span>
+            <p className="card-text">{this.props.course.description.text}</p>
+          </div>
+
+          <div className="card-footer">
+            <p className="card-text">Upvote Count: {this.state.upVoteCount}</p>
+          </div>
           {/* // Display course detail view onClick */}
           <Route
             path="/courses/courseid"

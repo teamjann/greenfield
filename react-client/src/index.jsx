@@ -173,7 +173,6 @@ class App extends React.Component {
             />
             </Nav> */}
         <CategoryView category={this.state.categories} />
-        <CourseDetailView course={this.state.categories[0].courses[0]} />
       </div>
     );
   }
