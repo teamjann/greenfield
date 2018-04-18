@@ -16,7 +16,7 @@ class LoginModal extends React.Component {
   handleLogin() {
     return this.props.users.map((user) => {
       if (user.name === this.state.email && user.password === this.state.password) {
-        this.props.addCurrentUser({ name: this.state.email, password: this.state.password });
+        this.props.addCurrentUser({ email: this.state.email, password: this.state.password });
         console.log(this.state.email, ' is logged in!');
         return this.setState({ email: '', password: '' });
       }
