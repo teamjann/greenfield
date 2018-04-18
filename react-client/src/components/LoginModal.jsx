@@ -28,6 +28,7 @@ class LoginModal extends React.Component {
     this.handleChangePassword = this.handleChangePassword.bind(this);
   }
 
+  // TODO: the window.alert needs to only appear if the login fails, setup logic for this
   handleLogin() {
     return this.props.users.map((user) => {
       if (user.name === this.state.email && user.password === this.state.password) {
