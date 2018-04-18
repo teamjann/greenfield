@@ -10,9 +10,6 @@ require('../database-mongo/config')(passport);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.get('/', (req, res) => {
-  res.sendFile(path.join(`${__dirname}/../react-client/src/index.html`));
-});
 
 ///////////////////////////////////////////////////////////////////////
 app.use(session({
@@ -23,7 +20,7 @@ app.use(session({
 
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(express.static(`${__dirname}/../react-client/dist`));
+//app.use(express.static(`${__dirname}/../react-client/dist`));
 
 const isLoggedIn = (req, res, next) => {
   if (req.isAuthenticated()) {
@@ -36,17 +33,46 @@ const isLoggedIn = (req, res, next) => {
 app.post('/api/signup', passport.authenticate('local-signup'), (req, res) => {
   res.status(200).json(req.user);
 });
-
 app.post('/api/login', passport.authenticate('local-login'), (req, res) => {
   res.status(200).json(req.user);
-})
+});
 ////////////////////////////////////////////////////////////////////////
 
-app.post('/api/categories/:id/courses', (req, res) => {
-  const categoryToInsertCourse = req.params.id;
-  const courseToInsert = req.body.newCourse;
+/*
+ROUTE LEGEND:
+  STATIC '/': Serves up static files and index.html.
+  CATEGORIES GET '/api/categories': List of all categories.
+  CATEGORY POST '/api/categories': Add a new cateogry.
+  COURSES GET '/api/categories/:id/courses': List of all courses for an individual category.
+  COURSE GET '/api/categories/:id/courses/:courseId': Detailed information about a specific course.
+  COURSE POST '/api/categories/:id/courses': Add a new course to a category.
+  USER GET '/api/users': Returns a list of each user document.
+  USER GET '/api/users/:id': Returns a specific user's information.
+  USER POST '/api/users': Adds a new user to the database.
+*/
+
+// STATIC '/': Serves up static files and index.html.
+app.use(express.static(`${__dirname}/../react-client/dist`));
+app.get('/', (req, res) => {
+  res.sendFile(path.join(`${__dirname}/../react-client/src/index.html`));
+});
+// CATEGORY GET '/api/categories': List of all categories.
+app.get('/api/categories', (req, res) => {
   new Promise((resolve, reject) => {
-    resolve(db.insertNewCourse(courseToInsert, categoryToInsertCourse));
+    resolve(db.retrieveCategories());
+  })
+    .then(categories => res.status(200).json(categories))
+    .catch((err) => {
+      console.log(err);
+      res.status(500).end();
+    });
+});
+// CATEGORY POST '/api/categories': Add a new cateogry.
+app.post('/api/categories', (req, res) => {
+  const categoryToInsert = req.body;
+
+  new Promise((resolve, reject) => {
+    resolve(db.insertNewCategory(categoryToInsert));
   })
     .then(() => res.status(201).end())
     .catch((err) => {
@@ -54,7 +80,7 @@ app.post('/api/categories/:id/courses', (req, res) => {
       res.status(500).end();
     });
 });
-
+// COURSE GET '/api/categories/:id/courses': List of all courses for an individual category.
 app.get('/api/categories/:id/courses', (req, res) => {
   const categoryToRetrieveCourses = req.params.id;
   new Promise((resolve, reject) => {
@@ -66,12 +92,25 @@ app.get('/api/categories/:id/courses', (req, res) => {
       res.status(500).end();
     });
 });
-
-app.post('/api/categories', (req, res) => {
-  const categoryToInsert = req.body.newCategory;
+// COURSE GET '/api/categories/:id/courses/:courseId': Detailed information about a specific course.
+app.get('/api/category/:category/courses/:courseId', (req, res) => {
+  new Promise((resolve, reject) => {
+    resolve(db.retrieveCourse(req.params.category, req.params.courseId));
+  })
+    .then(course => res.status(200).json(course))
+    .catch((err) => {
+      console.log(err);
+      res.status(500).end();
+    });
+});
+// COURSE POST '/api/categories/:id/courses': Add a new course to a category.
+app.post('/api/categories/:id/courses', (req, res) => {
+  const categoryToInsertCourse = req.params.id;
+  console.log(req.body);
+  const courseToInsert = req.body;
 
   new Promise((resolve, reject) => {
-    resolve(db.insertNewCategory(categoryToInsert));
+    resolve(db.insertNewCourse(courseToInsert, categoryToInsertCourse));
   })
     .then(() => res.status(201).end())
     .catch((err) => {
@@ -79,32 +118,18 @@ app.post('/api/categories', (req, res) => {
       res.status(500).end();
     });
 });
-
-app.get('/api/categories', (req, res) => {
-  isLoggedIn();
+// USER GET '/api/users': Returns a list of each user document.
+app.get('/api/users', (req, res) => {
   new Promise((resolve, reject) => {
-    resolve(db.retrieveCategories());
+    resolve(db.retrieveUsers());
   })
-    .then(categories => res.status(200).json(categories))
+    .then(users => res.status(200).json(users))
     .catch((err) => {
       console.log(err);
       res.status(500).end();
     });
 });
-
-app.post('/api/users', (req, res) => {
-  const userToInsert = req.body;
-
-  new Promise((resolve, reject) => {
-    resolve(db.insertNewUser(userToInsert));
-  })
-    .then(() => res.status(201).end())
-    .catch((err) => {
-      console.log(err);
-      res.status(500).end();
-    });
-});
-
+// USER GET '/api/users/:id': Returns a specific user's information.
 app.get('/api/users/:id', (req, res) => {
   const userToRetrieve = req.params.id;
 
@@ -117,12 +142,14 @@ app.get('/api/users/:id', (req, res) => {
       res.status(500).end();
     });
 });
+// USER POST '/api/users': Adds a new user to the database.
+app.post('/api/users', (req, res) => {
+  const userToInsert = req.body;
 
-app.get('/api/users', (req, res) => {
   new Promise((resolve, reject) => {
-    resolve(db.retrieveUsers());
+    resolve(db.insertNewUser(userToInsert));
   })
-    .then(users => res.status(200).json(users))
+    .then(() => res.status(201).end())
     .catch((err) => {
       console.log(err);
       res.status(500).end();

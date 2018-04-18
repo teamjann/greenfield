@@ -159,7 +159,7 @@ class App extends React.Component {
             categories={this.state.categories}
           />
           <CategoryView categories={this.state.categories} />
-          <CourseDetailView course={this.state.categories[0].courses[0]} />
+          {/* <CourseDetailView course={this.state.categories[0].courses[0]} /> */}
         </div>
       </Router>
     );
@@ -167,3 +167,5 @@ class App extends React.Component {
 }
 
 ReactDOM.render(<App />, document.getElementById('app'));
+
+export default App;

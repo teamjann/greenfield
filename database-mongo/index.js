@@ -14,7 +14,7 @@ db.once('open', () => {
 });
 
 const categorySchema = mongoose.Schema({
-  _id: { type: mongoose.Schema.Types.ObjectId, auto: true },
+  id: { type: Number, auto: true },
   name: String,
   courses: [
     {
@@ -43,69 +43,76 @@ const userSchema = mongoose.Schema({
 const Category = mongoose.model('Category', categorySchema);
 const User = mongoose.model('User', userSchema);
 
-const retrieveCategory = function (categoryId) {
-  return Category.findOne({ _id: categoryId })
+/*
+FUNCTION LEGEND:
+  - CATEGORY:
+    retrieveCategory
+    retrieveCategories
+    insertNewCategory
+  - COURSE:
+    retrieveCourse
+    retrieveCourses
+    insertNewCourse *FIX
+  - USER:
+    retrieveUser
+    retrieveUsers
+    insertNewUser *FIX
+*/
+
+module.exports.retrieveCategory = categoryId =>
+  Category.findOne({ _id: categoryId })
     .then(category => category)
     .catch(err => console.log(err));
-};
 
-const insertNewCourse = function (courseToBeAdded, categoryId) {
-  // needs work...
-  return Category.findOneAndUpdate({ _id: categoryId }, { $push: { courses: courseToBeAdded } })
-    .save()
-    .then(() => console.log('New course successfully added!'))
+module.exports.retrieveCategories = () =>
+  Category.find({})
+    .select('name id')
+    .then(allCategoriesArray => allCategoriesArray)
     .catch(err => console.log(err));
-};
 
-const retrieveCourses = function (categoryId) {
-  return Category.findOne({ _id: categoryId })
-    .select('courses')
-    .then(allCourses => allCourses)
-    .catch(err => console.log(err));
-};
-
-const insertNewCategory = function (newCategory) {
+module.exports.insertNewCategory = (newCategory) => {
   new Category(newCategory)
     .save()
     .then(() => console.log('New category successfully added!'))
     .catch(err => console.log(err));
 };
 
-const retrieveCategories = function () {
-  return Category.find({})
-    .select('name id')
-    .then(allCategoriesArray => allCategoriesArray)
+module.exports.retrieveCourse = (category, courseId) =>
+  Category.findOne({ id: category })
+    .where({ courses: { id: courseId } })
+    .then(course => course)
     .catch(err => console.log(err));
-};
 
-const insertNewUser = function (newUser) {
-  return User.findOne({ email: newUser.email })
-    .then(user => { return user.email, ' allready exists' })
+module.exports.retrieveCourses = categoryId =>
+  Category.findOne({ _id: categoryId })
+    .select('courses')
+    .then(allCourses => allCourses)
+    .catch(err => console.log(err));
+
+module.exports.insertNewCourse = (courseToBeAdded, categoryId) =>
+  Category.findOneAndUpdate({ _id: categoryId }, { $push: { courses: courseToBeAdded } })
+    // .save()
+    .then(() => console.log('New course successfully added!'))
+    .catch(err => console.log(err));
+
+module.exports.retrieveUser = userEmail =>
+  User.findOne({ email: userEmail })
+    .then(user => user)
+    .catch(err => console.log(err));
+
+module.exports.retrieveUsers = userEmail =>
+  User.find()
+    .then(users => users)
+    .catch(err => console.log(err));
+
+module.exports.insertNewUser = newUser =>
+  User.findOne({ email: newUser.email })
+    .then(user => console.log(user.email, ' allready exists'))
     .catch(() => {
       new User(newUser)
         .save()
         .then(() => console.log('New user sucessfully added!'))
         .catch(err => console.log(err));
     });
-};
 
-const retrieveUser = function (userEmail) {
-  return User.findOne({ email: userEmail })
-    .then(user => user)
-    .catch(err => console.log(err));
-};
 
-const retrieveUsers = function (userEmail) {
-  return User.find()
-    .then(users => users)
-    .catch(err => console.log(err));
-};
-
-module.exports.insertNewCourse = insertNewCourse;
-module.exports.retrieveCourses = retrieveCourses;
-module.exports.insertNewCategory = insertNewCategory;
-module.exports.retrieveCategories = retrieveCategories;
-module.exports.insertNewUser = insertNewUser;
-module.exports.retrieveUser = retrieveUser;
-module.exports.retrieveUsers = retrieveUsers;
-module.exports.User = User;

@@ -42,6 +42,7 @@ class SignupModal extends React.Component {
   render() {
     return (
       <div>
+        {/* Implement Close Button router functionality */}
         <button>Close</button>
         <form>
           <label>Username</label>
@@ -55,6 +56,7 @@ class SignupModal extends React.Component {
             onChange={this.handleChangeSecondPassword}
           />
         </form>
+        {/* Implement signup router functionality */}
         <button onClick={this.handleSignup}>Sign Up</button>
       </div>
     );
