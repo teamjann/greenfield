@@ -62,13 +62,6 @@ class App extends React.Component {
     //   .catch(err => console.log(err));
   }
 
-  handleLoginClick() {
-    this.setState({ loginModalTriggered: true, signupModalTriggered: false });
-  }
-
-  handleSignupClick() {
-    this.setState({ signupModalTriggered: true });
-  }
 
   addCurrentUser(user) {
     // The order here will need to be switched when validation server-side is working!
