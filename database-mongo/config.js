@@ -3,7 +3,7 @@ const LocalStrategy = require('passport-local').Strategy;
 const bodyParser = require('body-parser');
 const db = require('./index');
 const bcrypt = require('bcrypt');
-const salt = 20;
+const saltRounds = 10;
 
 module.exports = function (passport) {
 
@@ -19,13 +19,13 @@ module.exports = function (passport) {
 passport.use('local-signup', new LocalStrategy({
   passReqToCallBack: true
 },
-  async (req, username, password, cb) => {
-    bcrypt.hash(password, salt, async (err, hash) => {
+  async (req, email, password, cb) => {
+    bcrypt.hash(password, saltRounds, async (err, hash) => {
       if (err) {
         cb(err, null)
       } else {
-        const user = await db.insertNewUser(req.body, hash); //accept hash value?
-        if (user === user.email, ' allready exists') {
+        const user = await db.insertNewUser({ "user": email, "password": hash });
+        if (user === email, ' allready exists') {
           cb(err, null)
         } else {
           let userData = await db.retrieveUser(req.body);
@@ -40,9 +40,9 @@ passport.use('local-signup', new LocalStrategy({
 passport.use('local-login', new LocalStrategy({
   passReqToCallback: true
 },
-  async (req, username, password, cb) => {
+  async (req, email, password, cb) => {
     const userData = await db.retrieveUser(req.body);
-    if (userData) { // user data comes back at all...
+    if (userData) { // user data comes back at all... no length
       //let user = userInfo[0];
       bcrypt.compare(password, user.password, (err, res) => {
         if (err) {
