@@ -18,7 +18,7 @@ const categorySchema = mongoose.Schema({
   name: String,
   courses: [
     {
-      _id: { type: mongoose.Schema.Types.ObjectId, auto: true },
+      id: { type: Number, auto: true },
       name: String,
       upvotes: Number,
       description: {
@@ -86,11 +86,11 @@ const insertNewUser = function (newUser) {
         .save()
         .then(() => console.log('New user sucessfully added!'))
         .catch(err => console.log(err));
-    })
+    });
 };
 
 const retrieveUser = function (userEmail) {
-  return User.findOne({ email: userEmail })
+  return User.findOne({ ema`il: userEmail })
     .then(user => user)
     .catch(err => console.log(err));
 };
