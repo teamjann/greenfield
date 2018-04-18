@@ -70,11 +70,10 @@ class App extends React.Component {
     this.setState({ signupModalTriggered: true });
   }
 
-  addCurrentUser(user) {
-    console.log('add cur called', user);
-    this.setState({ currentUser: user });
+  addCurrentUser() {
+    //this.setState({ currentUser: user });
     axios
-      .post('/api/login', user)
+      .post('/api/login', { "password": "test", "username": "test" })
       .then(res => console.log(res))
       .catch(err => console.log(err));
   }
@@ -153,12 +152,12 @@ class App extends React.Component {
     return (
       <Router>
         <div>
+          <button onClick={this.addCurrentUser}>Session Test</button>
           <Navigation
             handleSignupClick={this.handleSignupClick}
             handleLoginClick={this.handleLoginClick}
             categories={this.state.categories}
           />
-          <button>Session Test Button!</button>
           <CategoryView categories={this.state.categories} />
           <CourseDetailView course={this.state.categories[0].courses[0]} />
         </div>

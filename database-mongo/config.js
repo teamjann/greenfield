@@ -16,18 +16,14 @@ module.exports = function (passport) {
   passport.deserializeUser((user, done) => {
     done(null, user);
   })
-  passport.use('local-signup', new LocalStrategy({
-    passReqToCallBack: true
-  },
-
-    async (req, email, password, cb) => {
-      console.log('//////////////////')
+  passport.use('local-signup', new LocalStrategy(
+    async (username, password, cb) => {
       bcrypt.hash(password, saltRounds, async (err, hash) => {
         if (err) {
           cb(err, null)
         } else {
-          const user = await db.insertNewUser({ "user": email, "password": hash });
-          if (user === email, ' allready exists') {
+          const user = await db.insertNewUser({ "email": username, "password": hash });
+          if (user === username, ' allready exists') {
             cb(null, false)
           } else {
             cb(null, true);
@@ -38,21 +34,17 @@ module.exports = function (passport) {
     }
   ))
 
-  passport.use('local-login', new LocalStrategy({
-    passReqToCallback: true
-  },
-    async (req, email, password, cb) => {
-      console.log(email, password, '////////////////')
-      const userData = await db.retrieveUser(email);
-      if (userData) { // user data comes back at all... no length
-        //let user = userInfo[0];
+  passport.use('local-login', new LocalStrategy(
+    async (username, password, cb) => {
+      const userData = await db.retrieveUser(username);
+      if (userData) {
         bcrypt.compare(password, userData.password, (err, res) => {
           if (err) {
             cb(err, null)
           } else if (res === false) {
             cb(null, false);
           } else {
-            cb(null, user);
+            cb(null, userData);
           }
         })
       } else {

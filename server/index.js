@@ -1,13 +1,12 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const session = require('express-session');
 const passport = require('passport');
 const db = require('../database-mongo/index');
 const path = require('path');
 const app = express();
 require('../database-mongo/config')(passport);
-const session = require('express-session');
 
-app.use(express.static(`${__dirname}/../react-client/dist`));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -20,25 +19,25 @@ app.use(session({
   secret: 'hopethisworks',
   resave: true,
   saveUninitialized: false //change back later
-}))
+}));
 
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(express.static(`${__dirname}/../react-client/dist`));
 
 const isLoggedIn = (req, res, next) => {
   if (req.isAuthenticated()) {
+    console.log('logged in ///////////////////////')
     return next();
   }
   res.status(401).end('You must log in to do that!');
 }
 
 app.post('/api/signup', passport.authenticate('local-signup'), (req, res) => {
-  console.log(req.body, '//////////////////')
   res.status(200).json(req.user);
 });
 
 app.post('/api/login', passport.authenticate('local-login'), (req, res) => {
-  console.log(req.body, '///////////////')
   res.status(200).json(req.user);
 })
 ////////////////////////////////////////////////////////////////////////
@@ -46,7 +45,6 @@ app.post('/api/login', passport.authenticate('local-login'), (req, res) => {
 app.post('/api/categories/:id/courses', (req, res) => {
   const categoryToInsertCourse = req.params.id;
   const courseToInsert = req.body.newCourse;
-
   new Promise((resolve, reject) => {
     resolve(db.insertNewCourse(courseToInsert, categoryToInsertCourse));
   })
@@ -83,6 +81,7 @@ app.post('/api/categories', (req, res) => {
 });
 
 app.get('/api/categories', (req, res) => {
+  isLoggedIn();
   new Promise((resolve, reject) => {
     resolve(db.retrieveCategories());
   })
