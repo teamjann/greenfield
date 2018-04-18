@@ -80,7 +80,7 @@ const retrieveCategories = function () {
 
 const insertNewUser = function (newUser) {
   return User.findOne({ email: newUser.email })
-    .then(user => console.log(user.email, ' allready exists'))
+    .then(user => { return user.email, ' allready exists' })
     .catch(() => {
       new User(newUser)
         .save()
@@ -108,3 +108,4 @@ module.exports.retrieveCategories = retrieveCategories;
 module.exports.insertNewUser = insertNewUser;
 module.exports.retrieveUser = retrieveUser;
 module.exports.retrieveUsers = retrieveUsers;
+module.exports.User = User;

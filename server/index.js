@@ -4,6 +4,8 @@ const passport = require('passport');
 const db = require('../database-mongo');
 const path = require('path');
 const app = express();
+const config = require('../database-mongo/config')
+
 
 app.use(express.static(`${__dirname}/../react-client/dist`));
 app.use(bodyParser.json());
@@ -24,11 +26,11 @@ const isLoggedIn = (req, res, next) => {
   res.status(401).end('You must log in to do that!');
 }
 
-app.post('/signup', passport.authenticate('local-signup'), (req, res) => {
-  res.status(200).json(req.user)
+app.post('/api/signup', passport.authenticate('local-signup'), (req, res) => {
+  res.status(200).json(req.user);
 });
 
-app.post('/login', passport.authenticate('local-login'), (req, res) => {
+app.post('/api/login', passport.authenticate('local-login'), (req, res) => {
   res.status(200).json(req.user);
 })
 ////////////////////////////////////////////////////////////////////////
