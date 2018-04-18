@@ -1,5 +1,20 @@
 import React from 'react';
 
+import {
+  Collapse,
+  Navbar,
+  NavbarToggler,
+  NavbarBrand,
+  Nav,
+  NavItem,
+  NavLink,
+  Container,
+  Row,
+  Col,
+  Jumbotron,
+  Button,
+} from 'reactstrap';
+
 class LoginModal extends React.Component {
   constructor(props) {
     super(props);
@@ -35,7 +50,7 @@ class LoginModal extends React.Component {
   render() {
     return (
       <div>
-        <button>Close</button>
+        <Button>&times</Button>
         <form>
           <label>Username</label>
           <input type="email" value={this.state.email} onChange={this.handleChangeEmail} />
