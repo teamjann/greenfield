@@ -1,8 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const passport = require('passport');
 const db = require('../database-mongo');
 const path = require('path');
-
 const app = express();
 
 app.use(express.static(`${__dirname}/../react-client/dist`));
@@ -12,6 +12,26 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.get('/', (req, res) => {
   res.sendFile(path.join(`${__dirname}/../react-client/src/index.html`));
 });
+
+///////////////////////////////////////////////////////////////////////
+app.use(passport.initialize());
+app.use(passport.session());
+
+const isLoggedIn = (req, res, next) => {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.status(401).end('You must log in to do that!');
+}
+
+app.post('/signup', passport.authenticate('local-signup'), (req, res) => {
+  res.status(200).json(req.user)
+});
+
+app.post('/login', passport.authenticate('local-login'), (req, res) => {
+  res.status(200).json(req.user);
+})
+////////////////////////////////////////////////////////////////////////
 
 app.post('/api/categories/:id/courses', (req, res) => {
   const categoryToInsertCourse = req.params.id;

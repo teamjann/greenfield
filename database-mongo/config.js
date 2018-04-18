@@ -9,24 +9,34 @@ module.exports = function (passprot) {
   });
 
   passport.deserializeUser((user, done) => {
-    done(null, user);
+    return done(null, user);
   })
 }
 
 passport.use('local-signup', new LocalStrategy({
   passReqToCallBack: true
 },
-  (req, email, password, cb) => {
+  (req, userName, password, cb) => {
     new Promise((resolve, reject) => {
-      resolve(db.retrieveUser(email));
+      resolve(db.retrieveUser(user));
     })
-      .then(user => done(null, false, req.flash('signupMessage', 'Email taken.')))
+      .then(user => cb(null, false, req.flash('signupMessage', 'Email taken.')))
       .catch(() => {
-        db.insertNewUser(email)
-        done(null, email)
+        db.insertNewUser(user)
+        cb(null, user)
       });
   }
 ))
+
+// passport.use('local-signin', new LocalStrategy({
+//   passReqToCallBack: true
+// },
+//   (req, userName, password, cb) => {
+
+//   }
+
+// ))
+
 
 
 
