@@ -8,6 +8,22 @@ import CourseDetailView from './components/CourseDetailView.jsx';
 import LoginModal from './components/LoginModal.jsx';
 import SignupModal from './components/SignupModal.jsx';
 
+// probably don't need all of these, will delete some
+import {
+  Collapse,
+  Navbar,
+  NavbarToggler,
+  NavbarBrand,
+  Nav,
+  NavItem,
+  NavLink,
+  Container,
+  Row,
+  Col,
+  Jumbotron,
+  Button,
+} from 'reactstrap';
+
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -61,7 +77,6 @@ class App extends React.Component {
     //     }))
     //   .catch(err => console.log(err));
   }
-
 
   addCurrentUser(user) {
     // The order here will need to be switched when validation server-side is working!
@@ -121,38 +136,44 @@ class App extends React.Component {
   render() {
     if (this.state.signupModalTriggered) {
       return (
-        <div>
-          <Navigation
-            handleSignupClick={this.handleSignupClick}
-            handleLoginClick={this.handleLoginClick}
-            categories={this.state.categories}
-          />
-          {/* <SignupModal addCurrentUser={this.addCurrentUser} /> */}
+        <div className="container">
+          <Nav>
+            <Navigation
+              handleSignupClick={this.handleSignupClick}
+              handleLoginClick={this.handleLoginClick}
+              categories={this.state.categories}
+            />
+            {/* <SignupModal addCurrentUser={this.addCurrentUser} /> */}
+          </Nav>
         </div>
       );
     } else if (this.state.loginModalTriggered) {
       return (
-        <div>
-          <Navigation
-            handleSignupClick={this.handleSignupClick}
-            handleLoginClick={this.handleLoginClick}
-            categories={this.state.categories}
-          />
-          {/* <LoginModal users={this.state.users} addCurrentUser={this.addCurrentUser} /> */}
+        <div className="container">
+          <Nav>
+            <Navigation
+              handleSignupClick={this.handleSignupClick}
+              handleLoginClick={this.handleLoginClick}
+              categories={this.state.categories}
+            />
+            {/* <LoginModal users={this.state.users} addCurrentUser={this.addCurrentUser} /> */}
+          </Nav>
         </div>
       );
     }
 
     return (
       <Router>
-        <div>
-          <Navigation
-            handleSignupClick={this.handleSignupClick}
-            handleLoginClick={this.handleLoginClick}
-            categories={this.state.categories}
-          />
-          <CategoryView categories={this.state.categories} />
-          {/* <CourseDetailView course={this.state.categories[0].courses[0]} /> */}
+        <div className="container">
+          <Nav>
+            <Navigation
+              handleSignupClick={this.handleSignupClick}
+              handleLoginClick={this.handleLoginClick}
+              categories={this.state.categories}
+            />
+            <CategoryView categories={this.state.categories} />
+            <CourseDetailView course={this.state.categories[0].courses[0]} />
+          </Nav>
         </div>
       </Router>
     );

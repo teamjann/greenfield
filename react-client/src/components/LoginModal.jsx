@@ -1,5 +1,20 @@
 import React from 'react';
 
+import {
+  Collapse,
+  Navbar,
+  NavbarToggler,
+  NavbarBrand,
+  Nav,
+  NavItem,
+  NavLink,
+  Container,
+  Row,
+  Col,
+  Jumbotron,
+  Button,
+} from 'reactstrap';
+
 class LoginModal extends React.Component {
   constructor(props) {
     super(props);
@@ -13,6 +28,7 @@ class LoginModal extends React.Component {
     this.handleChangePassword = this.handleChangePassword.bind(this);
   }
 
+  // TODO: the window.alert needs to only appear if the login fails, setup logic for this
   handleLogin() {
     return this.props.users.map((user) => {
       if (user.name === this.state.email && user.password === this.state.password) {
@@ -35,8 +51,7 @@ class LoginModal extends React.Component {
   render() {
     return (
       <div>
-        {/* Implement Close Button router functionality */}
-        <button>Close</button>
+        <Button>&times</Button>
         <form>
           <label>Username</label>
           <input type="email" value={this.state.email} onChange={this.handleChangeEmail} />
