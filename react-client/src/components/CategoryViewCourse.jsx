@@ -13,14 +13,23 @@ class CategoryViewCourse extends React.Component {
   }
   render() {
     return (
-      <div className="make me a card">
-        <h3>Course Title: {this.props.course.name}</h3>
-        <span>Price: ${this.props.course.description.price}</span>
-        <span>Instructor: {this.props.course.description.instructor}</span>
-        <span>Upvote Count: {this.state.upVoteCount}</span>
-        <p>{this.props.course.description.text}</p>
-        {/* // Display course detail view onClick */}
-      </div>
+      <Router>
+        <div className="make me a card">
+          <h3>
+            {/* Link will be dynamic based on course id/ */}
+            <Link to="/courses/courseid"> Course Title: {this.props.course.name} </Link>
+          </h3>
+          <span>Price: ${this.props.course.description.price}</span>
+          <span>Instructor: {this.props.course.description.instructor}</span>
+          <span>Upvote Count: {this.state.upVoteCount}</span>
+          <p>{this.props.course.description.text}</p>
+          {/* // Display course detail view onClick */}
+          <Route
+            path="/courses/courseid"
+            render={() => <CourseDetailView course={this.props.course} />}
+          />
+        </div>
+      </Router>
     );
   }
 }

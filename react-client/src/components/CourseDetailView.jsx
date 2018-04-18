@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-// import { Route, Link, BrowserRouter as Router } from 'react-router-dom';
+import { Route, Link, BrowserRouter as Router } from 'react-router-dom';
 
 class CourseDetailView extends React.Component {
   constructor(props) {
@@ -12,6 +12,7 @@ class CourseDetailView extends React.Component {
     return (
       <div>
         <div>
+          {/* Implement back button router functionality */}
           <button>Back</button>
           <h3>Course Title: {this.props.course.name}</h3>
           <span>Hosted: {this.props.course.courseUrl}</span>
@@ -19,7 +20,7 @@ class CourseDetailView extends React.Component {
         </div>
         <div>
           <iframe src={this.props.course.description.videoUrl} />
-          <p>Decription: {this.props.course.description.text}</p>
+          <p>Description: {this.props.course.description.text}</p>
         </div>
       </div>
     );
