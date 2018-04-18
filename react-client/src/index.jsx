@@ -1,13 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Route, Link, BrowserRouter as Router } from 'react-router-dom';
+// import { Route, Link, BrowserRouter as Router } from 'react-router-dom';
+import { BrowserRouter, Router } from 'react-router-dom';
 import axios from 'axios';
 import Navigation from './components/Navigation.jsx';
 import CategoryView from './components/CategoryView.jsx';
 import CourseDetailView from './components/CourseDetailView.jsx';
 import LoginModal from './components/LoginModal.jsx';
 import SignupModal from './components/SignupModal.jsx';
-
 // probably don't need all of these, will delete some
 import {
   Collapse,
@@ -134,52 +134,56 @@ class App extends React.Component {
   }
 
   render() {
-    if (this.state.signupModalTriggered) {
-      return (
-        <div className="container">
-          <Nav>
-            <Navigation
-              handleSignupClick={this.handleSignupClick}
-              handleLoginClick={this.handleLoginClick}
-              categories={this.state.categories}
-            />
-            {/* <SignupModal addCurrentUser={this.addCurrentUser} /> */}
-          </Nav>
-        </div>
-      );
-    } else if (this.state.loginModalTriggered) {
-      return (
-        <div className="container">
-          <Nav>
-            <Navigation
-              handleSignupClick={this.handleSignupClick}
-              handleLoginClick={this.handleLoginClick}
-              categories={this.state.categories}
-            />
-            {/* <LoginModal users={this.state.users} addCurrentUser={this.addCurrentUser} /> */}
-          </Nav>
-        </div>
-      );
-    }
+    // TURN ME ON WHEN WORKING ON MODAL
+    // if (this.state.signupModalTriggered) {
+    //   return (
+    //     <div className="container">
+    //       <Nav>
+    //         <Navigation
+    //           handleSignupClick={this.handleSignupClick}
+    //           handleLoginClick={this.handleLoginClick}
+    //           categories={this.state.categories}
+    //         />
+    //         {/* <SignupModal addCurrentUser={this.addCurrentUser} /> */}
+    //       </Nav>
+    //     </div>
+    //   );
+    // } else if (this.state.loginModalTriggered) {
+    //   return (
+    //     <div className="container">
+    //       <Nav>
+    //         <Navigation
+    //           handleSignupClick={this.handleSignupClick}
+    //           handleLoginClick={this.handleLoginClick}
+    //           categories={this.state.categories}
+    //         />
+    //         {/* <LoginModal users={this.state.users} addCurrentUser={this.addCurrentUser} /> */}
+    //       </Nav>
+    //     </div>
+    //   );
+    // }
 
     return (
-      <Router>
-        <div className="container">
-          <Nav>
-            <Navigation
-              handleSignupClick={this.handleSignupClick}
-              handleLoginClick={this.handleLoginClick}
-              categories={this.state.categories}
+      <div className="container">
+        {/* <Nav>
+              <Navigation
+                handleSignupClick={this.handleSignupClick}
+                handleLoginClick={this.handleLoginClick}
+                categories={this.state.categories}
             />
-            <CategoryView categories={this.state.categories} />
-            <CourseDetailView course={this.state.categories[0].courses[0]} />
-          </Nav>
-        </div>
-      </Router>
+            </Nav> */}
+        <CategoryView category={this.state.categories} />
+        <CourseDetailView course={this.state.categories[0].courses[0]} />
+      </div>
     );
   }
 }
 
-ReactDOM.render(<App />, document.getElementById('app'));
+ReactDOM.render(
+  <BrowserRouter>
+    <App />
+  </BrowserRouter>,
+  document.getElementById('app'),
+);
 
 export default App;

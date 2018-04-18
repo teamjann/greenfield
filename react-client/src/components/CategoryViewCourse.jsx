@@ -14,7 +14,7 @@ class CategoryViewCourse extends React.Component {
   render() {
     return (
       <Router>
-        <div className="make me a card">
+        <div className="card">
           <h3>
             {/* Link will be dynamic based on course id/ */}
             <Link to="/courses/courseid"> Course Title: {this.props.course.name} </Link>
