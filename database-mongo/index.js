@@ -48,7 +48,7 @@ FUNCTION LEGEND:
   - CATEGORY:
     retrieveCategory
     retrieveCategories
-    insertNewCategory *FIX
+    insertNewCategory
   - COURSE:
     retrieveCourse
     retrieveCourses
@@ -56,7 +56,7 @@ FUNCTION LEGEND:
   - USER:
     retrieveUser
     retrieveUsers
-    insertNewUser
+    insertNewUser *FIX
 */
 
 module.exports.retrieveCategory = categoryId =>

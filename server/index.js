@@ -38,7 +38,7 @@ app.get('/api/categories', (req, res) => {
 });
 // CATEGORY POST '/api/categories': Add a new cateogry.
 app.post('/api/categories', (req, res) => {
-  const categoryToInsert = req.body.newCategory;
+  const categoryToInsert = req.body;
 
   new Promise((resolve, reject) => {
     resolve(db.insertNewCategory(categoryToInsert));
