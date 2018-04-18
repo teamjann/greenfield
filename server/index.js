@@ -75,7 +75,8 @@ app.get('/api/category/:category/courses/:courseId', (req, res) => {
 // COURSE POST '/api/categories/:id/courses': Add a new course to a category.
 app.post('/api/categories/:id/courses', (req, res) => {
   const categoryToInsertCourse = req.params.id;
-  const courseToInsert = req.body.newCourse;
+  console.log(req.body);
+  const courseToInsert = req.body;
 
   new Promise((resolve, reject) => {
     resolve(db.insertNewCourse(courseToInsert, categoryToInsertCourse));

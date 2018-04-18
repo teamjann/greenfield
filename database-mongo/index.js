@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
-// mongoose.connect('mongodb://me:me@ds241019.mlab.com:41019/greenfield-dev');
-mongoose.connect('mongodb://localhost/greenfield');
+mongoose.connect('mongodb://me:me@ds241019.mlab.com:41019/greenfield-dev');
+// mongoose.connect('mongodb://localhost/greenfield');
 
 const db = mongoose.connection;
 
@@ -91,7 +91,7 @@ module.exports.retrieveCourses = categoryId =>
 
 module.exports.insertNewCourse = (courseToBeAdded, categoryId) =>
   Category.findOneAndUpdate({ _id: categoryId }, { $push: { courses: courseToBeAdded } })
-    .save()
+    // .save()
     .then(() => console.log('New course successfully added!'))
     .catch(err => console.log(err));
 
