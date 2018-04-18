@@ -11,7 +11,11 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 
-///////////////////////////////////////////////////////////////////////
+/*
+-------------------------------------------------------------------
+          Authorization! :)
+-------------------------------------------------------------------
+*/
 app.use(session({
   secret: 'hopethisworks',
   resave: true,
@@ -20,11 +24,9 @@ app.use(session({
 
 app.use(passport.initialize());
 app.use(passport.session());
-//app.use(express.static(`${__dirname}/../react-client/dist`));
 
 const isLoggedIn = (req, res, next) => {
   if (req.isAuthenticated()) {
-    console.log('logged in ///////////////////////')
     return next();
   }
   res.status(401).end('You must log in to do that!');
@@ -33,10 +35,23 @@ const isLoggedIn = (req, res, next) => {
 app.post('/api/signup', passport.authenticate('local-signup'), (req, res) => {
   res.status(200).json(req.user);
 });
+
 app.post('/api/login', passport.authenticate('local-login'), (req, res) => {
   res.status(200).json(req.user);
 });
-////////////////////////////////////////////////////////////////////////
+
+app.post('/logout', isLoggedIn, function (req, res) {
+  req.logout();
+  res.clearCookie('connect.sid').status(200).redirect('/');
+});
+
+/*
+-------------------------------------------------------------------
+          No Longer Authorization! :)
+-------------------------------------------------------------------
+*/
+
+
 
 /*
 ROUTE LEGEND:

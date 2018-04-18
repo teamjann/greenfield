@@ -73,10 +73,41 @@ class App extends React.Component {
   addCurrentUser() {
     //this.setState({ currentUser: user });
     axios
-      .post('/api/login', { "password": "test", "username": "test" })
+      .post('/api/logout', { "password": "test", "username": "test" })
       .then(res => console.log(res))
       .catch(err => console.log(err));
   }
+
+  signUpUser(user) {
+    let that = this;
+    axios
+      .post('/api/signin', user)
+      .then(
+        that.setState({ currentUser: res.username }))
+      .catch(err => err);
+  }
+
+  logInUser(user) {
+    let that = this;
+    axios
+      .post('/api/login', user)
+      .then(res => {
+        console.log('user logged in ', res)
+        that.setState({ currentUser: res.username })
+      })
+      .catch(err => console.log(err))
+  }
+
+  logOutUser() {
+    axios
+      .post('/api/logout')
+      .then(res => {
+        console.log('user logged out :(', res)
+        that.setState({ currentUser: '' })
+      })
+      .catch(err => console.log(err))
+  }
+
 
   getAllCategories() {
     axios
