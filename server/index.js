@@ -1,11 +1,11 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const passport = require('passport');
-const db = require('../database-mongo');
+const db = require('../database-mongo/index');
 const path = require('path');
 const app = express();
-const config = require('../database-mongo/config')
-
+require('../database-mongo/config')(passport);
+const session = require('express-session');
 
 app.use(express.static(`${__dirname}/../react-client/dist`));
 app.use(bodyParser.json());
@@ -16,6 +16,12 @@ app.get('/', (req, res) => {
 });
 
 ///////////////////////////////////////////////////////////////////////
+app.use(session({
+  secret: 'hopethisworks',
+  resave: true,
+  saveUninitialized: false //change back later
+}))
+
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -27,10 +33,12 @@ const isLoggedIn = (req, res, next) => {
 }
 
 app.post('/api/signup', passport.authenticate('local-signup'), (req, res) => {
+  console.log(req.body, '//////////////////')
   res.status(200).json(req.user);
 });
 
 app.post('/api/login', passport.authenticate('local-login'), (req, res) => {
+  console.log(req.body, '///////////////')
   res.status(200).json(req.user);
 })
 ////////////////////////////////////////////////////////////////////////

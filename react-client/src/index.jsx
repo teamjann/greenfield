@@ -71,10 +71,10 @@ class App extends React.Component {
   }
 
   addCurrentUser(user) {
-    // The order here will need to be switched when validation server-side is working!
+    console.log('add cur called', user);
     this.setState({ currentUser: user });
     axios
-      .post('/api/users', user)
+      .post('/api/login', user)
       .then(res => console.log(res))
       .catch(err => console.log(err));
   }
@@ -109,7 +109,7 @@ class App extends React.Component {
 
   createNewCategory(category) {
     axios
-      .post('/api/categories', (newCategory: category))
+      .post('/api/categories', ({ newCategory: category }))
       .then((res) => {
         this.getAllCategories();
       })
@@ -118,7 +118,7 @@ class App extends React.Component {
 
   createNewCourse(category, course) {
     axios
-      .post(`/api/categories/${category._id}/courses`, (newCourse: course))
+      .post(`/api/categories/${category._id}/courses`, ({ newCourse: course }))
       .then((res) => {
         this.getCoursesforCategory(category);
       })
@@ -158,6 +158,7 @@ class App extends React.Component {
             handleLoginClick={this.handleLoginClick}
             categories={this.state.categories}
           />
+          <button>Session Test Button!</button>
           <CategoryView categories={this.state.categories} />
           <CourseDetailView course={this.state.categories[0].courses[0]} />
         </div>
