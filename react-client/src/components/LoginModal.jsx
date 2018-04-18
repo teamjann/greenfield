@@ -35,6 +35,7 @@ class LoginModal extends React.Component {
   render() {
     return (
       <div>
+        {/* Implement Close Button router functionality */}
         <button>Close</button>
         <form>
           <label>Username</label>
@@ -42,6 +43,7 @@ class LoginModal extends React.Component {
           <label>Password</label>
           <input type="password" value={this.state.password} onChange={this.handleChangePassword} />
         </form>
+        {/* Implement login router functionality */}
         <button onClick={this.handleLogin}>Log In</button>
       </div>
     );
