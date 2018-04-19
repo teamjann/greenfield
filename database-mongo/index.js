@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://nn:nn@ds251598.mlab.com:51598/netninja');
-// mongoose.connect('mongodb://localhost/greenfield');
+mongoose.connect('mongodb://localhost/greenfield');
 
 const db = mongoose.connection;
 

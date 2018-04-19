@@ -12,8 +12,6 @@ app.use(bodyParser.urlencoded({
   extended: false,
 }));
 
-
-
 /*-------------------------------------------------------------------
           Authorization! :)
 -------------------------------------------------------------------*/
@@ -75,7 +73,7 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(`${__dirname}/../react-client/src/index.html`));
 });
 // CATEGORY GET '/api/categories': List of all categories.
-app.get('/api/categories', isLoggedIn, (req, res) => {
+app.get('/api/categories', (req, res) => {
   new Promise((resolve, reject) => {
     resolve(db.retrieveCategories());
   })
@@ -86,7 +84,7 @@ app.get('/api/categories', isLoggedIn, (req, res) => {
     });
 });
 // CATEGORY POST '/api/categories': Add a new cateogry.
-app.post('/api/categories', isLoggedIn, (req, res) => {
+app.post('/api/categories', (req, res) => {
   const categoryToInsert = req.body;
 
   new Promise((resolve, reject) => {
@@ -99,7 +97,7 @@ app.post('/api/categories', isLoggedIn, (req, res) => {
     });
 });
 // COURSE GET '/api/categories/:id/courses': List of all courses for an individual category.
-app.get('/api/categories/:id/courses', isLoggedIn, (req, res) => {
+app.get('/api/categories/:id/courses', (req, res) => {
   const categoryToRetrieveCourses = req.params.id;
   new Promise((resolve, reject) => {
     resolve(db.retrieveCourses(categoryToRetrieveCourses)); // send down specific course
@@ -111,7 +109,7 @@ app.get('/api/categories/:id/courses', isLoggedIn, (req, res) => {
     });
 });
 // COURSE GET '/api/categories/:id/courses/:courseId': Detailed information about a specific course.
-app.get('/api/categories/:category/courses/:course', isLoggedIn, (req, res) => {
+app.get('/api/categories/:category/courses/:course', (req, res) => {
   new Promise((resolve, reject) => {
     resolve(db.retrieveCourse(req.params.category));
   })
@@ -132,7 +130,7 @@ app.get('/api/categories/:category/courses/:course', isLoggedIn, (req, res) => {
     });
 });
 // COURSE POST '/api/categories/:id/courses': Add a new course to a category.
-app.post('/api/categories/:id/courses', isLoggedIn, (req, res) => {
+app.post('/api/categories/:id/courses', (req, res) => {
   const categoryToInsertCourse = req.params.id;
   console.log(req.body);
   const courseToInsert = req.body;
@@ -147,7 +145,7 @@ app.post('/api/categories/:id/courses', isLoggedIn, (req, res) => {
     });
 });
 // USER GET '/api/users': Returns a list of each user document.
-app.get('/api/users', isLoggedIn, (req, res) => {
+app.get('/api/users', (req, res) => {
   new Promise((resolve, reject) => {
     resolve(db.retrieveUsers());
   })
@@ -158,7 +156,7 @@ app.get('/api/users', isLoggedIn, (req, res) => {
     });
 });
 // USER GET '/api/users/:id': Returns a specific user's information.
-app.get('/api/users/:id', isLoggedIn, (req, res) => {
+app.get('/api/users/:id', (req, res) => {
   const userToRetrieve = req.params.id;
 
   new Promise((resolve, reject) => {
@@ -170,24 +168,6 @@ app.get('/api/users/:id', isLoggedIn, (req, res) => {
       res.status(500).end();
     });
 });
-
-// users must be added through auth route: see top
-// delete this post route
-
-
-// USER POST '/api/users': Adds a new user to the database.
-// app.post('/api/users', (req, res) => {
-//   const userToInsert = req.body;
-
-//   new Promise((resolve, reject) => {
-//     resolve(db.insertNewUser(userToInsert));
-//   })
-//     .then(() => res.status(201).end())
-//     .catch((err) => {
-//       console.log(err);
-//       res.status(500).end();
-//     });
-// });
 
 app.listen(3000, () => {
   console.log('listening on port 3000!');
