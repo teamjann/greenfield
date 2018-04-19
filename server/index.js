@@ -11,11 +11,11 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 
-/*
--------------------------------------------------------------------
+
+/*-------------------------------------------------------------------
           Authorization! :)
--------------------------------------------------------------------
-*/
+-------------------------------------------------------------------*/
+
 app.use(session({
   secret: 'shouldbestoredinakey',
   resave: true,
@@ -48,11 +48,9 @@ app.post('/api/logout', isLoggedIn, function (req, res) {
   res.clearCookie('connect.sid').status(200).redirect('/');
 });
 
-/*
--------------------------------------------------------------------
+/*-------------------------------------------------------------------
           No Longer Authorization! :)
--------------------------------------------------------------------
-*/
+-------------------------------------------------------------------*/
 
 
 
@@ -161,7 +159,9 @@ app.get('/api/users/:id', isLoggedIn, (req, res) => {
     });
 });
 
-// users must be added through auth route see top
+// users must be added through auth route: see top
+// delete this post route
+
 
 // USER POST '/api/users': Adds a new user to the database.
 // app.post('/api/users', (req, res) => {

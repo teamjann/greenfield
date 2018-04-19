@@ -56,7 +56,7 @@ FUNCTION LEGEND:
   - USER:
     retrieveUser
     retrieveUsers
-    insertNewUser *FIX
+    insertNewUser *FIX 
 */
 
 module.exports.retrieveCategory = categoryId =>
