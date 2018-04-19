@@ -1,4 +1,5 @@
 import React from 'react';
+import { ModalHeader, Modal, ModalBody, ModalFooter, Button } from 'reactstrap';
 
 class SignupModal extends React.Component {
   constructor(props) {
@@ -9,6 +10,8 @@ class SignupModal extends React.Component {
       secondPassword: '',
     };
     this.handleSignup = this.handleSignup.bind(this);
+    this.handleLogin = this.handleLogin.bind(this);
+
     this.handleChangeEmail = this.handleChangeEmail.bind(this);
     this.handleChangePassword = this.handleChangePassword.bind(this);
     this.handleChangeSecondPassword = this.handleChangeSecondPassword.bind(this);
@@ -27,6 +30,17 @@ class SignupModal extends React.Component {
     }
   }
 
+  handleLogin() {
+    return this.props.users.map((user) => {
+      if (user.name === this.state.email && user.password === this.state.password) {
+        this.props.addCurrentUser({ email: this.state.email, password: this.state.password });
+        console.log(this.state.email, ' is logged in!');
+        return this.setState({ email: '', password: '' });
+      }
+    });
+    window.alert('Invalid username/password');
+  }
+
   handleChangeEmail(e) {
     this.setState({ email: e.target.value });
   }
@@ -40,41 +54,72 @@ class SignupModal extends React.Component {
   }
 
   render() {
+    // if (this.props.modalState === 'Sign Up') {
     return (
       <div>
-        <form>
-          <div className="form-group">
-            <label htmlFor="inputEmail">Username</label>
-            <input
-              id="inputEmail"
-              type="email"
-              value={this.state.email}
-              onChange={this.handleChangeEmail}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="inputPassword1">Password</label>
-            <input
-              id="inputPassword1"
-              type="password"
-              value={this.state.password}
-              onChange={this.handleChangePassword}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="inputPassword2">Retype Password</label>
-            <input
-              id="inputPassword2"
-              type="password"
-              value={this.state.secondPassword}
-              onChange={this.handleChangeSecondPassword}
-            />
-          </div>
-        </form>
-        {/* Implement signup router functionality */}
-        <button onClick={this.handleSignup}>Sign Up</button>
+        <ModalHeader toggle={this.props.toggleModal}> Sign Up</ModalHeader>
+        <ModalBody>
+          <form>
+            <div className="form-group">
+              <label htmlFor="inputEmail" className="mr-1">
+                Email
+              </label>
+              <input
+                id="inputEmail"
+                type="email"
+                value={this.state.email}
+                onChange={this.handleChangeEmail}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="inputPassword1" className="mr-1">
+                Password
+              </label>
+              <input
+                id="inputPassword1"
+                type="password"
+                value={this.state.password}
+                onChange={this.handleChangePassword}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="inputPassword2" className="mr-1">
+                Retype Password
+              </label>
+              <input
+                id="inputPassword2"
+                type="password"
+                value={this.state.secondPassword}
+                onChange={this.handleChangeSecondPassword}
+              />
+            </div>
+          </form>
+        </ModalBody>
+        <ModalFooter>
+          <Button color="primary" onClick={this.handleSignup}>
+            Sign Up
+          </Button>
+          <Button color="secondary" onClick={this.props.toggleModal}>
+            Cancel
+          </Button>
+        </ModalFooter>
       </div>
     );
+    // }
+
+    // //return (
+    //   <div>
+    //   <Button>&times</Button>
+    //   <form>
+    //     <label>Username</label>
+    //     <input type="email" value={this.state.email} onChange={this.handleChangeEmail} />
+    //     <label>Password</label>
+    //     <input type="password" value={this.state.password} onChange={this.handleChangePassword} />
+    //   </form>
+    //   {/* Implement login router functionality */}
+    //   <button onClick={this.handleLogin}>Log In</button>
+    // </div>
+    // );
   }
 }
 

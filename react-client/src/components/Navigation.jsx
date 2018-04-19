@@ -26,7 +26,6 @@ class Navigation extends React.Component {
       selectedCategory: '',
       dropdownOpen: false,
       modal: false,
-      modalState: '',
     };
 
     this.toggleModal = this.toggleModal.bind(this);
@@ -38,25 +37,14 @@ class Navigation extends React.Component {
   }
 
   toggleModal() {
-    this.setState({ modal: !this.state.modal, modalState: 'Sign Up' });
+    this.setState({ modal: !this.state.modal });
   }
 
   render() {
     const modalDisplay = (
       <div>
         <Modal isOpen={this.state.modal} toggle={this.toggleModal}>
-          <ModalHeader toggle={this.toggleModal}> {this.state.modalState}</ModalHeader>
-          <ModalBody>
-            <SignupModal addCurrentUser={this.props.addCurrentUser} />
-          </ModalBody>
-          <ModalFooter>
-            <Button color="primary" onClick={this.toggleModal}>
-              Do Something
-            </Button>{' '}
-            <Button color="secondary" onClick={this.toggleModal}>
-              Cancel
-            </Button>
-          </ModalFooter>
+          <UserModal toggleModal={this.toggleModal} addCurrentUser={this.props.addCurrentUser} />
         </Modal>
       </div>
     );

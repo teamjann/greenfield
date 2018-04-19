@@ -167,7 +167,7 @@ class App extends React.Component {
     // The props here NEED TO BE CHANGED!
     return (
       <div>
-        <Navigation categories={this.state.categories} />
+        <Navigation categories={this.state.categories} addCurrentUser={this.addCurrentUser} />
         <CategoryView category={this.state.categories} />
       </div>
     );
