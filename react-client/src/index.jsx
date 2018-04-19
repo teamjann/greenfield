@@ -6,23 +6,6 @@ import axios from 'axios';
 import Navigation from './components/Navigation.jsx';
 import CategoryView from './components/CategoryView.jsx';
 import CourseDetailView from './components/CourseDetailView.jsx';
-import LoginModal from './components/LoginModal.jsx';
-import SignupModal from './components/SignupModal.jsx';
-// probably don't need all of these, will delete some
-import {
-  Collapse,
-  Navbar,
-  NavbarToggler,
-  NavbarBrand,
-  Nav,
-  NavItem,
-  NavLink,
-  Container,
-  Row,
-  Col,
-  Jumbotron,
-  Button,
-} from 'reactstrap';
 
 class App extends React.Component {
   constructor(props) {

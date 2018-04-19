@@ -1,8 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Route, Link, BrowserRouter as Router } from 'react-router-dom';
-import SignupModal from './SignupModal.jsx';
-import LoginModal from './LoginModal.jsx';
 import App from '../index.jsx';
 import UserModal from './UserModal.jsx';
 
