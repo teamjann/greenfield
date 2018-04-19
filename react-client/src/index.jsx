@@ -28,7 +28,9 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      currentCategories: [],
       currentCourses: [],
+      currentCourse: [],
       signupModalTriggered: false,
       loginModalTriggered: false,
       currentUser: {},
@@ -64,37 +66,15 @@ class App extends React.Component {
     };
 
     this.handleSignupClick = this.handleSignupClick.bind(this);
-    this.addCurrentUser = this.addCurrentUser.bind(this);
     this.handleLoginClick = this.handleLoginClick.bind(this);
+
+    this.signUpUser = this.signUpUser.bind(this);
+    this.logInUser = this.logInUser.bind(this);
+    this.logOutUser = this.logOutUser.bind(this);
   }
 
   componentDidMount() {
-    // axios
-    //   .get('/api/categories')
-    //   .then(res =>
-    //     this.setState({
-    //       categories: res,
-    //     }))
-    //   .catch(err => console.log(err));
-  }
-
-  addCurrentUser(user) {
-    // The order here will need to be switched when validation server-side is working!
-    this.setState({ currentUser: user });
-    axios
-      .post('/api/users', user)
-      .then(res => console.log(res))
-      .catch(err => console.log(err));
-  }
-
-  getAllCategories() {
-    axios
-      .get('/api/categories')
-      .then(res =>
-        this.setState({
-          categories: res,
-        }))
-      .catch(err => console.log(err));
+    // this.getAllCategories();
   }
 
   handleLoginClick() {
@@ -102,7 +82,58 @@ class App extends React.Component {
   }
 
   handleSignupClick() {
-    this.setState({ signupModalTriggered: true, loginModalTriggered: false });
+    this.setState({ signupModalTriggered: true });
+  }
+  /*
+  -------------------------------------------------------------------
+          Authorization! :)
+  -------------------------------------------------------------------
+  */
+  addCurrentUser(user) {
+    const that = this;
+    axios
+      .post('/api/signup', user)
+      .then((res) => {
+        that.setState({ currentUser: res.username });
+      })
+      .catch(err => err);
+  }
+
+  logInUser(user) {
+    const that = this;
+    axios
+      .post('/api/login', user)
+      .then((res) => {
+        console.log('user logged in ', res);
+        that.setState({ currentUser: res.username });
+      })
+      .catch(err => console.log(err));
+  }
+
+  logOutUser() {
+    const that = this;
+    axios
+      .post('/api/logout')
+      .then((res) => {
+        console.log('user logged out', res);
+        that.setState({ currentUser: '' });
+      })
+      .catch(err => console.log(err));
+  }
+  /*
+-------------------------------------------------------------------
+          No Longer Authorization! :)
+-------------------------------------------------------------------
+*/
+
+  getAllCategories() {
+    axios
+      .get('/api/categories')
+      .then(res =>
+        this.setState({
+          currentCategories: res.data,
+        }))
+      .catch(err => console.log(err));
   }
 
   getCoursesforCategory(category) {
@@ -110,14 +141,25 @@ class App extends React.Component {
       .get(`/api/categories/${category._id}/courses`)
       .then(res =>
         this.setState({
-          currentCourses: res,
+          currentCourses: res.data,
+        }))
+      .catch(err => console.log(err));
+  }
+
+  // Use _id or id? _id is mongoose generated id
+  getSpecificCourse(category, course) {
+    axios
+      .get(`/api/categories/${category._id}/courses/${course.id}`)
+      .then(res =>
+        this.setState({
+          currentCourse: res.data,
         }))
       .catch(err => console.log(err));
   }
 
   createNewCategory(category) {
     axios
-      .post('/api/categories', (newCategory: category))
+      .post('/api/categories', { newCategory: category })
       .then((res) => {
         this.getAllCategories();
       })
@@ -126,7 +168,7 @@ class App extends React.Component {
 
   createNewCourse(category, course) {
     axios
-      .post(`/api/categories/${category._id}/courses`, (newCourse: course))
+      .post(`/api/categories/${category._id}/courses`, { newCourse: course })
       .then((res) => {
         this.getCoursesforCategory(category);
       })

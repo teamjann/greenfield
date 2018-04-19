@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://me:me@ds241019.mlab.com:41019/greenfield-dev');
-// mongoose.connect('mongodb://localhost/greenfield');
+mongoose.connect('mongodb://localhost/greenfield');
 
 const db = mongoose.connection;
 
@@ -14,30 +13,40 @@ db.once('open', () => {
 });
 
 const categorySchema = mongoose.Schema({
-  id: { type: Number, auto: true },
+  id: {
+    type: Number,
+    auto: true,
+  },
   name: String,
-  courses: [
-    {
-      id: { type: Number, auto: true },
-      name: String,
-      upvotes: Number,
-      description: {
-        createdOn: Date,
-        instructor: String,
-        price: Number,
-        videoUrl: String,
-        description: String,
-      },
-      courseUrl: String,
+  courses: [{
+    id: {
+      type: Number,
+      auto: true,
     },
-  ],
+    name: String,
+    upvotes: Number,
+    description: {
+      createdOn: Date,
+      instructor: String,
+      price: Number,
+      videoUrl: String,
+      description: String,
+    },
+    courseUrl: String,
+  }],
 });
 
 const userSchema = mongoose.Schema({
-  _id: { type: mongoose.Schema.Types.ObjectId, auto: true },
+  _id: {
+    type: mongoose.Schema.Types.ObjectId,
+    auto: true,
+  },
   email: String,
   password: String,
-  coursesUpvoted: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Course' }],
+  coursesUpvoted: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Course',
+  }],
 });
 
 const Category = mongoose.model('Category', categorySchema);
@@ -52,15 +61,17 @@ FUNCTION LEGEND:
   - COURSE:
     retrieveCourse
     retrieveCourses
-    insertNewCourse *FIX
+    insertNewCourse
   - USER:
     retrieveUser
     retrieveUsers
-    insertNewUser *FIX
+    insertNewUser
 */
 
 module.exports.retrieveCategory = categoryId =>
-  Category.findOne({ _id: categoryId })
+  Category.findOne({
+    _id: categoryId,
+  })
     .then(category => category)
     .catch(err => console.log(err));
 
@@ -77,26 +88,37 @@ module.exports.insertNewCategory = (newCategory) => {
     .catch(err => console.log(err));
 };
 
-module.exports.retrieveCourse = (category, courseId) =>
-  Category.findOne({ id: category })
-    .where({ courses: { id: courseId } })
-    .then(course => course)
+module.exports.retrieveCourse = (categoryId, courseId) =>
+  Category.findOne({
+    _id: categoryId,
+  })
+    .then(category => category.courses)
     .catch(err => console.log(err));
 
 module.exports.retrieveCourses = categoryId =>
-  Category.findOne({ _id: categoryId })
+  Category.findOne({
+    _id: categoryId,
+  })
     .select('courses')
     .then(allCourses => allCourses)
     .catch(err => console.log(err));
 
 module.exports.insertNewCourse = (courseToBeAdded, categoryId) =>
-  Category.findOneAndUpdate({ _id: categoryId }, { $push: { courses: courseToBeAdded } })
+  Category.findOneAndUpdate({
+    _id: categoryId,
+  }, {
+      $push: {
+        courses: courseToBeAdded,
+      },
+    })
     // .save()
     .then(() => console.log('New course successfully added!'))
     .catch(err => console.log(err));
 
 module.exports.retrieveUser = userEmail =>
-  User.findOne({ email: userEmail })
+  User.findOne({
+    email: userEmail,
+  })
     .then(user => user)
     .catch(err => console.log(err));
 
@@ -106,7 +128,9 @@ module.exports.retrieveUsers = userEmail =>
     .catch(err => console.log(err));
 
 module.exports.insertNewUser = newUser =>
-  User.findOne({ email: newUser.email })
+  User.findOne({
+    email: newUser.email,
+  })
     .then(user => console.log(user.email, ' allready exists'))
     .catch(() => {
       new User(newUser)

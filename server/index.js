@@ -1,11 +1,58 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const db = require('../database-mongo');
+const session = require('express-session');
+const passport = require('passport');
+const db = require('../database-mongo/index');
 const path = require('path');
-
 const app = express();
+require('../database-mongo/config')(passport);
+
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({
+  extended: false,
+}));
+
+/*-------------------------------------------------------------------
+          Authorization! :)
+-------------------------------------------------------------------*/
+
+app.use(session({
+  secret: 'shouldbestoredinakey',
+  resave: true,
+  saveUninitialized: true,
+  cookie: { maxAge: 12 * 60 * 60 * 1000 }
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+// middleware to check if user is logged in.
+const isLoggedIn = (req, res, next) => {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.status(401).end('You must log in to do that!');
+}
+
+app.post('/api/signup', passport.authenticate('local-signup'), (req, res) => {
+  console.log('sign up called')
+  res.status(200).json(req.user);
+});
+
+app.post('/api/login', passport.authenticate('local-login'), (req, res) => {
+  res.status(200).json(req.user);
+});
+
+app.post('/api/logout', isLoggedIn, function (req, res) {
+  req.logout();
+  res.clearCookie('connect.sid').status(200).redirect('/');
+});
+
+/*-------------------------------------------------------------------
+          No Longer Authorization! :)
+-------------------------------------------------------------------*/
+
+
 
 /*
 ROUTE LEGEND:
@@ -62,11 +109,21 @@ app.get('/api/categories/:id/courses', (req, res) => {
     });
 });
 // COURSE GET '/api/categories/:id/courses/:courseId': Detailed information about a specific course.
-app.get('/api/category/:category/courses/:courseId', (req, res) => {
+app.get('/api/categories/:category/courses/:course', (req, res) => {
   new Promise((resolve, reject) => {
-    resolve(db.retrieveCourse(req.params.category, req.params.courseId));
+    resolve(db.retrieveCourse(req.params.category));
   })
-    .then(course => res.status(200).json(course))
+    .then((courseList) => {
+      const selectedCourse = courseList.filter(course =>
+        course._id == req.params.course);
+      if (selectedCourse.length > 0) {
+        console.log('Entered');
+        res.status(200).json(selectedCourse[0]);
+      } else {
+        console.log(courseList);
+        res.status(404).end();
+      }
+    })
     .catch((err) => {
       console.log(err);
       res.status(500).end();
@@ -106,19 +163,6 @@ app.get('/api/users/:id', (req, res) => {
     resolve(db.retrieveUser(userToRetrieve));
   })
     .then(user => res.status(200).json(user))
-    .catch((err) => {
-      console.log(err);
-      res.status(500).end();
-    });
-});
-// USER POST '/api/users': Adds a new user to the database.
-app.post('/api/users', (req, res) => {
-  const userToInsert = req.body;
-
-  new Promise((resolve, reject) => {
-    resolve(db.insertNewUser(userToInsert));
-  })
-    .then(() => res.status(201).end())
     .catch((err) => {
       console.log(err);
       res.status(500).end();
