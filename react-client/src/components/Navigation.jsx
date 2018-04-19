@@ -26,14 +26,25 @@ class Navigation extends React.Component {
       selectedCategory: '',
       dropdownOpen: false,
       modal: false,
+      modalSelected: '',
     };
 
     this.toggleModal = this.toggleModal.bind(this);
     this.toggleDropdown = this.toggleDropdown.bind(this);
+    this.toggleSignupModal = this.toggleSignupModal.bind(this);
+    this.toggleLoginModal = this.toggleLoginModal.bind(this);
   }
 
   toggleDropdown() {
     this.setState({ dropdownOpen: !this.state.dropdownOpen });
+  }
+
+  toggleSignupModal() {
+    this.setState({ modalSelected: 'Sign Up' }, this.toggleModal);
+  }
+
+  toggleLoginModal() {
+    this.setState({ modalSelected: 'Login' }, this.toggleModal);
   }
 
   toggleModal() {
@@ -44,7 +55,11 @@ class Navigation extends React.Component {
     const modalDisplay = (
       <div>
         <Modal isOpen={this.state.modal} toggle={this.toggleModal}>
-          <UserModal toggleModal={this.toggleModal} addCurrentUser={this.props.addCurrentUser} />
+          <UserModal
+            toggleModal={this.toggleModal}
+            addCurrentUser={this.props.addCurrentUser}
+            modalClicked={this.state.modalSelected}
+          />
         </Modal>
       </div>
     );
@@ -83,12 +98,12 @@ class Navigation extends React.Component {
                 </DropdownMenu>
               </Dropdown>
               <li className="nav-item">
-                <a className="nav-link" onClick={this.toggleModal}>
+                <a className="nav-link" onClick={this.toggleSignupModal}>
                   Sign Up
                 </a>
               </li>
               <li className="nav-item">
-                <a className="nav-link" onClick={this.toggleModal}>
+                <a className="nav-link" onClick={this.toggleLoginModal}>
                   Login
                 </a>
               </li>
