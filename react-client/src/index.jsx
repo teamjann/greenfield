@@ -12,7 +12,9 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      currentCategories: [],
       currentCourses: [],
+      currentCourse: [],
       signupModalTriggered: false,
       loginModalTriggered: false,
       currentUser: {},
@@ -53,13 +55,7 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    // axios
-    //   .get('/api/categories')
-    //   .then(res =>
-    //     this.setState({
-    //       categories: res,
-    //     }))
-    //   .catch(err => console.log(err));
+    //this.getAllCategories();
   }
 
   handleLoginClick() {
@@ -84,7 +80,7 @@ class App extends React.Component {
       .get('/api/categories')
       .then(res =>
         this.setState({
-          categories: res,
+          currentCategories: res.data,
         }))
       .catch(err => console.log(err));
   }
@@ -102,7 +98,18 @@ class App extends React.Component {
       .get(`/api/categories/${category._id}/courses`)
       .then(res =>
         this.setState({
-          currentCourses: res,
+          currentCourses: res.data,
+        }))
+      .catch(err => console.log(err));
+  }
+
+  // Use _id or id? _id is mongoose generated id
+  getSpecificCourse(category, course) {
+    axios
+      .get(`/api/categories/${category._id}/courses/${course.id}`)
+      .then(res =>
+        this.setState({
+          currentCourse: res.data,
         }))
       .catch(err => console.log(err));
   }
