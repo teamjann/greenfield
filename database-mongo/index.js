@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://me:me@ds241019.mlab.com:41019/greenfield-dev');
-// mongoose.connect('mongodb://localhost/greenfield');
+mongoose.connect('mongodb://localhost/greenfield');
 
 const db = mongoose.connection;
 
@@ -73,14 +72,14 @@ module.exports.retrieveCategory = categoryId =>
   Category.findOne({
     _id: categoryId,
   })
-  .then(category => category)
-  .catch(err => console.log(err));
+    .then(category => category)
+    .catch(err => console.log(err));
 
 module.exports.retrieveCategories = () =>
   Category.find({})
-  .select('name id')
-  .then(allCategoriesArray => allCategoriesArray)
-  .catch(err => console.log(err));
+    .select('name id')
+    .then(allCategoriesArray => allCategoriesArray)
+    .catch(err => console.log(err));
 
 module.exports.insertNewCategory = (newCategory) => {
   new Category(newCategory)
@@ -93,49 +92,49 @@ module.exports.retrieveCourse = (categoryId, courseId) =>
   Category.findOne({
     _id: categoryId,
   })
-  .then(category => category.courses)
-  .catch(err => console.log(err));
+    .then(category => category.courses)
+    .catch(err => console.log(err));
 
 module.exports.retrieveCourses = categoryId =>
   Category.findOne({
     _id: categoryId,
   })
-  .select('courses')
-  .then(allCourses => allCourses)
-  .catch(err => console.log(err));
+    .select('courses')
+    .then(allCourses => allCourses)
+    .catch(err => console.log(err));
 
 module.exports.insertNewCourse = (courseToBeAdded, categoryId) =>
   Category.findOneAndUpdate({
     _id: categoryId,
   }, {
-    $push: {
-      courses: courseToBeAdded,
-    },
-  })
-  // .save()
-  .then(() => console.log('New course successfully added!'))
-  .catch(err => console.log(err));
+      $push: {
+        courses: courseToBeAdded,
+      },
+    })
+    // .save()
+    .then(() => console.log('New course successfully added!'))
+    .catch(err => console.log(err));
 
 module.exports.retrieveUser = userEmail =>
   User.findOne({
     email: userEmail,
   })
-  .then(user => user)
-  .catch(err => console.log(err));
+    .then(user => user)
+    .catch(err => console.log(err));
 
 module.exports.retrieveUsers = userEmail =>
   User.find()
-  .then(users => users)
-  .catch(err => console.log(err));
+    .then(users => users)
+    .catch(err => console.log(err));
 
 module.exports.insertNewUser = newUser =>
   User.findOne({
     email: newUser.email,
   })
-  .then(user => console.log(user.email, ' allready exists'))
-  .catch(() => {
-    new User(newUser)
-      .save()
-      .then(() => console.log('New user sucessfully added!'))
-      .catch(err => console.log(err));
-  });
+    .then(user => console.log(user.email, ' allready exists'))
+    .catch(() => {
+      new User(newUser)
+        .save()
+        .then(() => console.log('New user sucessfully added!'))
+        .catch(err => console.log(err));
+    });
