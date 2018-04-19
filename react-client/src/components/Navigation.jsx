@@ -4,6 +4,7 @@ import { Route, Link, BrowserRouter as Router } from 'react-router-dom';
 import SignupModal from './SignupModal.jsx';
 import LoginModal from './LoginModal.jsx';
 import App from '../index.jsx';
+import UserModal from './UserModal.jsx';
 
 import {
   UncontrolledDropdown,
@@ -19,14 +20,20 @@ class Navigation extends React.Component {
     this.state = {
       selectedCategory: '',
       dropdownOpen: false,
+      modal: false,
     };
-    this.toggle = this.toggle.bind(this);
+
+    this.toggleModal = this.toggleModal.bind(this);
+    this.toggleDropdown = this.toggleDropdown.bind(this);
   }
 
-  toggle() {
-    this.setState({
-      dropdownOpen: !this.state.dropdownOpen,
-    });
+  toggleDropdown() {
+    this.setState({ dropdownOpen: !this.state.dropdownOpen });
+  }
+
+  toggleModal() {
+    this.setState({ modal: !this.state.modal });
+    return <UserModal />;
   }
 
   render() {
@@ -53,7 +60,7 @@ class Navigation extends React.Component {
           </div>
           <div className="collapse navbar-collapse justify-content-end" id="navigation">
             <ul className="navbar-nav">
-              <Dropdown nav isOpen={this.state.dropdownOpen} toggle={this.toggle}>
+              <Dropdown nav isOpen={this.state.dropdownOpen} toggle={this.toggleDropdown}>
                 <DropdownToggle nav caret>
                   Categories
                 </DropdownToggle>
@@ -63,21 +70,14 @@ class Navigation extends React.Component {
                   ))}
                 </DropdownMenu>
               </Dropdown>
-              <li className="nav-item">
-                <a className="nav-link" href="/signup">
-                  Sign Up
-                </a>
+              <li className="nav-item" onClick={this.toggleModal}>
+                Sign Up
               </li>
-              <li className="nav-item">
-                <a className="nav-link" href="/login">
-                  Login
-                </a>
+              <li className="nav-item" onClick={this.toggleModal}>
+                Login
               </li>
             </ul>
           </div>
-
-          <Route path="/signup" component={SignupModal} />
-          <Route path="/login" component={LoginModal} />
         </div>
       </nav>
     );
