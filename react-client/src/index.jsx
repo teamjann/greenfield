@@ -45,8 +45,9 @@ class App extends React.Component {
                 createdOn: '01.01.2001',
                 instructor: 'Nick Fray',
                 price: 8,
-                videoUrl: 'http://via.placeholder.com/350x150',
-                text: 'party',
+                videoUrl: 'https://www.youtube.com/embed/7mgvfGc7ZyU',
+                text:
+                  "Today we're add some simple React components, while we also initialize the use of Watchify, Browserify and Reactify. Of course all while using Gulp as well! We will lay the basis of our UI, and add some placeholders for later on.",
               },
               courseUrl: 'https://www.udemy.com/understand-javascript/',
             },
