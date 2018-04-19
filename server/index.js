@@ -8,7 +8,9 @@ const app = express();
 require('../database-mongo/config')(passport);
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({
+  extended: false,
+}));
 
 
 
@@ -109,11 +111,21 @@ app.get('/api/categories/:id/courses', isLoggedIn, (req, res) => {
     });
 });
 // COURSE GET '/api/categories/:id/courses/:courseId': Detailed information about a specific course.
-app.get('/api/category/:category/courses/:courseId', isLoggedIn, (req, res) => {
+app.get('/api/categories/:category/courses/:course', isLoggedIn, (req, res) => {
   new Promise((resolve, reject) => {
-    resolve(db.retrieveCourse(req.params.category, req.params.courseId));
+    resolve(db.retrieveCourse(req.params.category));
   })
-    .then(course => res.status(200).json(course))
+    .then((courseList) => {
+      const selectedCourse = courseList.filter(course =>
+        course._id == req.params.course);
+      if (selectedCourse.length > 0) {
+        console.log('Entered');
+        res.status(200).json(selectedCourse[0]);
+      } else {
+        console.log(courseList);
+        res.status(404).end();
+      }
+    })
     .catch((err) => {
       console.log(err);
       res.status(500).end();
