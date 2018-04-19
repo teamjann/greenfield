@@ -25,6 +25,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
+// middleware to check if user is logged in.
 const isLoggedIn = (req, res, next) => {
   if (req.isAuthenticated()) {
     return next();
@@ -40,7 +41,7 @@ app.post('/api/login', passport.authenticate('local-login'), (req, res) => {
   res.status(200).json(req.user);
 });
 
-app.post('/logout', isLoggedIn, function (req, res) {
+app.post('/api/logout', isLoggedIn, function (req, res) {
   req.logout();
   res.clearCookie('connect.sid').status(200).redirect('/');
 });
@@ -72,7 +73,7 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(`${__dirname}/../react-client/src/index.html`));
 });
 // CATEGORY GET '/api/categories': List of all categories.
-app.get('/api/categories', (req, res) => {
+app.get('/api/categories', isLoggedIn, (req, res) => {
   new Promise((resolve, reject) => {
     resolve(db.retrieveCategories());
   })
@@ -83,7 +84,7 @@ app.get('/api/categories', (req, res) => {
     });
 });
 // CATEGORY POST '/api/categories': Add a new cateogry.
-app.post('/api/categories', (req, res) => {
+app.post('/api/categories', isLoggedIn, (req, res) => {
   const categoryToInsert = req.body;
 
   new Promise((resolve, reject) => {
@@ -96,7 +97,7 @@ app.post('/api/categories', (req, res) => {
     });
 });
 // COURSE GET '/api/categories/:id/courses': List of all courses for an individual category.
-app.get('/api/categories/:id/courses', (req, res) => {
+app.get('/api/categories/:id/courses', isLoggedIn, (req, res) => {
   const categoryToRetrieveCourses = req.params.id;
   new Promise((resolve, reject) => {
     resolve(db.retrieveCourses(categoryToRetrieveCourses)); // send down specific course
@@ -108,7 +109,7 @@ app.get('/api/categories/:id/courses', (req, res) => {
     });
 });
 // COURSE GET '/api/categories/:id/courses/:courseId': Detailed information about a specific course.
-app.get('/api/category/:category/courses/:courseId', (req, res) => {
+app.get('/api/category/:category/courses/:courseId', isLoggedIn, (req, res) => {
   new Promise((resolve, reject) => {
     resolve(db.retrieveCourse(req.params.category, req.params.courseId));
   })
@@ -119,7 +120,7 @@ app.get('/api/category/:category/courses/:courseId', (req, res) => {
     });
 });
 // COURSE POST '/api/categories/:id/courses': Add a new course to a category.
-app.post('/api/categories/:id/courses', (req, res) => {
+app.post('/api/categories/:id/courses', isLoggedIn, (req, res) => {
   const categoryToInsertCourse = req.params.id;
   console.log(req.body);
   const courseToInsert = req.body;
@@ -134,7 +135,7 @@ app.post('/api/categories/:id/courses', (req, res) => {
     });
 });
 // USER GET '/api/users': Returns a list of each user document.
-app.get('/api/users', (req, res) => {
+app.get('/api/users', isLoggedIn, (req, res) => {
   new Promise((resolve, reject) => {
     resolve(db.retrieveUsers());
   })
@@ -145,7 +146,7 @@ app.get('/api/users', (req, res) => {
     });
 });
 // USER GET '/api/users/:id': Returns a specific user's information.
-app.get('/api/users/:id', (req, res) => {
+app.get('/api/users/:id', isLoggedIn, (req, res) => {
   const userToRetrieve = req.params.id;
 
   new Promise((resolve, reject) => {
@@ -157,19 +158,22 @@ app.get('/api/users/:id', (req, res) => {
       res.status(500).end();
     });
 });
-// USER POST '/api/users': Adds a new user to the database.
-app.post('/api/users', (req, res) => {
-  const userToInsert = req.body;
 
-  new Promise((resolve, reject) => {
-    resolve(db.insertNewUser(userToInsert));
-  })
-    .then(() => res.status(201).end())
-    .catch((err) => {
-      console.log(err);
-      res.status(500).end();
-    });
-});
+// users must be added through auth route see top
+
+// USER POST '/api/users': Adds a new user to the database.
+// app.post('/api/users', (req, res) => {
+//   const userToInsert = req.body;
+
+//   new Promise((resolve, reject) => {
+//     resolve(db.insertNewUser(userToInsert));
+//   })
+//     .then(() => res.status(201).end())
+//     .catch((err) => {
+//       console.log(err);
+//       res.status(500).end();
+//     });
+// });
 
 app.listen(3000, () => {
   console.log('listening on port 3000!');

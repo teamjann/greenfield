@@ -48,8 +48,12 @@ class App extends React.Component {
     };
 
     this.handleSignupClick = this.handleSignupClick.bind(this);
-    this.addCurrentUser = this.addCurrentUser.bind(this);
     this.handleLoginClick = this.handleLoginClick.bind(this);
+
+    this.signUpUser = this.signUpUser.bind(this);
+    this.logInUser = this.logInUser.bind(this);
+    this.logOutUser = this.logOutUser.bind(this);
+
   }
 
   componentDidMount() {
@@ -62,6 +66,7 @@ class App extends React.Component {
     //   .catch(err => console.log(err));
   }
 
+
   handleLoginClick() {
     this.setState({ loginModalTriggered: true, signupModalTriggered: false });
   }
@@ -70,27 +75,33 @@ class App extends React.Component {
     this.setState({ signupModalTriggered: true });
   }
 
-  addCurrentUser() {
-    //this.setState({ currentUser: user });
-    axios
-      .post('/api/logout', { "password": "test", "username": "test" })
-      .then(res => console.log(res))
-      .catch(err => console.log(err));
-  }
+  // addCurrentUser(user) {
+  //   //this.setState({ currentUser: user });
+  //   axios
+  //     .post('/api/logout', user)
+  //     .then(res => console.log(res))
+  //     .catch(err => console.log(err));
+  // }
 
+  /*
+  -------------------------------------------------------------------
+          Authorization! :)
+  -------------------------------------------------------------------
+  */
   signUpUser(user) {
     let that = this;
     axios
-      .post('/api/signin', user)
-      .then(
-        that.setState({ currentUser: res.username }))
+      .post('/api/signin', { username: 'test', 'password': 'test' })
+      .then(res => {
+        that.setState({ currentUser: res.username })
+      })
       .catch(err => err);
   }
 
   logInUser(user) {
     let that = this;
     axios
-      .post('/api/login', user)
+      .post('/api/login', { username: 'test', 'password': 'test' })
       .then(res => {
         console.log('user logged in ', res)
         that.setState({ currentUser: res.username })
@@ -99,33 +110,36 @@ class App extends React.Component {
   }
 
   logOutUser() {
+    console.log('log out called')
+    let that = this;
     axios
       .post('/api/logout')
       .then(res => {
-        console.log('user logged out :(', res)
+        console.log('user logged out', res)
         that.setState({ currentUser: '' })
       })
       .catch(err => console.log(err))
   }
+  /*
+-------------------------------------------------------------------
+          No Longer Authorization! :)
+-------------------------------------------------------------------
+*/
 
 
   getAllCategories() {
     axios
       .get('/api/categories')
-      .then(res =>
-        this.setState({
-          categories: res,
-        }))
+      .then(res => { console.log(res) }
+        // this.setState({
+        //   categories: res,
+        // })
+
+      )
       .catch(err => console.log(err));
   }
 
-  handleLoginClick() {
-    this.setState({ loginModalTriggered: true, signupModalTriggered: false });
-  }
 
-  handleSignupClick() {
-    this.setState({ signupModalTriggered: true, loginModalTriggered: false });
-  }
 
   getCoursesforCategory(category) {
     axios
@@ -183,7 +197,10 @@ class App extends React.Component {
     return (
       <Router>
         <div>
-          <button onClick={this.addCurrentUser}>Session Test</button>
+          <button onClick={this.signUpUser}>Sign up</button>
+          <button onClick={this.logInUser}>log in</button>
+          <button onClick={this.logOutUser}>log out</button>
+          <button onClick={this.getAllCategories}>Get Cat</button>
           <Navigation
             handleSignupClick={this.handleSignupClick}
             handleLoginClick={this.handleLoginClick}
