@@ -42,19 +42,34 @@ class SignupModal extends React.Component {
   render() {
     return (
       <div>
-        {/* Implement Close Button router functionality */}
-        <button>Close</button>
         <form>
-          <label>Username</label>
-          <input type="email" value={this.state.email} onChange={this.handleChangeEmail} />
-          <label>Password</label>
-          <input type="password" value={this.state.password} onChange={this.handleChangePassword} />
-          <label>Retype Password</label>
-          <input
-            type="password"
-            value={this.state.secondPassword}
-            onChange={this.handleChangeSecondPassword}
-          />
+          <div className="form-group">
+            <label htmlFor="inputEmail">Username</label>
+            <input
+              id="inputEmail"
+              type="email"
+              value={this.state.email}
+              onChange={this.handleChangeEmail}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="inputPassword1">Password</label>
+            <input
+              id="inputPassword1"
+              type="password"
+              value={this.state.password}
+              onChange={this.handleChangePassword}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="inputPassword2">Retype Password</label>
+            <input
+              id="inputPassword2"
+              type="password"
+              value={this.state.secondPassword}
+              onChange={this.handleChangeSecondPassword}
+            />
+          </div>
         </form>
         {/* Implement signup router functionality */}
         <button onClick={this.handleSignup}>Sign Up</button>

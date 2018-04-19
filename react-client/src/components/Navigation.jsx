@@ -12,6 +12,11 @@ import {
   DropdownMenu,
   DropdownItem,
   Dropdown,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Button,
 } from 'reactstrap';
 
 class Navigation extends React.Component {
@@ -21,6 +26,7 @@ class Navigation extends React.Component {
       selectedCategory: '',
       dropdownOpen: false,
       modal: false,
+      modalState: '',
     };
 
     this.toggleModal = this.toggleModal.bind(this);
@@ -32,11 +38,29 @@ class Navigation extends React.Component {
   }
 
   toggleModal() {
-    this.setState({ modal: !this.state.modal });
-    return <UserModal />;
+    this.setState({ modal: !this.state.modal, modalState: 'Sign Up' });
   }
 
   render() {
+    const modalDisplay = (
+      <div>
+        <Modal isOpen={this.state.modal} toggle={this.toggleModal}>
+          <ModalHeader toggle={this.toggleModal}> {this.state.modalState}</ModalHeader>
+          <ModalBody>
+            <SignupModal addCurrentUser={this.props.addCurrentUser} />
+          </ModalBody>
+          <ModalFooter>
+            <Button color="primary" onClick={this.toggleModal}>
+              Do Something
+            </Button>{' '}
+            <Button color="secondary" onClick={this.toggleModal}>
+              Cancel
+            </Button>
+          </ModalFooter>
+        </Modal>
+      </div>
+    );
+
     return (
       <nav className="navbar navbar-expand-md bg-info">
         <div className="container">
@@ -70,15 +94,20 @@ class Navigation extends React.Component {
                   ))}
                 </DropdownMenu>
               </Dropdown>
-              <li className="nav-item" onClick={this.toggleModal}>
-                Sign Up
+              <li className="nav-item">
+                <a className="nav-link" onClick={this.toggleModal}>
+                  Sign Up
+                </a>
               </li>
-              <li className="nav-item" onClick={this.toggleModal}>
-                Login
+              <li className="nav-item">
+                <a className="nav-link" onClick={this.toggleModal}>
+                  Login
+                </a>
               </li>
             </ul>
           </div>
         </div>
+        {modalDisplay}
       </nav>
     );
   }
