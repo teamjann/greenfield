@@ -48,8 +48,12 @@ class App extends React.Component {
     };
 
     this.handleSignupClick = this.handleSignupClick.bind(this);
-    this.addCurrentUser = this.addCurrentUser.bind(this);
     this.handleLoginClick = this.handleLoginClick.bind(this);
+
+    this.signUpUser = this.signUpUser.bind(this);
+    this.logInUser = this.logInUser.bind(this);
+    this.logOutUser = this.logOutUser.bind(this);
+
   }
 
   componentDidMount() {
@@ -62,6 +66,7 @@ class App extends React.Component {
     //   .catch(err => console.log(err));
   }
 
+
   handleLoginClick() {
     this.setState({ loginModalTriggered: true, signupModalTriggered: false });
   }
@@ -69,15 +74,48 @@ class App extends React.Component {
   handleSignupClick() {
     this.setState({ signupModalTriggered: true });
   }
-
-  addCurrentUser(user) {
-    // The order here will need to be switched when validation server-side is working!
-    this.setState({ currentUser: user });
+  /*
+  -------------------------------------------------------------------
+          Authorization! :)
+  -------------------------------------------------------------------
+  */
+  signUpUser(user) {
+    let that = this;
     axios
-      .post('/api/users', user)
-      .then(res => console.log(res))
-      .catch(err => console.log(err));
+      .post('/api/signup', user)
+      .then(res => {
+        that.setState({ currentUser: res.username })
+      })
+      .catch(err => err);
   }
+
+  logInUser(user) {
+    let that = this;
+    axios
+      .post('/api/login', user)
+      .then(res => {
+        console.log('user logged in ', res)
+        that.setState({ currentUser: res.username })
+      })
+      .catch(err => console.log(err))
+  }
+
+  logOutUser() {
+    let that = this;
+    axios
+      .post('/api/logout')
+      .then(res => {
+        console.log('user logged out', res)
+        that.setState({ currentUser: '' })
+      })
+      .catch(err => console.log(err))
+  }
+  /*
+-------------------------------------------------------------------
+          No Longer Authorization! :)
+-------------------------------------------------------------------
+*/
+
 
   getAllCategories() {
     axios
@@ -85,17 +123,13 @@ class App extends React.Component {
       .then(res =>
         this.setState({
           categories: res,
-        }))
+        })
+
+      )
       .catch(err => console.log(err));
   }
 
-  handleLoginClick() {
-    this.setState({ loginModalTriggered: true, signupModalTriggered: false });
-  }
 
-  handleSignupClick() {
-    this.setState({ signupModalTriggered: true, loginModalTriggered: false });
-  }
 
   getCoursesforCategory(category) {
     axios
@@ -109,7 +143,7 @@ class App extends React.Component {
 
   createNewCategory(category) {
     axios
-      .post('/api/categories', (newCategory: category))
+      .post('/api/categories', ({ newCategory: category }))
       .then((res) => {
         this.getAllCategories();
       })
@@ -118,7 +152,7 @@ class App extends React.Component {
 
   createNewCourse(category, course) {
     axios
-      .post(`/api/categories/${category._id}/courses`, (newCourse: course))
+      .post(`/api/categories/${category._id}/courses`, ({ newCourse: course }))
       .then((res) => {
         this.getCoursesforCategory(category);
       })
