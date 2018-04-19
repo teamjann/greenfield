@@ -8,25 +8,50 @@ class CategoryViewCourse extends React.Component {
     super(props);
     this.state = {
       upVoteCount: 0,
+      isClicked: false,
       // downVoteCount = 0
     };
+    this.courseDetailClicked = this.courseDetailClicked.bind(this);
   }
+  courseDetailClicked() {
+    this.setState(prevState => ({ isClicked: !prevState.isClicked }));
+  }
+
+  // ALL of this course CLICKED logic needs to be up at the APP level in the router. It should be dynamic instead of static (there are too many routing options to handle it all staticly)
+
   render() {
-    return (
-      <div className="make me a card">
-        <h3>
-          {/* Link will be dynamic based on course id/ */}
-          <Link to="/courses/courseid"> Course Title: {this.props.course.name} </Link>
-        </h3>
-        <span>Price: ${this.props.course.description.price}</span>
-        <span>Instructor: {this.props.course.description.instructor}</span>
-        <span>Upvote Count: {this.state.upVoteCount}</span>
-        <p>{this.props.course.description.text}</p>
-        {/* // Display course detail view onClick */}
-        <Route
-          path="/courses/courseid"
-          render={() => <CourseDetailView course={this.props.course} />}
+    if (this.state.isClicked) {
+      return (
+        <CourseDetailView
+          course={this.props.course}
+          courseDetailClicked={this.courseDetailClicked}
         />
+      );
+    }
+    return (
+      <div className="card">
+        <div className="card-body" onClick={this.courseDetailClicked}>
+          <h3 className="card-title">
+            {/* Link will be dynamic based on course id/ */}
+            {this.props.course.name}
+          </h3>
+          <span className="card-text float-right">
+            Price: ${this.props.course.description.price}
+          </span>
+          <h6 className="card-subtitle text-muted">
+            By: {this.props.course.description.instructor}
+          </h6>
+          <p className="card-text">{this.props.course.description.text}</p>
+          <p className="card-subtitle text-muted text-center">Click for more details</p>
+        </div>
+
+        <div className="card-footer bg-secondary">
+          <button className="btn btn-primary btn-icon btn-icon-mini btn-round text-center">
+            <i className="fas fa-chevron-up" />
+          </button>
+          <span className="card-text text-light ml-2">Upvote Count: {this.state.upVoteCount}</span>
+        </div>
+        {/* // Display course detail view onClick */}
       </div>
     );
   }

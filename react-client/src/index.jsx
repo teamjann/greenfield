@@ -1,12 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Route, Link, BrowserRouter as Router } from 'react-router-dom';
+// import { Route, Link, BrowserRouter as Router } from 'react-router-dom';
+import { BrowserRouter, Router } from 'react-router-dom';
 import axios from 'axios';
 import Navigation from './components/Navigation.jsx';
 import CategoryView from './components/CategoryView.jsx';
 import CourseDetailView from './components/CourseDetailView.jsx';
-import LoginModal from './components/LoginModal.jsx';
-import SignupModal from './components/SignupModal.jsx';
 
 class App extends React.Component {
   constructor(props) {
@@ -31,8 +30,9 @@ class App extends React.Component {
                 createdOn: '01.01.2001',
                 instructor: 'Nick Fray',
                 price: 8,
-                videoUrl: 'http://via.placeholder.com/350x150',
-                text: 'party',
+                videoUrl: 'https://www.youtube.com/embed/7mgvfGc7ZyU',
+                text:
+                  "Today we're add some simple React components, while we also initialize the use of Watchify, Browserify and Reactify. Of course all while using Gulp as well! We will lay the basis of our UI, and add some placeholders for later on.",
               },
               courseUrl: 'https://www.udemy.com/understand-javascript/',
             },
@@ -52,16 +52,14 @@ class App extends React.Component {
     this.handleSignupClick = this.handleSignupClick.bind(this);
     this.handleLoginClick = this.handleLoginClick.bind(this);
 
-    this.signUpUser = this.signUpUser.bind(this);
+    this.addCurrentUser = this.addCurrentUser.bind(this);
     this.logInUser = this.logInUser.bind(this);
     this.logOutUser = this.logOutUser.bind(this);
-
   }
 
   componentDidMount() {
-    //this.getAllCategories();
+    // this.getAllCategories();
   }
-
 
   handleLoginClick() {
     this.setState({ loginModalTriggered: true, signupModalTriggered: false });
@@ -75,43 +73,42 @@ class App extends React.Component {
           Authorization! :)
   -------------------------------------------------------------------
   */
-  signUpUser(user) {
-    let that = this;
+  addCurrentUser(user) {
+    const that = this;
     axios
       .post('/api/signup', user)
-      .then(res => {
-        that.setState({ currentUser: res.username })
+      .then((res) => {
+        that.setState({ currentUser: res.username });
       })
       .catch(err => err);
   }
 
   logInUser(user) {
-    let that = this;
+    const that = this;
     axios
       .post('/api/login', user)
-      .then(res => {
-        console.log('user logged in ', res)
-        that.setState({ currentUser: res.username })
+      .then((res) => {
+        console.log('user logged in ', res);
+        that.setState({ currentUser: res.username });
       })
-      .catch(err => console.log(err))
+      .catch(err => console.log(err));
   }
 
   logOutUser() {
-    let that = this;
+    const that = this;
     axios
       .post('/api/logout')
-      .then(res => {
-        console.log('user logged out', res)
-        that.setState({ currentUser: '' })
+      .then((res) => {
+        console.log('user logged out', res);
+        that.setState({ currentUser: '' });
       })
-      .catch(err => console.log(err))
+      .catch(err => console.log(err));
   }
   /*
 -------------------------------------------------------------------
           No Longer Authorization! :)
 -------------------------------------------------------------------
 */
-
 
   getAllCategories() {
     axios
@@ -122,8 +119,6 @@ class App extends React.Component {
         }))
       .catch(err => console.log(err));
   }
-
-
 
   getCoursesforCategory(category) {
     axios
@@ -148,7 +143,7 @@ class App extends React.Component {
 
   createNewCategory(category) {
     axios
-      .post('/api/categories', ({ newCategory: category }))
+      .post('/api/categories', { newCategory: category })
       .then((res) => {
         this.getAllCategories();
       })
@@ -157,7 +152,7 @@ class App extends React.Component {
 
   createNewCourse(category, course) {
     axios
-      .post(`/api/categories/${category._id}/courses`, ({ newCourse: course }))
+      .post(`/api/categories/${category._id}/courses`, { newCourse: course })
       .then((res) => {
         this.getCoursesforCategory(category);
       })
@@ -165,46 +160,50 @@ class App extends React.Component {
   }
 
   render() {
-    if (this.state.signupModalTriggered) {
-      return (
-        <div>
-          <Navigation
-            handleSignupClick={this.handleSignupClick}
-            handleLoginClick={this.handleLoginClick}
-            categories={this.state.categories}
-          />
-          {/* <SignupModal addCurrentUser={this.addCurrentUser} /> */}
-        </div>
-      );
-    } else if (this.state.loginModalTriggered) {
-      return (
-        <div>
-          <Navigation
-            handleSignupClick={this.handleSignupClick}
-            handleLoginClick={this.handleLoginClick}
-            categories={this.state.categories}
-          />
-          {/* <LoginModal users={this.state.users} addCurrentUser={this.addCurrentUser} /> */}
-        </div>
-      );
-    }
+    // TURN ME ON WHEN WORKING ON MODAL
+    // if (this.state.signupModalTriggered) {
+    //   return (
+    //     <div className="container">
+    //       <Nav>
+    //         <Navigation
+    //           handleSignupClick={this.handleSignupClick}
+    //           handleLoginClick={this.handleLoginClick}
+    //           categories={this.state.categories}
+    //         />
+    //         {/* <SignupModal addCurrentUser={this.addCurrentUser} /> */}
+    //       </Nav>
+    //     </div>
+    //   );
+    // } else if (this.state.loginModalTriggered) {
+    //   return (
+    //     <div className="container">
+    //       <Nav>
+    //         <Navigation
+    //           handleSignupClick={this.handleSignupClick}
+    //           handleLoginClick={this.handleLoginClick}
+    //           categories={this.state.categories}
+    //         />
+    //         {/* <LoginModal users={this.state.users} addCurrentUser={this.addCurrentUser} /> */}
+    //       </Nav>
+    //     </div>
+    //   );
+    // }
 
+    // The props here NEED TO BE CHANGED!
     return (
-      <Router>
-        <div>
-          <Navigation
-            handleSignupClick={this.handleSignupClick}
-            handleLoginClick={this.handleLoginClick}
-            categories={this.state.categories}
-          />
-          <CategoryView categories={this.state.categories} />
-          {/* <CourseDetailView course={this.state.categories[0].courses[0]} /> */}
-        </div>
-      </Router>
+      <div>
+        <Navigation categories={this.state.categories} addCurrentUser={this.addCurrentUser} />
+        <CategoryView category={this.state.categories} />
+      </div>
     );
   }
 }
 
-ReactDOM.render(<App />, document.getElementById('app'));
+ReactDOM.render(
+  <BrowserRouter>
+    <App />
+  </BrowserRouter>,
+  document.getElementById('app'),
+);
 
 export default App;

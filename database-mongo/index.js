@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost/greenfield');
+mongoose.connect('mongodb://me:me@ds241019.mlab.com:41019/greenfield-dev');
+// mongoose.connect('mongodb://localhost/greenfield');
 
 const db = mongoose.connection;
 
@@ -18,22 +19,24 @@ const categorySchema = mongoose.Schema({
     auto: true,
   },
   name: String,
-  courses: [{
-    id: {
-      type: Number,
-      auto: true,
+  courses: [
+    {
+      id: {
+        type: Number,
+        auto: true,
+      },
+      name: String,
+      upvotes: Number,
+      description: {
+        createdOn: Date,
+        instructor: String,
+        price: Number,
+        videoUrl: String,
+        description: String,
+      },
+      courseUrl: String,
     },
-    name: String,
-    upvotes: Number,
-    description: {
-      createdOn: Date,
-      instructor: String,
-      price: Number,
-      videoUrl: String,
-      description: String,
-    },
-    courseUrl: String,
-  }],
+  ],
 });
 
 const userSchema = mongoose.Schema({
@@ -43,10 +46,12 @@ const userSchema = mongoose.Schema({
   },
   email: String,
   password: String,
-  coursesUpvoted: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Course',
-  }],
+  coursesUpvoted: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Course',
+    },
+  ],
 });
 
 const Category = mongoose.model('Category', categorySchema);
@@ -104,13 +109,16 @@ module.exports.retrieveCourses = categoryId =>
     .catch(err => console.log(err));
 
 module.exports.insertNewCourse = (courseToBeAdded, categoryId) =>
-  Category.findOneAndUpdate({
-    _id: categoryId,
-  }, {
+  Category.findOneAndUpdate(
+    {
+      _id: categoryId,
+    },
+    {
       $push: {
         courses: courseToBeAdded,
       },
-    })
+    },
+  )
     // .save()
     .then(() => console.log('New course successfully added!'))
     .catch(err => console.log(err));
