@@ -13,7 +13,10 @@ class CourseDetailView extends React.Component {
       <div className="container">
         <div>
           {/* Implement back button router functionality */}
-          <button className="btn btn-primary btn-icon btn-icon-mini btn-round text-center float-left">
+          <button
+            className="btn btn-primary btn-icon btn-icon-mini btn-round text-center float-left"
+            onClick={this.props.courseDetailClicked}
+          >
             <i className="fas fa-arrow-left" />
           </button>
           <h1 className="text-primary text-center">{this.props.course.name}</h1>
