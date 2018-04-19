@@ -17,6 +17,8 @@ class CategoryViewCourse extends React.Component {
     this.setState(prevState => ({ isClicked: !prevState.isClicked }));
   }
 
+  // ALL of this course CLICKED logic needs to be up at the APP level in the router. It should be dynamic instead of static (there are too many routing options to handle it all staticly)
+
   render() {
     if (this.state.isClicked) {
       return (
