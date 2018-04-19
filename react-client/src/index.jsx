@@ -74,15 +74,6 @@ class App extends React.Component {
   handleSignupClick() {
     this.setState({ signupModalTriggered: true });
   }
-
-  // addCurrentUser(user) {
-  //   //this.setState({ currentUser: user });
-  //   axios
-  //     .post('/api/logout', user)
-  //     .then(res => console.log(res))
-  //     .catch(err => console.log(err));
-  // }
-
   /*
   -------------------------------------------------------------------
           Authorization! :)
@@ -91,7 +82,7 @@ class App extends React.Component {
   signUpUser(user) {
     let that = this;
     axios
-      .post('/api/signin', { username: 'test', 'password': 'test' })
+      .post('/api/signup', { username: 'fray', 'password': 'fray' })
       .then(res => {
         that.setState({ currentUser: res.username })
       })
@@ -101,7 +92,7 @@ class App extends React.Component {
   logInUser(user) {
     let that = this;
     axios
-      .post('/api/login', { username: 'test', 'password': 'test' })
+      .post('/api/login', { username: 'fray', 'password': 'fray' })
       .then(res => {
         console.log('user logged in ', res)
         that.setState({ currentUser: res.username })

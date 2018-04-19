@@ -17,9 +17,10 @@ app.use(bodyParser.urlencoded({ extended: false }));
 -------------------------------------------------------------------
 */
 app.use(session({
-  secret: 'hopethisworks',
+  secret: 'shouldbestoredinakey',
   resave: true,
-  saveUninitialized: false //change back later
+  saveUninitialized: true,
+  cookie: { maxAge: 12 * 60 * 60 * 1000 }
 }));
 
 app.use(passport.initialize());
@@ -34,6 +35,7 @@ const isLoggedIn = (req, res, next) => {
 }
 
 app.post('/api/signup', passport.authenticate('local-signup'), (req, res) => {
+  console.log('sign up called')
   res.status(200).json(req.user);
 });
 
