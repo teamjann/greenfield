@@ -40,6 +40,7 @@ class CategoryViewCourse extends React.Component {
             By: {this.props.course.description.instructor}
           </h6>
           <p className="card-text">{this.props.course.description.text}</p>
+          <p className="card-subtitle text-muted text-center">Click for more details</p>
         </div>
 
         <div className="card-footer bg-secondary">
