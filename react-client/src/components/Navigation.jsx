@@ -6,17 +6,11 @@ import LoginModal from './LoginModal.jsx';
 import App from '../index.jsx';
 
 import {
-  Collapse,
-  Navbar,
-  NavbarToggler,
-  NavbarBrand,
-  Nav,
-  NavItem,
-  NavLink,
   UncontrolledDropdown,
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
+  Dropdown,
 } from 'reactstrap';
 
 class Navigation extends React.Component {
@@ -24,49 +18,68 @@ class Navigation extends React.Component {
     super(props);
     this.state = {
       selectedCategory: '',
-      isOpen: false,
+      dropdownOpen: false,
     };
+    this.toggle = this.toggle.bind(this);
   }
 
   toggle() {
     this.setState({
-      isOpen: !this.state.isOpen,
+      dropdownOpen: !this.state.dropdownOpen,
     });
   }
 
   render() {
     return (
-      <Router>
-        <div>
-          <Navbar color="light" light expand="md">
-            <NavbarBrand href="/">Home</NavbarBrand>
-            <NavbarToggler onClick={this.toggle} />
-            <Collapse isOpen={this.state.isOpen} navbar>
-              <Nav className="ml-auto" navbar>
-                <UncontrolledDropdown nav inNavbar>
-                  <DropdownToggle nav caret>
-                    Categories
-                  </DropdownToggle>
-                  <DropdownMenu right>
-                    {this.props.categories.map(category => (
-                      <DropdownItem>{category.name}</DropdownItem>
-                    ))}
-                  </DropdownMenu>
-                </UncontrolledDropdown>
-                <NavItem>
-                  <NavLink href="/components/">Components</NavLink>
-                </NavItem>
-                <NavItem>
-                  <NavLink href="https://github.com/reactstrap/reactstrap">GitHub</NavLink>
-                </NavItem>
-              </Nav>
-            </Collapse>
-          </Navbar>
-        </div>
+      <nav className="navbar navbar-expand-md bg-info">
+        <div className="container">
+          <div className="navbar-translate">
+            <a className="navbar-brand" href="/">
+              Home
+            </a>
+            <button
+              className="navbar-toggler navbar-toggler-right"
+              type="button"
+              data-toggle="collapse"
+              data-target="#navigation"
+              aria-controls="navigation-index"
+              aria-expanded="false"
+              aria-label="Toggle navigation"
+            >
+              <span className="navbar-toggler-bar bar1" />
+              <span className="navbar-toggler-bar bar2" />
+              <span className="navbar-toggler-bar bar3" />
+            </button>
+          </div>
+          <div className="collapse navbar-collapse justify-content-end" id="navigation">
+            <ul className="navbar-nav">
+              <Dropdown nav isOpen={this.state.dropdownOpen} toggle={this.toggle}>
+                <DropdownToggle nav caret>
+                  Categories
+                </DropdownToggle>
+                <DropdownMenu>
+                  {this.props.categories.map(category => (
+                    <DropdownItem key={category.name}> {category.name}</DropdownItem>
+                  ))}
+                </DropdownMenu>
+              </Dropdown>
+              <li className="nav-item">
+                <a className="nav-link" href="/signup">
+                  Sign Up
+                </a>
+              </li>
+              <li className="nav-item">
+                <a className="nav-link" href="/login">
+                  Login
+                </a>
+              </li>
+            </ul>
+          </div>
 
-        <Route path="/signup" component={SignupModal} />
-        <Route path="/login" component={LoginModal} />
-      </Router>
+          <Route path="/signup" component={SignupModal} />
+          <Route path="/login" component={LoginModal} />
+        </div>
+      </nav>
     );
   }
 }

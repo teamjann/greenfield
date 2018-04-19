@@ -164,15 +164,10 @@ class App extends React.Component {
     //   );
     // }
 
+    // The props here NEED TO BE CHANGED!
     return (
-      <div className="container">
-        {/* <Nav>
-              <Navigation
-                handleSignupClick={this.handleSignupClick}
-                handleLoginClick={this.handleLoginClick}
-                categories={this.state.categories}
-            />
-            </Nav> */}
+      <div>
+        <Navigation categories={this.state.categories} />
         <CategoryView category={this.state.categories} />
       </div>
     );

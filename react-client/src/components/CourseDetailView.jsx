@@ -29,8 +29,8 @@ class CourseDetailView extends React.Component {
             src={this.props.course.description.videoUrl}
             allowFullScreen
           />
-          <a href={this.props.course.courseUrl}>{this.props.course.courseUrl}</a>
         </div>
+        <a href={this.props.course.courseUrl}>{this.props.course.courseUrl}</a>
         <p>Description: {this.props.course.description.text}</p>
       </div>
     );
