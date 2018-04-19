@@ -82,7 +82,7 @@ class App extends React.Component {
   signUpUser(user) {
     let that = this;
     axios
-      .post('/api/signup', { username: 'fray', 'password': 'fray' })
+      .post('/api/signup', user)
       .then(res => {
         that.setState({ currentUser: res.username })
       })
@@ -92,7 +92,7 @@ class App extends React.Component {
   logInUser(user) {
     let that = this;
     axios
-      .post('/api/login', { username: 'fray', 'password': 'fray' })
+      .post('/api/login', user)
       .then(res => {
         console.log('user logged in ', res)
         that.setState({ currentUser: res.username })
@@ -101,7 +101,6 @@ class App extends React.Component {
   }
 
   logOutUser() {
-    console.log('log out called')
     let that = this;
     axios
       .post('/api/logout')
@@ -121,10 +120,10 @@ class App extends React.Component {
   getAllCategories() {
     axios
       .get('/api/categories')
-      .then(res => { console.log(res) }
-        // this.setState({
-        //   categories: res,
-        // })
+      .then(res =>
+        this.setState({
+          categories: res,
+        })
 
       )
       .catch(err => console.log(err));
@@ -188,10 +187,6 @@ class App extends React.Component {
     return (
       <Router>
         <div>
-          <button onClick={this.signUpUser}>Sign up</button>
-          <button onClick={this.logInUser}>log in</button>
-          <button onClick={this.logOutUser}>log out</button>
-          <button onClick={this.getAllCategories}>Get Cat</button>
           <Navigation
             handleSignupClick={this.handleSignupClick}
             handleLoginClick={this.handleLoginClick}
