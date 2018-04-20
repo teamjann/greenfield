@@ -4,6 +4,7 @@ const session = require('express-session');
 const passport = require('passport');
 const db = require('../database-mongo/index');
 const path = require('path');
+
 const app = express();
 require('../database-mongo/config')(passport);
 
@@ -20,7 +21,7 @@ app.use(session({
   secret: 'shouldbestoredinakey',
   resave: true,
   saveUninitialized: true,
-  cookie: { maxAge: 12 * 60 * 60 * 1000 }
+  cookie: { maxAge: 12 * 60 * 60 * 1000 },
 }));
 
 app.use(passport.initialize());
@@ -32,10 +33,10 @@ const isLoggedIn = (req, res, next) => {
     return next();
   }
   res.status(401).end('You must log in to do that!');
-}
+};
 
 app.post('/api/signup', passport.authenticate('local-signup'), (req, res) => {
-  console.log('sign up called')
+  console.log('sign up called');
   res.status(200).json(req.user);
 });
 
@@ -43,16 +44,17 @@ app.post('/api/login', passport.authenticate('local-login'), (req, res) => {
   res.status(200).json(req.user);
 });
 
-app.post('/api/logout', isLoggedIn, function (req, res) {
+app.post('/api/logout', isLoggedIn, (req, res) => {
   req.logout();
-  res.clearCookie('connect.sid').status(200).redirect('/');
+  res
+    .clearCookie('connect.sid')
+    .status(200)
+    .redirect('/');
 });
 
 /*-------------------------------------------------------------------
           No Longer Authorization! :)
 -------------------------------------------------------------------*/
-
-
 
 /*
 ROUTE LEGEND:
@@ -72,12 +74,26 @@ app.use(express.static(`${__dirname}/../react-client/dist`));
 app.get('/', (req, res) => {
   res.sendFile(path.join(`${__dirname}/../react-client/src/index.html`));
 });
-// CATEGORY GET '/api/categories': List of all categories.
+// CATEGORIES GET '/api/categories': List of all categories.
 app.get('/api/categories', (req, res) => {
   new Promise((resolve, reject) => {
     resolve(db.retrieveCategories());
   })
     .then(categories => res.status(200).json(categories))
+    .catch((err) => {
+      console.log(err);
+      res.status(500).end();
+    });
+});
+// CATEGORY GET '/api/categories/id': List of all categories.
+app.get('/api/categories/:id', (req, res) => {
+  const categoryId = req.params.id;
+  new Promise((resolve, reject) => {
+    resolve(db.retrieveCategory(categoryId));
+  })
+    .then((category) => {
+      res.status(200).json(category);
+    })
     .catch((err) => {
       console.log(err);
       res.status(500).end();
@@ -114,8 +130,7 @@ app.get('/api/categories/:category/courses/:course', (req, res) => {
     resolve(db.retrieveCourse(req.params.category));
   })
     .then((courseList) => {
-      const selectedCourse = courseList.filter(course =>
-        course._id == req.params.course);
+      const selectedCourse = courseList.filter(course => course._id == req.params.course);
       if (selectedCourse.length > 0) {
         console.log('Entered');
         res.status(200).json(selectedCourse[0]);
