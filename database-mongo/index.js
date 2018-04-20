@@ -44,11 +44,10 @@ const categorySchema = mongoose.Schema({
 const userSchema = mongoose.Schema({
   _id: {
     type: mongoose.Schema.Types.ObjectId,
-    auto: true,
-    unique: true
+    auto: true
   },
   email: { type: String, unique: true },
-  password: { type: String, unique: true },
+  password: String,
   coursesUpvoted: [
     {
       type: mongoose.Schema.Types.ObjectId,
