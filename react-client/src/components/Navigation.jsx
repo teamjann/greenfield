@@ -31,6 +31,7 @@ class Navigation extends React.Component {
     this.toggleDropdown = this.toggleDropdown.bind(this);
     this.toggleSignupModal = this.toggleSignupModal.bind(this);
     this.toggleLoginModal = this.toggleLoginModal.bind(this);
+    this.onDropdownChange = this.onDropdownChange.bind(this);
   }
 
   toggleDropdown() {
@@ -47,6 +48,10 @@ class Navigation extends React.Component {
 
   toggleModal() {
     this.setState({ modal: !this.state.modal });
+  }
+
+  onDropdownChange(event) {
+    this.props.changeCategory(event.target.value);
   }
 
   render() {
@@ -91,7 +96,13 @@ class Navigation extends React.Component {
                 </DropdownToggle>
                 <DropdownMenu>
                   {this.props.categories.map(category => (
-                    <DropdownItem key={category.name}> {category.name}</DropdownItem>
+                    <DropdownItem
+                      key={category.name}
+                      value={category._id}
+                      onClick={this.onDropdownChange}
+                    >
+                      {category.name}
+                    </DropdownItem>
                   ))}
                 </DropdownMenu>
               </Dropdown>

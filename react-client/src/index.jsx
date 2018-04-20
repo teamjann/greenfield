@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-// import { Route, Link, BrowserRouter as Router } from 'react-router-dom';
-import { BrowserRouter, Router } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 import axios from 'axios';
 import Navigation from './components/Navigation.jsx';
 import CategoryView from './components/CategoryView.jsx';
@@ -53,15 +52,16 @@ class App extends React.Component {
     this.addCurrentUser = this.addCurrentUser.bind(this);
     this.logInUser = this.logInUser.bind(this);
     this.logOutUser = this.logOutUser.bind(this);
+
+    this.getCategoryInfo = this.getCategoryInfo.bind(this);
   }
 
   componentDidMount() {
     this.getAllCategories();
-    this.getCategoryInfo('5ad7c0dbfac8270c7ae8f3a9');
   }
   /*
   -------------------------------------------------------------------
-          Authorization! :)
+  Authorization! :)
   -------------------------------------------------------------------
   */
   addCurrentUser(user) {
@@ -97,10 +97,10 @@ class App extends React.Component {
       .catch(err => console.log(err));
   }
   /*
--------------------------------------------------------------------
-          No Longer Authorization! :)
--------------------------------------------------------------------
-*/
+  -------------------------------------------------------------------
+  No Longer Authorization! :)
+  -------------------------------------------------------------------
+  */
 
   getAllCategories() {
     axios
@@ -109,13 +109,15 @@ class App extends React.Component {
         this.setState({
           categoriesList: res.data,
         }))
+      .then(() => {
+        this.getCategoryInfo(this.state.categoriesList[1]._id);
+      })
       .catch(err => console.log(err));
   }
 
-  // Change to ID to reference object ID
-  getCategoryInfo(id) {
+  getCategoryInfo(categoryID) {
     axios
-      .get(`/api/categories/${id}`)
+      .get(`/api/categories/${categoryID}`)
       .then(res =>
         this.setState({
           currentCategory: res.data,
@@ -166,7 +168,11 @@ class App extends React.Component {
     // The props here NEED TO BE CHANGED!
     return (
       <div>
-        <Navigation categories={this.state.categoriesList} addCurrentUser={this.addCurrentUser} />
+        <Navigation
+          categories={this.state.categoriesList}
+          addCurrentUser={this.addCurrentUser}
+          changeCategory={this.getCategoryInfo}
+        />
         <CategoryView category={this.state.currentCategory} />
       </div>
     );
@@ -174,9 +180,9 @@ class App extends React.Component {
 }
 
 ReactDOM.render(
-  <BrowserRouter>
+  <Router>
     <App />
-  </BrowserRouter>,
+  </Router>,
   document.getElementById('app'),
 );
 
