@@ -14,9 +14,7 @@ class App extends React.Component {
       currentCategories: [],
       currentCourses: [],
       currentCourse: [],
-      signupModalTriggered: false,
-      loginModalTriggered: false,
-      currentUser: {},
+      currentUser: '',
       categories: [
         {
           _id: 1,
@@ -70,7 +68,6 @@ class App extends React.Component {
         that.setState({ currentUser: res.username });
       })
       .catch(err => err);
-    logInUser(user);
   }
 
   logInUser(user) {
@@ -153,7 +150,13 @@ class App extends React.Component {
     // The props here NEED TO BE CHANGED!
     return (
       <div>
-        <Navigation categories={this.state.categories} addCurrentUser={this.addCurrentUser} />
+        <Navigation
+          categories={this.state.categories}
+          addCurrentUser={this.addCurrentUser}
+          logInUser={this.logInUser}
+          logOutUser={this.logOutUser}
+          currentUser={this.state.currentUser}
+        />
         <CategoryView category={this.state.categories} />
       </div>
     );
