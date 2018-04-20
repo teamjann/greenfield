@@ -70,6 +70,7 @@ class App extends React.Component {
         that.setState({ currentUser: res.username });
       })
       .catch(err => err);
+    logInUser(user);
   }
 
   logInUser(user) {
@@ -149,7 +150,6 @@ class App extends React.Component {
   }
 
   render() {
-
     // The props here NEED TO BE CHANGED!
     return (
       <div>
