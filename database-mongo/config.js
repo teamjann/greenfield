@@ -19,18 +19,22 @@ module.exports = function (passport) {
   passport.use(
     'local-signup',
     new LocalStrategy(async (username, password, cb) => {
-      bcrypt.hash(password, saltRounds, async (err, hash) => {
-        if (err) {
-          cb(err, null);
-        } else {
-          const user = await db.insertNewUser({ email: username, password: hash });
-          if ((user === username, ' allready exists')) {
-            cb(null, false);
+      if (password.length > 1) {
+        bcrypt.hash(password, saltRounds, async (err, hash) => {
+          if (err) {
+            cb(err, null);
           } else {
-            cb(null, true);
+            const user = await db.insertNewUser({ email: username, password: hash });
+            if ((user === username, ' allready exists')) {
+              cb(null, false);
+            } else {
+              cb(null, true);
+            }
           }
-        }
-      });
+        });
+      } else {
+        console.log('password failed validation');
+      }
     }),
   );
 
