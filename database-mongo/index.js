@@ -1,7 +1,9 @@
 const mongoose = require('mongoose');
 
+
 mongoose.connect('mongodb://me:me@ds241019.mlab.com:41019/greenfield-dev');
 // mongoose.connect('mongodb://localhost/greenfield');
+
 
 const db = mongoose.connection;
 
@@ -43,9 +45,10 @@ const userSchema = mongoose.Schema({
   _id: {
     type: mongoose.Schema.Types.ObjectId,
     auto: true,
+    unique: true
   },
-  email: String,
-  password: String,
+  email: { type: String, unique: true },
+  password: { type: String, unique: true },
   coursesUpvoted: [
     {
       type: mongoose.Schema.Types.ObjectId,
@@ -136,13 +139,7 @@ module.exports.retrieveUsers = userEmail =>
     .catch(err => console.log(err));
 
 module.exports.insertNewUser = newUser =>
-  User.findOne({
-    email: newUser.email,
-  })
-    .then(user => console.log(user.email, ' allready exists'))
-    .catch(() => {
-      new User(newUser)
-        .save()
-        .then(() => console.log('New user sucessfully added!'))
-        .catch(err => console.log(err));
-    });
+  new User(newUser)
+    .save()
+    .then(() => console.log('New user added!'))
+    .catch(err => console.log('user may allready exist'))
