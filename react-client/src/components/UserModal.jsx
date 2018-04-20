@@ -21,7 +21,7 @@ class UserModal extends React.Component {
   }
 
   handleSignup() {
-    if (this.state.password === this.state.secondPassword) {
+    if (this.state.password === this.state.secondPassword && this.state.password.length > 1) {
       this.props.addCurrentUser({ username: this.state.email, password: this.state.password });
       this.setState({
         email: '',
@@ -29,7 +29,7 @@ class UserModal extends React.Component {
         secondPassword: '',
       });
     } else {
-      window.alert('The passwords need to match!');
+      window.alert('The passwords need to match and need to be at least 2 characters long!');
     }
   }
 
