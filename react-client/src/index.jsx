@@ -49,6 +49,9 @@ class App extends React.Component {
       ],
     };
 
+    this.handleSignupClick = this.handleSignupClick.bind(this);
+    this.handleLoginClick = this.handleLoginClick.bind(this);
+
     this.addCurrentUser = this.addCurrentUser.bind(this);
     this.logInUser = this.logInUser.bind(this);
     this.logOutUser = this.logOutUser.bind(this);
@@ -56,6 +59,14 @@ class App extends React.Component {
 
   componentDidMount() {
     // this.getAllCategories();
+  }
+
+  handleLoginClick() {
+    this.setState({ loginModalTriggered: true, signupModalTriggered: false });
+  }
+
+  handleSignupClick() {
+    this.setState({ signupModalTriggered: true });
   }
   /*
   -------------------------------------------------------------------
@@ -70,7 +81,6 @@ class App extends React.Component {
         that.setState({ currentUser: res.username });
       })
       .catch(err => err);
-    logInUser(user);
   }
 
   logInUser(user) {
@@ -150,6 +160,35 @@ class App extends React.Component {
   }
 
   render() {
+    // TURN ME ON WHEN WORKING ON MODAL
+    // if (this.state.signupModalTriggered) {
+    //   return (
+    //     <div className="container">
+    //       <Nav>
+    //         <Navigation
+    //           handleSignupClick={this.handleSignupClick}
+    //           handleLoginClick={this.handleLoginClick}
+    //           categories={this.state.categories}
+    //         />
+    //         {/* <SignupModal addCurrentUser={this.addCurrentUser} /> */}
+    //       </Nav>
+    //     </div>
+    //   );
+    // } else if (this.state.loginModalTriggered) {
+    //   return (
+    //     <div className="container">
+    //       <Nav>
+    //         <Navigation
+    //           handleSignupClick={this.handleSignupClick}
+    //           handleLoginClick={this.handleLoginClick}
+    //           categories={this.state.categories}
+    //         />
+    //         {/* <LoginModal users={this.state.users} addCurrentUser={this.addCurrentUser} /> */}
+    //       </Nav>
+    //     </div>
+    //   );
+    // }
+
     // The props here NEED TO BE CHANGED!
     return (
       <div>
