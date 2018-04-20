@@ -63,6 +63,20 @@ class Navigation extends React.Component {
       </div>
     );
 
+    const logInLogOutNav = this.props.currentUser ? (
+      <li className="nav-item">
+        <a className="nav-link" onClick={this.props.logOutUser}>
+          Logout
+        </a>
+      </li>
+    ) : (
+      <li className="nav-item">
+        <a className="nav-link" onClick={this.toggleLoginModal}>
+          Login
+        </a>
+      </li>
+    );
+
     return (
       <nav className="navbar navbar-expand-md bg-info">
         <div className="container">
@@ -96,16 +110,7 @@ class Navigation extends React.Component {
                   ))}
                 </DropdownMenu>
               </Dropdown>
-              <li className="nav-item">
-                <a className="nav-link" onClick={this.toggleSignupModal}>
-                  Sign Up
-                </a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link" onClick={this.toggleLoginModal}>
-                  Login
-                </a>
-              </li>
+              {logInLogOutNav}
             </ul>
           </div>
         </div>
