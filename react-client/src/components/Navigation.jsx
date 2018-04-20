@@ -56,6 +56,7 @@ class Navigation extends React.Component {
           <UserModal
             toggleModal={this.toggleModal}
             addCurrentUser={this.props.addCurrentUser}
+            logInUser={this.props.logInUser}
             modalClicked={this.state.modalSelected}
           />
         </Modal>
