@@ -73,7 +73,9 @@ ROUTE LEGEND:
     - GET '/api/users/:id': Returns a specific user's information.
     - POST '/api/users': Adds a new user to the database.
   UPVOTE:
-    - POST '/api/upvote': Updates the upvote status.
+    - POST '/api/upvote': Adds an upvote.
+    - DELETE '/api/upvote': Removes an upvote.
+    - PATCH '/api/upvote': Retrieves upvotes. Send in the fields you want to filter by.
 */
 
 // GET '/': Serves up static files and index.html.
@@ -81,7 +83,7 @@ app.use(express.static(`${__dirname}/../react-client/dist`));
 app.get('/', (req, res) => {
   res.sendFile(path.join(`${__dirname}/../react-client/src/index.html`));
 });
-// CATEGORY GET '/api/categories': List of all categories.
+// GET '/api/categories': List of all categories.
 app.get('/api/categories', (req, res) => {
   new Promise((resolve, reject) => {
     resolve(db.retrieveCategories());
@@ -93,7 +95,7 @@ app.get('/api/categories', (req, res) => {
     });
 });
 // GET '/api/categories/:id': Detail view of category.
-// CATEGORY POST '/api/categories': Add a new cateogry.
+// POST '/api/categories': Add a new cateogry.
 app.post('/api/categories', (req, res) => {
   const categoryToInsert = req.body;
 
@@ -106,7 +108,7 @@ app.post('/api/categories', (req, res) => {
       res.status(500).end();
     });
 });
-// COURSE GET '/api/categories/:id/courses': List of all courses for an individual category.
+// GET '/api/categories/:id/courses': List of all courses for an individual category.
 app.get('/api/categories/:id/courses', (req, res) => {
   const categoryToRetrieveCourses = req.params.id;
   new Promise((resolve, reject) => {
@@ -118,7 +120,7 @@ app.get('/api/categories/:id/courses', (req, res) => {
       res.status(500).end();
     });
 });
-// COURSE GET '/api/categories/:id/courses/:courseId': Detailed information about a specific course.
+// GET '/api/categories/:id/courses/:courseId': Detailed information about a specific course.
 app.get('/api/categories/:category/courses/:course', (req, res) => {
   new Promise((resolve, reject) => {
     resolve(db.retrieveCourse(req.params.category));
@@ -138,7 +140,7 @@ app.get('/api/categories/:category/courses/:course', (req, res) => {
       res.status(500).end();
     });
 });
-// COURSE POST '/api/categories/:id/courses': Add a new course to a category.
+// POST '/api/categories/:id/courses': Add a new course to a category.
 app.post('/api/categories/:id/courses', (req, res) => {
   const categoryToInsertCourse = req.params.id;
   console.log(req.body);
@@ -153,7 +155,7 @@ app.post('/api/categories/:id/courses', (req, res) => {
       res.status(500).end();
     });
 });
-// USER GET '/api/users': Returns a list of each user document.
+// GET '/api/users': Returns a list of each user document.
 app.get('/api/users', (req, res) => {
   new Promise((resolve, reject) => {
     resolve(db.retrieveUsers());
@@ -164,7 +166,7 @@ app.get('/api/users', (req, res) => {
       res.status(500).end();
     });
 });
-// USER GET '/api/users/:id': Returns a specific user's information.
+// GET '/api/users/:id': Returns a specific user's information.
 app.get('/api/users/:id', (req, res) => {
   const userToRetrieve = req.params.id;
 
@@ -178,7 +180,7 @@ app.get('/api/users/:id', (req, res) => {
     });
 });
 
-// UPVOTE POST '/api/upvote': Adds an upvote.
+// POST '/api/upvote': Adds an upvote.
 app.post('/api/upvote', (req, res) => {
   new Promise((resolve, reject) => {
     resolve(db.addUpVote(req.body));
@@ -193,7 +195,7 @@ app.post('/api/upvote', (req, res) => {
     });
 });
 
-// UPVOTE DELETE '/api/upvote': Removes an upvote.
+// DELETE '/api/upvote': Removes an upvote.
 app.delete('/api/upvote', (req, res) => {
   new Promise((resolve, reject) => {
     resolve(db.removeUpVote(req.body));
@@ -208,6 +210,7 @@ app.delete('/api/upvote', (req, res) => {
     });
 });
 
+// PATCH '/api/upvote': Retrieves upvotes. Send in the fields you want to filter by.
 app.patch('/api/upvote', (req, res) => {
   new Promise((resolve, reject) => {
     resolve(db.retrieveUpVotes(req.body.categoryId, req.body.courseId, req.body.userId));
