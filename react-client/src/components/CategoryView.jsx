@@ -6,7 +6,9 @@ const CategoryView = props => (
     <h1>{props.category.name} Courses</h1>
     {props.category &&
       props.category.courses &&
-      props.category.courses.map((course, i) => <CategoryViewCourse course={course} key={i} />)}
+      props.category.courses.map((course, i) => (
+        <CategoryViewCourse category={props.category} course={course} key={i} />
+      ))}
   </div>
 );
 

@@ -1,10 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { Switch, Route, Router } from 'react-router-dom';
 import axios from 'axios';
 import Navigation from './components/Navigation.jsx';
 import CategoryView from './components/CategoryView.jsx';
 import CourseDetailView from './components/CourseDetailView.jsx';
+import history from './history';
 
 class App extends React.Component {
   constructor(props) {
@@ -12,39 +13,39 @@ class App extends React.Component {
     this.state = {
       categoriesList: [],
       currentCategory: {},
-      currentCourses: [],
-      currentCourse: [],
-      currentUser: '',
-      categories: [
-        {
-          _id: 1,
-          name: 'React',
-          courses: [
-            {
-              _id: 1,
-              name: 'Reactify',
-              upvotes: 100,
-              description: {
-                createdOn: '01.01.2001',
-                instructor: 'Nick Fray',
-                price: 8,
-                videoUrl: 'https://www.youtube.com/embed/7mgvfGc7ZyU',
-                text:
-                  "Today we're add some simple React components, while we also initialize the use of Watchify, Browserify and Reactify. Of course all while using Gulp as well! We will lay the basis of our UI, and add some placeholders for later on.",
-              },
-              courseUrl: 'https://www.udemy.com/understand-javascript/',
-            },
-          ],
-        },
-      ],
-      users: [
-        {
-          _id: 1,
-          email: 'johncrogers@test.com',
-          password: '1234',
-          coursesUpvoted: [],
-        },
-      ],
+      signupModalTriggered: false,
+      loginModalTriggered: false,
+      currentUser: {},
+      // categories: [
+      //   {
+      //     _id: 1,
+      //     name: 'React',
+      //     courses: [
+      //       {
+      //         _id: 1,
+      //         name: 'Reactify',
+      //         upvotes: 100,
+      //         description: {
+      //           createdOn: '01.01.2001',
+      //           instructor: 'Nick Fray',
+      //           price: 8,
+      //           videoUrl: 'https://www.youtube.com/embed/7mgvfGc7ZyU',
+      //           text:
+      //             "Today we're add some simple React components, while we also initialize the use of Watchify, Browserify and Reactify. Of course all while using Gulp as well! We will lay the basis of our UI, and add some placeholders for later on.",
+      //         },
+      //         courseUrl: 'https://www.udemy.com/understand-javascript/',
+      //       },
+      //     ],
+      //   },
+      // ],
+      // users: [
+      //   {
+      //     _id: 1,
+      //     email: 'johncrogers@test.com',
+      //     password: '1234',
+      //     coursesUpvoted: [],
+      //   },
+      // ],
     };
 
     this.handleSignupClick = this.handleSignupClick.bind(this);
@@ -143,7 +144,6 @@ class App extends React.Component {
       .catch(err => console.log(err));
   }
 
-  // Use _id or id? _id is mongoose generated id
   getSpecificCourse(category, course) {
     axios
       .get(`/api/categories/${category._id}/courses/${course.id}`)
@@ -217,8 +217,12 @@ class App extends React.Component {
 }
 
 ReactDOM.render(
-  <Router>
-    <App />
+  <Router history={history}>
+    <Switch>
+      <Route exact path="/" component={App} />
+      <Route path="/course*" component={CourseDetailView} />
+      {/* <Route path="/courses" component={CategoryView} /> */}
+    </Switch>
   </Router>,
   document.getElementById('app'),
 );
