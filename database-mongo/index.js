@@ -1,9 +1,7 @@
 const mongoose = require('mongoose');
 
-
-mongoose.connect('mongodb://me:me@ds241019.mlab.com:41019/greenfield-dev');
-// mongoose.connect('mongodb://localhost/greenfield');
-
+// mongoose.connect('mongodb://me:me@ds241019.mlab.com:41019/greenfield-dev');
+mongoose.connect('mongodb://localhost/greenfield');
 
 const db = mongoose.connection;
 
@@ -44,7 +42,7 @@ const categorySchema = mongoose.Schema({
 const userSchema = mongoose.Schema({
   _id: {
     type: mongoose.Schema.Types.ObjectId,
-    auto: true
+    auto: true,
   },
   email: { type: String, unique: true },
   password: String,
@@ -141,4 +139,4 @@ module.exports.insertNewUser = newUser =>
   new User(newUser)
     .save()
     .then(() => console.log('New user added!'))
-    .catch(err => console.log('user may allready exist'))
+    .catch(err => console.log('user may allready exist'));

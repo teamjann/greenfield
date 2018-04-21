@@ -36,17 +36,23 @@ const isLoggedIn = (req, res, next) => {
 };
 
 app.post('/api/signup', passport.authenticate('local-signup'), (req, res) => {
-  console.log('sign up called')
+  console.log(req.user, ' was successfully created');
   res.status(201).json(req.user);
 });
 
 app.post('/api/login', passport.authenticate('local-login'), (req, res) => {
+  console.log(req.user, ' was successfully logged in');
   res.status(201).json(req.user);
 });
 
 app.post('/api/logout', isLoggedIn, (req, res) => {
   req.logout();
-  res.clearCookie('connect.sid').status(201).redirect('/');
+  console.log('Successfully logged out');
+
+  res
+    .clearCookie('connect.sid')
+    .status(201)
+    .redirect('/');
 });
 
 /*-------------------------------------------------------------------
