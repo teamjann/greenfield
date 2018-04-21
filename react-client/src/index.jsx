@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-// import { Route, Link, BrowserRouter as Router } from 'react-router-dom';
-import { BrowserRouter, Router } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 import axios from 'axios';
 import Navigation from './components/Navigation.jsx';
 import CategoryView from './components/CategoryView.jsx';
@@ -11,7 +10,8 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentCategories: [],
+      categoriesList: [],
+      currentCategory: {},
       currentCourses: [],
       currentCourse: [],
       currentUser: '',
@@ -47,17 +47,30 @@ class App extends React.Component {
       ],
     };
 
+    this.handleSignupClick = this.handleSignupClick.bind(this);
+    this.handleLoginClick = this.handleLoginClick.bind(this);
+
     this.addCurrentUser = this.addCurrentUser.bind(this);
     this.logInUser = this.logInUser.bind(this);
     this.logOutUser = this.logOutUser.bind(this);
+
+    this.getCategoryInfo = this.getCategoryInfo.bind(this);
   }
 
   componentDidMount() {
-    // this.getAllCategories();
+    this.getAllCategories();
+  }
+
+  handleLoginClick() {
+    this.setState({ loginModalTriggered: true, signupModalTriggered: false });
+  }
+
+  handleSignupClick() {
+    this.setState({ signupModalTriggered: true });
   }
   /*
   -------------------------------------------------------------------
-          Authorization! :)
+  Authorization! :)
   -------------------------------------------------------------------
   */
   addCurrentUser(user) {
@@ -92,17 +105,30 @@ class App extends React.Component {
       .catch(err => console.log(err));
   }
   /*
--------------------------------------------------------------------
-          No Longer Authorization! :)
--------------------------------------------------------------------
-*/
+  -------------------------------------------------------------------
+  No Longer Authorization! :)
+  -------------------------------------------------------------------
+  */
 
   getAllCategories() {
     axios
       .get('/api/categories')
       .then(res =>
         this.setState({
-          currentCategories: res.data,
+          categoriesList: res.data,
+        }))
+      .then(() => {
+        this.getCategoryInfo(this.state.categoriesList[1]._id);
+      })
+      .catch(err => console.log(err));
+  }
+
+  getCategoryInfo(categoryID) {
+    axios
+      .get(`/api/categories/${categoryID}`)
+      .then(res =>
+        this.setState({
+          currentCategory: res.data,
         }))
       .catch(err => console.log(err));
   }
@@ -147,10 +173,40 @@ class App extends React.Component {
   }
 
   render() {
+    // TURN ME ON WHEN WORKING ON MODAL
+    // if (this.state.signupModalTriggered) {
+    //   return (
+    //     <div className="container">
+    //       <Nav>
+    //         <Navigation
+    //           handleSignupClick={this.handleSignupClick}
+    //           handleLoginClick={this.handleLoginClick}
+    //           categories={this.state.categories}
+    //         />
+    //         {/* <SignupModal addCurrentUser={this.addCurrentUser} /> */}
+    //       </Nav>
+    //     </div>
+    //   );
+    // } else if (this.state.loginModalTriggered) {
+    //   return (
+    //     <div className="container">
+    //       <Nav>
+    //         <Navigation
+    //           handleSignupClick={this.handleSignupClick}
+    //           handleLoginClick={this.handleLoginClick}
+    //           categories={this.state.categories}
+    //         />
+    //         {/* <LoginModal users={this.state.users} addCurrentUser={this.addCurrentUser} /> */}
+    //       </Nav>
+    //     </div>
+    //   );
+    // }
+
     // The props here NEED TO BE CHANGED!
     return (
       <div>
         <Navigation
+<<<<<<< HEAD
           categories={this.state.categories}
           addCurrentUser={this.addCurrentUser}
           logInUser={this.logInUser}
@@ -158,15 +214,22 @@ class App extends React.Component {
           currentUser={this.state.currentUser}
         />
         <CategoryView category={this.state.categories} />
+=======
+          categories={this.state.categoriesList}
+          addCurrentUser={this.addCurrentUser}
+          changeCategory={this.getCategoryInfo}
+        />
+        <CategoryView category={this.state.currentCategory} />
+>>>>>>> ce2f2f7ac12bcfc55453a4f9927bfc596a8ca441
       </div>
     );
   }
 }
 
 ReactDOM.render(
-  <BrowserRouter>
+  <Router>
     <App />
-  </BrowserRouter>,
+  </Router>,
   document.getElementById('app'),
 );
 
