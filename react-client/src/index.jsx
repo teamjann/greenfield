@@ -206,21 +206,11 @@ class App extends React.Component {
     return (
       <div>
         <Navigation
-<<<<<<< HEAD
-          categories={this.state.categories}
-          addCurrentUser={this.addCurrentUser}
-          logInUser={this.logInUser}
-          logOutUser={this.logOutUser}
-          currentUser={this.state.currentUser}
-        />
-        <CategoryView category={this.state.categories} />
-=======
           categories={this.state.categoriesList}
           addCurrentUser={this.addCurrentUser}
           changeCategory={this.getCategoryInfo}
         />
         <CategoryView category={this.state.currentCategory} />
->>>>>>> ce2f2f7ac12bcfc55453a4f9927bfc596a8ca441
       </div>
     );
   }
