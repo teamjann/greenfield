@@ -176,6 +176,7 @@ module.exports.retrieveUpVotes = (categoryId, courseId, userId) => {
   if (categoryId) query.categoryId = categoryId;
   if (courseId) query.courseId = courseId;
   if (userId) query.userId = userId;
+  // console.log(JSON.stringify(query));
   return Upvote.find(query)
     .then(result => result)
     .catch(err => err);

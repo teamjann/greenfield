@@ -75,7 +75,8 @@ ROUTE LEGEND:
   UPVOTE:
     - POST '/api/upvote': Adds an upvote.
     - DELETE '/api/upvote': Removes an upvote.
-    - PATCH '/api/upvote': Retrieves upvotes. Send in the fields you want to filter by.
+    - PATCH '/api/upvotes': Retrieves upvotes. Send in the fields you want to filter by.
+    - PATCH '/api/upvote': Processes the upvote request.
 */
 
 // GET '/': Serves up static files and index.html.
@@ -210,12 +211,58 @@ app.delete('/api/upvote', (req, res) => {
     });
 });
 
-// PATCH '/api/upvote': Retrieves upvotes. Send in the fields you want to filter by.
-app.patch('/api/upvote', (req, res) => {
+// PATCH '/api/upvotes': Retrieves upvotes. Send in the fields you want to filter by.
+app.patch('/api/upvotes', (req, res) => {
   new Promise((resolve, reject) => {
     resolve(db.retrieveUpVotes(req.body.categoryId, req.body.courseId, req.body.userId));
   })
     .then(upVotes => res.status(200).json(upVotes))
+    .catch((err) => {
+      console.log(err);
+      res.status(500).end();
+    });
+});
+
+// PATCH '/api/upvote': Processes the upvote request.
+app.patch('/api/upvote', (req, res) => {
+  const upVote = {
+    categoryId: req.body.categoryId,
+    courseId: req.body.courseId,
+    userId: req.body.userId,
+  };
+  new Promise((resolve, reject) => {
+    resolve(db.retrieveUpVotes(req.body.categoryId, req.body.courseId, req.body.userId));
+  })
+    .then((result) => {
+      console.log(`Query result: ${result[0]}`);
+      if (result[0]) {
+        console.log('This upvote already exists.');
+        new Promise((resolve, reject) => {
+          resolve(db.removeUpVote(upVote));
+        })
+          .then(() => {
+            console.log('Removed successfully.');
+            res.status(201).end();
+          })
+          .catch((err) => {
+            console.log(err);
+            res.status(500).end();
+          });
+      } else {
+        console.log('This upvote does not exist.');
+        new Promise((resolve, reject) => {
+          resolve(db.addUpVote(upVote));
+        })
+          .then(() => {
+            console.log('Added successfully.');
+            res.status(201).end();
+          })
+          .catch((err) => {
+            console.log(err);
+            res.status(500).end();
+          });
+      }
+    })
     .catch((err) => {
       console.log(err);
       res.status(500).end();
