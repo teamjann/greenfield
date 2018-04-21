@@ -78,7 +78,7 @@ class App extends React.Component {
     axios
       .post('/api/signup', user)
       .then((res) => {
-        that.setState({ currentUser: res.username });
+        that.setState({ currentUser: res.data.email });
       })
       .catch(err => err);
   }
@@ -89,7 +89,7 @@ class App extends React.Component {
       .post('/api/login', user)
       .then((res) => {
         console.log('user logged in ', res);
-        that.setState({ currentUser: res.username });
+        that.setState({ currentUser: res.data.email });
       })
       .catch(err => console.log(err));
   }
@@ -208,7 +208,10 @@ class App extends React.Component {
         <Navigation
           categories={this.state.categoriesList}
           addCurrentUser={this.addCurrentUser}
+          logInUser={this.logInUser}
+          logOutUser={this.logOutUser}
           changeCategory={this.getCategoryInfo}
+          currentUser={this.state.currentUser}
         />
         <CategoryView category={this.state.currentCategory} />
       </div>

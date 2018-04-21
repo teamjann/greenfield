@@ -63,24 +63,26 @@ class Navigation extends React.Component {
             addCurrentUser={this.props.addCurrentUser}
             logInUser={this.props.logInUser}
             modalClicked={this.state.modalSelected}
+            currentUser={this.props.currentUser}
           />
         </Modal>
       </div>
     );
 
-    const logInLogOutNav = this.props.currentUser ? (
-      <li className="nav-item">
-        <a className="nav-link" onClick={this.props.logOutUser}>
-          Logout
-        </a>
-      </li>
-    ) : (
-      <li className="nav-item">
-        <a className="nav-link" onClick={this.toggleLoginModal}>
-          Login
-        </a>
-      </li>
-    );
+    const logInLogOutNav =
+      this.props.currentUser !== '' ? (
+        <li className="nav-item">
+          <a className="nav-link" onClick={this.props.logOutUser}>
+            Logout
+          </a>
+        </li>
+      ) : (
+        <li className="nav-item">
+          <a className="nav-link" onClick={this.toggleLoginModal}>
+            Login
+          </a>
+        </li>
+      );
 
     return (
       <nav className="navbar navbar-expand-md bg-info">
