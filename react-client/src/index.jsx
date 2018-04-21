@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-// import { Route, Link, BrowserRouter as Router } from 'react-router-dom';
-import { BrowserRouter, Router } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 import axios from 'axios';
 import Navigation from './components/Navigation.jsx';
 import CategoryView from './components/CategoryView.jsx';
@@ -11,55 +10,58 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentCategories: [],
+      categoriesList: [],
+      currentCategory: {},
       currentCourses: [],
       currentCourse: [],
       signupModalTriggered: false,
       loginModalTriggered: false,
       currentUser: {},
-      categories: [
-        {
-          _id: 1,
-          name: 'React',
-          courses: [
-            {
-              _id: 1,
-              name: 'Reactify',
-              upvotes: 100,
-              description: {
-                createdOn: '01.01.2001',
-                instructor: 'Nick Fray',
-                price: 8,
-                videoUrl: 'https://www.youtube.com/embed/7mgvfGc7ZyU',
-                text:
-                  "Today we're add some simple React components, while we also initialize the use of Watchify, Browserify and Reactify. Of course all while using Gulp as well! We will lay the basis of our UI, and add some placeholders for later on.",
-              },
-              courseUrl: 'https://www.udemy.com/understand-javascript/',
-            },
-          ],
-        },
-      ],
-      users: [
-        {
-          _id: 1,
-          email: 'johncrogers@test.com',
-          password: '1234',
-          coursesUpvoted: [],
-        },
-      ],
+      // categories: [
+      //   {
+      //     _id: 1,
+      //     name: 'React',
+      //     courses: [
+      //       {
+      //         _id: 1,
+      //         name: 'Reactify',
+      //         upvotes: 100,
+      //         description: {
+      //           createdOn: '01.01.2001',
+      //           instructor: 'Nick Fray',
+      //           price: 8,
+      //           videoUrl: 'https://www.youtube.com/embed/7mgvfGc7ZyU',
+      //           text:
+      //             "Today we're add some simple React components, while we also initialize the use of Watchify, Browserify and Reactify. Of course all while using Gulp as well! We will lay the basis of our UI, and add some placeholders for later on.",
+      //         },
+      //         courseUrl: 'https://www.udemy.com/understand-javascript/',
+      //       },
+      //     ],
+      //   },
+      // ],
+      // users: [
+      //   {
+      //     _id: 1,
+      //     email: 'johncrogers@test.com',
+      //     password: '1234',
+      //     coursesUpvoted: [],
+      //   },
+      // ],
     };
 
     this.addCurrentUser = this.addCurrentUser.bind(this);
     this.logInUser = this.logInUser.bind(this);
     this.logOutUser = this.logOutUser.bind(this);
+
+    this.getCategoryInfo = this.getCategoryInfo.bind(this);
   }
 
   componentDidMount() {
-    // this.getAllCategories();
+    this.getAllCategories();
   }
   /*
   -------------------------------------------------------------------
-          Authorization! :)
+  Authorization! :)
   -------------------------------------------------------------------
   */
   addCurrentUser(user) {
@@ -95,17 +97,30 @@ class App extends React.Component {
       .catch(err => console.log(err));
   }
   /*
--------------------------------------------------------------------
-          No Longer Authorization! :)
--------------------------------------------------------------------
-*/
+  -------------------------------------------------------------------
+  No Longer Authorization! :)
+  -------------------------------------------------------------------
+  */
 
   getAllCategories() {
     axios
       .get('/api/categories')
       .then(res =>
         this.setState({
-          currentCategories: res.data,
+          categoriesList: res.data,
+        }))
+      .then(() => {
+        this.getCategoryInfo(this.state.categoriesList[1]._id);
+      })
+      .catch(err => console.log(err));
+  }
+
+  getCategoryInfo(categoryID) {
+    axios
+      .get(`/api/categories/${categoryID}`)
+      .then(res =>
+        this.setState({
+          currentCategory: res.data,
         }))
       .catch(err => console.log(err));
   }
@@ -153,17 +168,21 @@ class App extends React.Component {
     // The props here NEED TO BE CHANGED!
     return (
       <div>
-        <Navigation categories={this.state.categories} addCurrentUser={this.addCurrentUser} />
-        <CategoryView category={this.state.categories} />
+        <Navigation
+          categories={this.state.categoriesList}
+          addCurrentUser={this.addCurrentUser}
+          changeCategory={this.getCategoryInfo}
+        />
+        <CategoryView category={this.state.currentCategory} />
       </div>
     );
   }
 }
 
 ReactDOM.render(
-  <BrowserRouter>
+  <Router>
     <App />
-  </BrowserRouter>,
+  </Router>,
   document.getElementById('app'),
 );
 
