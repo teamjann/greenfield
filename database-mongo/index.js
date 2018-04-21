@@ -54,23 +54,34 @@ const userSchema = mongoose.Schema({
   ],
 });
 
+const upVoteSchema = mongoose.Schema({
+  categoryId: String,
+  courseId: String,
+  userId: String,
+});
+
 const Category = mongoose.model('Category', categorySchema);
 const User = mongoose.model('User', userSchema);
+const Upvote = mongoose.model('Upvote', upVoteSchema);
 
 /*
 FUNCTION LEGEND:
-  - CATEGORY:
-    retrieveCategory
-    retrieveCategories
-    insertNewCategory
-  - COURSE:
-    retrieveCourse
-    retrieveCourses
-    insertNewCourse
-  - USER:
-    retrieveUser
-    retrieveUsers
-    insertNewUser
+  CATEGORY:
+    - retrieveCategory
+    - retrieveCategories
+    - insertNewCategory
+  COURSE:
+    - retrieveCourse
+    - retrieveCourses
+    - insertNewCourse
+  USER:
+    - retrieveUser
+    - retrieveUsers
+    - insertNewUser
+  UPVOTE:
+    - addUpVote
+    - removeUpVote
+    - retrieveUpvotes
 */
 
 module.exports.retrieveCategory = categoryId =>
@@ -146,3 +157,93 @@ module.exports.insertNewUser = newUser =>
         .then(() => console.log('New user sucessfully added!'))
         .catch(err => console.log(err));
     });
+
+// module.exports.addUpVote = (upVote) => {
+//   new Upvote(upVote)
+//     .save((err, product) => {
+//       if (err) console.log(err);
+//       console.log(`${product} was entered into Upvote.`);
+//     })
+//     .then()
+//     .catch(err => console.log(err));
+// };
+
+// module.exports.removeUpVote = (upVote) => {
+//   const { categoryId } = upVote;
+//   const { courseId } = upVote;
+//   const { userId } = upVote;
+
+//   Upvote.deleteMany(
+//     {
+//       categories: {
+//         categoryId,
+//         courses: {
+//           courseId,
+//           upVotes: {
+//             userId,
+//           },
+//         },
+//       },
+//     },
+//     (err) => {
+//       console.log(err);
+//     },
+//   );
+// };
+
+// module.exports.retrieveUpVotes = (upVote) => {
+//   const { categoryId } = upVote;
+
+//   Upvote.findOne({
+//     categories: {
+//       categoryId,
+//     },
+//   })
+//     .then(upVotes => upVotes)
+//     .catch(err => console.log(err));
+// };
+
+// module.exports.retrieveUpVote = (upVote) => {
+//   const { categoryId } = upVote;
+//   const { courseId } = upVote;
+//   const { userId } = upVote;
+
+//   Upvote.find({
+//     categories: {
+//       categoryId,
+//       courses: {
+//         courseId,
+//         upVotes: {
+//           userId,
+//         },
+//       },
+//     },
+//   })
+//     .then(foundUpVote => foundUpVote)
+//     .catch((err) => {
+//       console.log(err);
+//     });
+// };
+
+module.exports.addUpVote = (upVote) => {
+  new Upvote(upVote)
+    .save()
+    .then(result => console.log(`Added ${JSON.stringify(result)}`))
+    .catch(err => console.log(err));
+};
+
+module.exports.removeUpVote = (upVote) => {
+  Upvote.deleteMany(upVote)
+    .then(result => console.log(`Removed ${JSON.stringify(result)}`))
+    .catch(err => console.log(err));
+};
+
+module.exports.retrieveUpVotes = (categoryId, courseId, userId) => {
+  const query = {};
+  if (categoryId) query.categoryId = categoryId;
+  if (courseId) query.courseId = courseId;
+  if (userId) query.userId = userId;
+  return Upvote.find(query)
+    .then(result => result) // console.log(`Query result: ${result}`)
+    .catch(err => err);
+};

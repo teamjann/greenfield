@@ -4,6 +4,7 @@ const session = require('express-session');
 const passport = require('passport');
 const db = require('../database-mongo/index');
 const path = require('path');
+
 const app = express();
 require('../database-mongo/config')(passport);
 
@@ -20,7 +21,7 @@ app.use(session({
   secret: 'shouldbestoredinakey',
   resave: true,
   saveUninitialized: true,
-  cookie: { maxAge: 12 * 60 * 60 * 1000 }
+  cookie: { maxAge: 12 * 60 * 60 * 1000 },
 }));
 
 app.use(passport.initialize());
@@ -32,10 +33,10 @@ const isLoggedIn = (req, res, next) => {
     return next();
   }
   res.status(401).end('You must log in to do that!');
-}
+};
 
 app.post('/api/signup', passport.authenticate('local-signup'), (req, res) => {
-  console.log('sign up called')
+  console.log('sign up called');
   res.status(200).json(req.user);
 });
 
@@ -43,31 +44,39 @@ app.post('/api/login', passport.authenticate('local-login'), (req, res) => {
   res.status(200).json(req.user);
 });
 
-app.post('/api/logout', isLoggedIn, function (req, res) {
+app.post('/api/logout', isLoggedIn, (req, res) => {
   req.logout();
-  res.clearCookie('connect.sid').status(200).redirect('/');
+  res
+    .clearCookie('connect.sid')
+    .status(200)
+    .redirect('/');
 });
 
 /*-------------------------------------------------------------------
           No Longer Authorization! :)
 -------------------------------------------------------------------*/
 
-
-
 /*
 ROUTE LEGEND:
-  STATIC '/': Serves up static files and index.html.
-  CATEGORIES GET '/api/categories': List of all categories.
-  CATEGORY POST '/api/categories': Add a new cateogry.
-  COURSES GET '/api/categories/:id/courses': List of all courses for an individual category.
-  COURSE GET '/api/categories/:id/courses/:courseId': Detailed information about a specific course.
-  COURSE POST '/api/categories/:id/courses': Add a new course to a category.
-  USER GET '/api/users': Returns a list of each user document.
-  USER GET '/api/users/:id': Returns a specific user's information.
-  USER POST '/api/users': Adds a new user to the database.
+  STATIC:
+    - GET '/': Serves up static files and index.html.
+  CATEGORY:
+    - GET '/api/categories': List of all categories.
+    - GET '/api/categories/:id': Detail view of category.
+    - POST '/api/categories': Add a new cateogry.
+  COURSE:
+    - GET '/api/categories/:id/courses': List of all courses for an individual category.
+    - GET '/api/categories/:id/courses/:courseId': Detailed information about a specific course.
+    - POST '/api/categories/:id/courses': Add a new course to a category.
+  USER:
+    - GET '/api/users': Returns a list of each user document.
+    - GET '/api/users/:id': Returns a specific user's information.
+    - POST '/api/users': Adds a new user to the database.
+  UPVOTE:
+    - POST '/api/upvote': Updates the upvote status.
 */
 
-// STATIC '/': Serves up static files and index.html.
+// GET '/': Serves up static files and index.html.
 app.use(express.static(`${__dirname}/../react-client/dist`));
 app.get('/', (req, res) => {
   res.sendFile(path.join(`${__dirname}/../react-client/src/index.html`));
@@ -83,6 +92,7 @@ app.get('/api/categories', (req, res) => {
       res.status(500).end();
     });
 });
+// GET '/api/categories/:id': Detail view of category.
 // CATEGORY POST '/api/categories': Add a new cateogry.
 app.post('/api/categories', (req, res) => {
   const categoryToInsert = req.body;
@@ -114,8 +124,7 @@ app.get('/api/categories/:category/courses/:course', (req, res) => {
     resolve(db.retrieveCourse(req.params.category));
   })
     .then((courseList) => {
-      const selectedCourse = courseList.filter(course =>
-        course._id == req.params.course);
+      const selectedCourse = courseList.filter(course => course._id == req.params.course);
       if (selectedCourse.length > 0) {
         console.log('Entered');
         res.status(200).json(selectedCourse[0]);
@@ -163,6 +172,47 @@ app.get('/api/users/:id', (req, res) => {
     resolve(db.retrieveUser(userToRetrieve));
   })
     .then(user => res.status(200).json(user))
+    .catch((err) => {
+      console.log(err);
+      res.status(500).end();
+    });
+});
+
+// UPVOTE POST '/api/upvote': Adds an upvote.
+app.post('/api/upvote', (req, res) => {
+  new Promise((resolve, reject) => {
+    resolve(db.addUpVote(req.body));
+  })
+    .then((addedUpVote) => {
+      console.log('Added successfully.');
+      res.status(201).end();
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).end();
+    });
+});
+
+// UPVOTE DELETE '/api/upvote': Removes an upvote.
+app.delete('/api/upvote', (req, res) => {
+  new Promise((resolve, reject) => {
+    resolve(db.removeUpVote(req.body));
+  })
+    .then((removedUpVote) => {
+      console.log('Removed successfully.');
+      res.status(201).end();
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).end();
+    });
+});
+
+app.patch('/api/upvote', (req, res) => {
+  new Promise((resolve, reject) => {
+    resolve(db.retrieveUpVotes(req.body.categoryId, req.body.courseId, req.body.userId));
+  })
+    .then(upVotes => res.status(200).json(upVotes))
     .catch((err) => {
       console.log(err);
       res.status(500).end();
