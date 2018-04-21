@@ -61,10 +61,25 @@ class Navigation extends React.Component {
           <UserModal
             toggleModal={this.toggleModal}
             addCurrentUser={this.props.addCurrentUser}
+            logInUser={this.props.logInUser}
             modalClicked={this.state.modalSelected}
           />
         </Modal>
       </div>
+    );
+
+    const logInLogOutNav = this.props.currentUser ? (
+      <li className="nav-item">
+        <a className="nav-link" onClick={this.props.logOutUser}>
+          Logout
+        </a>
+      </li>
+    ) : (
+      <li className="nav-item">
+        <a className="nav-link" onClick={this.toggleLoginModal}>
+          Login
+        </a>
+      </li>
     );
 
     return (
@@ -106,16 +121,7 @@ class Navigation extends React.Component {
                   ))}
                 </DropdownMenu>
               </Dropdown>
-              <li className="nav-item">
-                <a className="nav-link" onClick={this.toggleSignupModal}>
-                  Sign Up
-                </a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link" onClick={this.toggleLoginModal}>
-                  Login
-                </a>
-              </li>
+              {logInLogOutNav}
             </ul>
           </div>
         </div>

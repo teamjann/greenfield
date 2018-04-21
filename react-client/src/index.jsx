@@ -14,39 +14,37 @@ class App extends React.Component {
       currentCategory: {},
       currentCourses: [],
       currentCourse: [],
-      signupModalTriggered: false,
-      loginModalTriggered: false,
-      currentUser: {},
-      // categories: [
-      //   {
-      //     _id: 1,
-      //     name: 'React',
-      //     courses: [
-      //       {
-      //         _id: 1,
-      //         name: 'Reactify',
-      //         upvotes: 100,
-      //         description: {
-      //           createdOn: '01.01.2001',
-      //           instructor: 'Nick Fray',
-      //           price: 8,
-      //           videoUrl: 'https://www.youtube.com/embed/7mgvfGc7ZyU',
-      //           text:
-      //             "Today we're add some simple React components, while we also initialize the use of Watchify, Browserify and Reactify. Of course all while using Gulp as well! We will lay the basis of our UI, and add some placeholders for later on.",
-      //         },
-      //         courseUrl: 'https://www.udemy.com/understand-javascript/',
-      //       },
-      //     ],
-      //   },
-      // ],
-      // users: [
-      //   {
-      //     _id: 1,
-      //     email: 'johncrogers@test.com',
-      //     password: '1234',
-      //     coursesUpvoted: [],
-      //   },
-      // ],
+      currentUser: '',
+      categories: [
+        {
+          _id: 1,
+          name: 'React',
+          courses: [
+            {
+              _id: 1,
+              name: 'Reactify',
+              upvotes: 100,
+              description: {
+                createdOn: '01.01.2001',
+                instructor: 'Nick Fray',
+                price: 8,
+                videoUrl: 'https://www.youtube.com/embed/7mgvfGc7ZyU',
+                text:
+                  "Today we're add some simple React components, while we also initialize the use of Watchify, Browserify and Reactify. Of course all while using Gulp as well! We will lay the basis of our UI, and add some placeholders for later on.",
+              },
+              courseUrl: 'https://www.udemy.com/understand-javascript/',
+            },
+          ],
+        },
+      ],
+      users: [
+        {
+          _id: 1,
+          email: 'johncrogers@test.com',
+          password: '1234',
+          coursesUpvoted: [],
+        },
+      ],
     };
 
     this.handleSignupClick = this.handleSignupClick.bind(this);
@@ -208,11 +206,21 @@ class App extends React.Component {
     return (
       <div>
         <Navigation
+<<<<<<< HEAD
+          categories={this.state.categories}
+          addCurrentUser={this.addCurrentUser}
+          logInUser={this.logInUser}
+          logOutUser={this.logOutUser}
+          currentUser={this.state.currentUser}
+        />
+        <CategoryView category={this.state.categories} />
+=======
           categories={this.state.categoriesList}
           addCurrentUser={this.addCurrentUser}
           changeCategory={this.getCategoryInfo}
         />
         <CategoryView category={this.state.currentCategory} />
+>>>>>>> ce2f2f7ac12bcfc55453a4f9927bfc596a8ca441
       </div>
     );
   }
