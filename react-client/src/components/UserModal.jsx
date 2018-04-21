@@ -22,19 +22,38 @@ class UserModal extends React.Component {
 
   handleSignup() {
     if (this.state.password === this.state.secondPassword && this.state.password.length > 1) {
-      this.props.addCurrentUser({ username: this.state.email, password: this.state.password });
-      this.setState({
-        email: '',
-        password: '',
-        secondPassword: '',
-      });
+      new Promise((resolve, reject) => {
+        resolve(this.props.addCurrentUser({ username: this.state.email, password: this.state.password }));
+      })
+        .then(() => {
+          this.setState({
+            email: '',
+            password: '',
+            secondPassword: '',
+            modalState: 'Login',
+          });
+          window.alert('Please Login');
+        })
+        .catch(err => console.log(err));
     } else {
       window.alert('The passwords need to match and need to be at least 2 characters long!');
     }
   }
 
   handleLogin() {
-    this.props.logInUser({ email: this.state.email, password: this.state.password });
+    new Promise((resolve, reject) => {
+      resolve(this.props.logInUser({ username: this.state.email, password: this.state.password }));
+    })
+      .then(() => {
+        this.setState({
+          email: '',
+          password: '',
+          secondPassword: '',
+          modalState: 'Login',
+        });
+        this.props.toggleModal();
+      })
+      .catch(err => console.log(err));
   }
 
   handleChangeEmail(e) {
