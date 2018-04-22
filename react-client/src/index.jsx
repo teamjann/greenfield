@@ -55,6 +55,8 @@ class App extends React.Component {
     this.addCurrentUser = this.addCurrentUser.bind(this);
     this.logInUser = this.logInUser.bind(this);
     this.logOutUser = this.logOutUser.bind(this);
+
+    this.handleUpvoteRequest = this.handleUpvoteRequest.bind(this);
   }
 
   componentDidMount() {
@@ -159,6 +161,10 @@ class App extends React.Component {
       .catch(err => console.log(err));
   }
 
+  handleUpvoteRequest(upVote) {
+    console.log('OOOOOOOEEE!!! You sent a upvote request! ', JSON.stringify(upVote));
+  }
+
   render() {
     // TURN ME ON WHEN WORKING ON MODAL
     // if (this.state.signupModalTriggered) {
@@ -193,7 +199,10 @@ class App extends React.Component {
     return (
       <div>
         <Navigation categories={this.state.categories} addCurrentUser={this.addCurrentUser} />
-        <CategoryView category={this.state.categories} />
+        <CategoryView
+          category={this.state.categories}
+          handleUpvoteRequest={this.handleUpvoteRequest}
+        />
       </div>
     );
   }

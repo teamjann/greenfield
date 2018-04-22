@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Route, Link, BrowserRouter as Router } from 'react-router-dom';
 import CourseDetailView from './CourseDetailView.jsx';
+import Upvote from './Upvote.jsx';
 
 class CategoryViewCourse extends React.Component {
   constructor(props) {
@@ -46,9 +47,10 @@ class CategoryViewCourse extends React.Component {
         </div>
 
         <div className="card-footer bg-secondary">
-          <button className="btn btn-primary btn-icon btn-icon-mini btn-round text-center">
+          {/* <button className="btn btn-primary btn-icon btn-icon-mini btn-round text-center">
             <i className="fas fa-chevron-up" />
-          </button>
+          </button> */}
+          <Upvote handleUpvoteRequest={this.props.handleUpvoteRequest} />
           <span className="card-text text-light ml-2">Upvote Count: {this.state.upVoteCount}</span>
         </div>
         {/* // Display course detail view onClick */}
