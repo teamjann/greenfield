@@ -21,27 +21,39 @@ class UserModal extends React.Component {
   }
 
   handleSignup() {
-    if (this.state.password === this.state.secondPassword) {
-      this.props.addCurrentUser({ email: this.state.email, password: this.state.password });
-      this.setState({
-        email: '',
-        password: '',
-        secondPassword: '',
-      });
+    if (this.state.password === this.state.secondPassword && this.state.password.length > 1) {
+      new Promise((resolve, reject) => {
+        resolve(this.props.addCurrentUser({ username: this.state.email, password: this.state.password }));
+      })
+        .then(() => {
+          this.setState({
+            email: '',
+            password: '',
+            secondPassword: '',
+            modalState: 'Login',
+          });
+          window.alert('Please Login');
+        })
+        .catch(err => console.log(err));
     } else {
-      window.alert('The passwords need to match!');
+      window.alert('The passwords need to match and need to be at least 2 characters long!');
     }
   }
 
   handleLogin() {
-    return this.props.users.map((user) => {
-      if (user.name === this.state.email && user.password === this.state.password) {
-        this.props.addCurrentUser({ email: this.state.email, password: this.state.password });
-        console.log(this.state.email, ' is logged in!');
-        return this.setState({ email: '', password: '' });
-      }
-    });
-    window.alert('Invalid username/password');
+    new Promise((resolve, reject) => {
+      resolve(this.props.logInUser({ username: this.state.email, password: this.state.password }));
+    })
+      .then(() => {
+        this.setState({
+          email: '',
+          password: '',
+          secondPassword: '',
+          modalState: 'Login',
+        });
+        this.props.toggleModal();
+      })
+      .catch(err => console.log(err));
   }
 
   handleChangeEmail(e) {

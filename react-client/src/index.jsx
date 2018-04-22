@@ -1,52 +1,51 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-// import { Route, Link, BrowserRouter as Router } from 'react-router-dom';
-import { BrowserRouter, Router } from 'react-router-dom';
+import { Switch, Route, Router } from 'react-router-dom';
 import axios from 'axios';
 import Navigation from './components/Navigation.jsx';
 import CategoryView from './components/CategoryView.jsx';
 import CourseDetailView from './components/CourseDetailView.jsx';
+import history from './history';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentCategories: [],
-      currentCourses: [],
-      currentCourse: [],
+      categoriesList: [],
+      currentCategory: {},
       signupModalTriggered: false,
       loginModalTriggered: false,
       currentUser: {},
-      categories: [
-        {
-          _id: 1,
-          name: 'React',
-          courses: [
-            {
-              _id: 1,
-              name: 'Reactify',
-              upvotes: 100,
-              description: {
-                createdOn: '01.01.2001',
-                instructor: 'Nick Fray',
-                price: 8,
-                videoUrl: 'https://www.youtube.com/embed/7mgvfGc7ZyU',
-                text:
-                  "Today we're add some simple React components, while we also initialize the use of Watchify, Browserify and Reactify. Of course all while using Gulp as well! We will lay the basis of our UI, and add some placeholders for later on.",
-              },
-              courseUrl: 'https://www.udemy.com/understand-javascript/',
-            },
-          ],
-        },
-      ],
-      users: [
-        {
-          _id: 1,
-          email: 'johncrogers@test.com',
-          password: '1234',
-          coursesUpvoted: [],
-        },
-      ],
+      // categories: [
+      //   {
+      //     _id: 1,
+      //     name: 'React',
+      //     courses: [
+      //       {
+      //         _id: 1,
+      //         name: 'Reactify',
+      //         upvotes: 100,
+      //         description: {
+      //           createdOn: '01.01.2001',
+      //           instructor: 'Nick Fray',
+      //           price: 8,
+      //           videoUrl: 'https://www.youtube.com/embed/7mgvfGc7ZyU',
+      //           text:
+      //             "Today we're add some simple React components, while we also initialize the use of Watchify, Browserify and Reactify. Of course all while using Gulp as well! We will lay the basis of our UI, and add some placeholders for later on.",
+      //         },
+      //         courseUrl: 'https://www.udemy.com/understand-javascript/',
+      //       },
+      //     ],
+      //   },
+      // ],
+      // users: [
+      //   {
+      //     _id: 1,
+      //     email: 'johncrogers@test.com',
+      //     password: '1234',
+      //     coursesUpvoted: [],
+      //   },
+      // ],
     };
 
     this.handleSignupClick = this.handleSignupClick.bind(this);
@@ -57,10 +56,11 @@ class App extends React.Component {
     this.logOutUser = this.logOutUser.bind(this);
 
     this.handleUpvoteRequest = this.handleUpvoteRequest.bind(this);
+    this.getCategoryInfo = this.getCategoryInfo.bind(this);
   }
 
   componentDidMount() {
-    // this.getAllCategories();
+    this.getAllCategories();
   }
 
   handleLoginClick() {
@@ -72,7 +72,7 @@ class App extends React.Component {
   }
   /*
   -------------------------------------------------------------------
-          Authorization! :)
+  Authorization! :)
   -------------------------------------------------------------------
   */
   addCurrentUser(user) {
@@ -80,7 +80,7 @@ class App extends React.Component {
     axios
       .post('/api/signup', user)
       .then((res) => {
-        that.setState({ currentUser: res.username });
+        that.setState({ currentUser: res.data.email });
       })
       .catch(err => err);
   }
@@ -91,7 +91,7 @@ class App extends React.Component {
       .post('/api/login', user)
       .then((res) => {
         console.log('user logged in ', res);
-        that.setState({ currentUser: res.username });
+        that.setState({ currentUser: res.data.email });
       })
       .catch(err => console.log(err));
   }
@@ -107,17 +107,30 @@ class App extends React.Component {
       .catch(err => console.log(err));
   }
   /*
--------------------------------------------------------------------
-          No Longer Authorization! :)
--------------------------------------------------------------------
-*/
+  -------------------------------------------------------------------
+  No Longer Authorization! :)
+  -------------------------------------------------------------------
+  */
 
   getAllCategories() {
     axios
       .get('/api/categories')
       .then(res =>
         this.setState({
-          currentCategories: res.data,
+          categoriesList: res.data,
+        }))
+      .then(() => {
+        this.getCategoryInfo(this.state.categoriesList[1]._id);
+      })
+      .catch(err => console.log(err));
+  }
+
+  getCategoryInfo(categoryID) {
+    axios
+      .get(`/api/categories/${categoryID}`)
+      .then(res =>
+        this.setState({
+          currentCategory: res.data,
         }))
       .catch(err => console.log(err));
   }
@@ -132,7 +145,6 @@ class App extends React.Component {
       .catch(err => console.log(err));
   }
 
-  // Use _id or id? _id is mongoose generated id
   getSpecificCourse(category, course) {
     axios
       .get(`/api/categories/${category._id}/courses/${course.id}`)
@@ -198,9 +210,16 @@ class App extends React.Component {
     // The props here NEED TO BE CHANGED!
     return (
       <div>
-        <Navigation categories={this.state.categories} addCurrentUser={this.addCurrentUser} />
+        <Navigation
+          categories={this.state.categoriesList}
+          addCurrentUser={this.addCurrentUser}
+          logInUser={this.logInUser}
+          logOutUser={this.logOutUser}
+          changeCategory={this.getCategoryInfo}
+          currentUser={this.state.currentUser}
+        />
         <CategoryView
-          category={this.state.categories}
+          category={this.state.currentCategory}
           handleUpvoteRequest={this.handleUpvoteRequest}
         />
       </div>
@@ -209,9 +228,13 @@ class App extends React.Component {
 }
 
 ReactDOM.render(
-  <BrowserRouter>
-    <App />
-  </BrowserRouter>,
+  <Router history={history}>
+    <Switch>
+      <Route exact path="/" component={App} />
+      <Route path="/course*" component={CourseDetailView} />
+      {/* <Route path="/courses" component={CategoryView} /> */}
+    </Switch>
+  </Router>,
   document.getElementById('app'),
 );
 

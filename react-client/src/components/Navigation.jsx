@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Route, Link, BrowserRouter as Router } from 'react-router-dom';
 import App from '../index.jsx';
 import UserModal from './UserModal.jsx';
 
@@ -31,6 +30,7 @@ class Navigation extends React.Component {
     this.toggleDropdown = this.toggleDropdown.bind(this);
     this.toggleSignupModal = this.toggleSignupModal.bind(this);
     this.toggleLoginModal = this.toggleLoginModal.bind(this);
+    this.onDropdownChange = this.onDropdownChange.bind(this);
   }
 
   toggleDropdown() {
@@ -49,6 +49,10 @@ class Navigation extends React.Component {
     this.setState({ modal: !this.state.modal });
   }
 
+  onDropdownChange(event) {
+    this.props.changeCategory(event.target.value);
+  }
+
   render() {
     const modalDisplay = (
       <div>
@@ -56,11 +60,28 @@ class Navigation extends React.Component {
           <UserModal
             toggleModal={this.toggleModal}
             addCurrentUser={this.props.addCurrentUser}
+            logInUser={this.props.logInUser}
             modalClicked={this.state.modalSelected}
+            currentUser={this.props.currentUser}
           />
         </Modal>
       </div>
     );
+
+    const logInLogOutNav =
+      this.props.currentUser !== '' ? (
+        <li className="nav-item">
+          <a className="nav-link" onClick={this.props.logOutUser}>
+            Logout
+          </a>
+        </li>
+      ) : (
+        <li className="nav-item">
+          <a className="nav-link" onClick={this.toggleLoginModal}>
+            Login
+          </a>
+        </li>
+      );
 
     return (
       <nav className="navbar navbar-expand-md bg-info">
@@ -91,20 +112,17 @@ class Navigation extends React.Component {
                 </DropdownToggle>
                 <DropdownMenu>
                   {this.props.categories.map(category => (
-                    <DropdownItem key={category.name}> {category.name}</DropdownItem>
+                    <DropdownItem
+                      key={category.name}
+                      value={category._id}
+                      onClick={this.onDropdownChange}
+                    >
+                      {category.name}
+                    </DropdownItem>
                   ))}
                 </DropdownMenu>
               </Dropdown>
-              <li className="nav-item">
-                <a className="nav-link" onClick={this.toggleSignupModal}>
-                  Sign Up
-                </a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link" onClick={this.toggleLoginModal}>
-                  Login
-                </a>
-              </li>
+              {logInLogOutNav}
             </ul>
           </div>
         </div>

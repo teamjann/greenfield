@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Route, Link } from 'react-router-dom';
+import history from '../history';
 
 class CourseDetailView extends React.Component {
   constructor(props) {
@@ -8,30 +8,38 @@ class CourseDetailView extends React.Component {
 
     this.state = {};
   }
+
+  componentDidMount() {
+    const { course } = this.props.location.state;
+  }
+
   render() {
     return (
       <div className="container">
         <div>
-          {/* Implement back button router functionality */}
           <button
             className="btn btn-primary btn-icon btn-icon-mini btn-round text-center float-left"
-            onClick={this.props.courseDetailClicked}
+            onClick={history.goBack}
           >
             <i className="fas fa-arrow-left" />
           </button>
-          <h1 className="text-primary text-center">{this.props.course.name}</h1>
-          <p className="text-secondary">By {this.props.course.description.instructor}</p>
-          <p>Price: ${this.props.course.description.price} </p>
+          <h1 className="text-primary text-center">{this.props.location.state.course.name}</h1>
+          <p className="text-secondary">
+            By {this.props.location.state.course.description.instructor}
+          </p>
+          <p>Price: ${this.props.location.state.course.description.price} </p>
         </div>
         <div className="embed-responsive embed-responsive-16by9">
           <iframe
             className="embed-responsive-item"
-            src={this.props.course.description.videoUrl}
+            src={this.props.location.state.course.description.videoUrl}
             allowFullScreen
           />
         </div>
-        <a href={this.props.course.courseUrl}>{this.props.course.courseUrl}</a>
-        <p>Description: {this.props.course.description.text}</p>
+        <a href={this.props.location.state.course.courseUrl}>
+          {this.props.location.state.course.courseUrl}
+        </a>
+        <p>Description: {this.props.location.state.course.description.text}</p>
       </div>
     );
   }

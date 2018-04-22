@@ -44,7 +44,7 @@ const userSchema = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     auto: true,
   },
-  email: String,
+  email: { type: String, unique: true },
   password: String,
   coursesUpvoted: [
     {
@@ -180,3 +180,7 @@ module.exports.retrieveUpVotes = (categoryId, courseId, userId) => {
     .then(result => result)
     .catch(err => err);
 };
+// new User(newUser)
+//   .save()
+//   .then(() => console.log('New user added!'))
+//   .catch(err => console.log('user may allready exist'));

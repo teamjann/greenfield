@@ -36,19 +36,22 @@ const isLoggedIn = (req, res, next) => {
 };
 
 app.post('/api/signup', passport.authenticate('local-signup'), (req, res) => {
-  console.log('sign up called');
-  res.status(200).json(req.user);
+  console.log(req.user, ' was successfully created');
+  res.status(201).json(req.user);
 });
 
 app.post('/api/login', passport.authenticate('local-login'), (req, res) => {
-  res.status(200).json(req.user);
+  console.log(req.user, ' was successfully logged in');
+  res.status(201).json(req.user);
 });
 
 app.post('/api/logout', isLoggedIn, (req, res) => {
   req.logout();
+  console.log('Successfully logged out');
+
   res
     .clearCookie('connect.sid')
-    .status(200)
+    .status(201)
     .redirect('/');
 });
 
@@ -95,7 +98,20 @@ app.get('/api/categories', (req, res) => {
       res.status(500).end();
     });
 });
-// GET '/api/categories/:id': Detail view of category.
+// GET '/api/categories/id': List of all categories.
+app.get('/api/categories/:id', (req, res) => {
+  const categoryId = req.params.id;
+  new Promise((resolve, reject) => {
+    resolve(db.retrieveCategory(categoryId));
+  })
+    .then((category) => {
+      res.status(200).json(category);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).end();
+    });
+});
 // POST '/api/categories': Add a new cateogry.
 app.post('/api/categories', (req, res) => {
   const categoryToInsert = req.body;
