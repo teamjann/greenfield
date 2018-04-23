@@ -55,11 +55,13 @@ class App extends React.Component {
     this.logInUser = this.logInUser.bind(this);
     this.logOutUser = this.logOutUser.bind(this);
 
+    this.refreshUpvotes = this.refreshUpvotes.bind(this);
     this.getCategoryInfo = this.getCategoryInfo.bind(this);
   }
 
   componentDidMount() {
     this.getAllCategories();
+    this.getInitialUpvotes();
   }
 
   handleLoginClick() {
@@ -121,6 +123,7 @@ class App extends React.Component {
       .then(() => {
         this.getCategoryInfo(this.state.categoriesList[1]._id);
       })
+      .then(() => {})
       .catch(err => console.log(err));
   }
 
@@ -173,6 +176,20 @@ class App extends React.Component {
       .catch(err => console.log(err));
   }
 
+  refreshUpvotes(upVotesToRefresh) {
+    axios
+      .patch('/api/upvotes', upVotesToRefresh)
+      .then((response) => {
+        this.setState({ upvotes: response.data }, () => {
+          console.log('Upvotes set in App level state: ', this.state.upvotes);
+        });
+      })
+      .catch(err => console.log(err));
+  }
+  getInitialUpvotes() {
+    this.refreshUpvotes({ categoryId: '5ad7c0dffac8270c7ae8f3aa' });
+  }
+
   render() {
     // TURN ME ON WHEN WORKING ON MODAL
     // if (this.state.signupModalTriggered) {
@@ -214,7 +231,11 @@ class App extends React.Component {
           changeCategory={this.getCategoryInfo}
           currentUser={this.state.currentUser}
         />
-        <CategoryView category={this.state.currentCategory} />
+        <CategoryView
+          category={this.state.currentCategory}
+          refreshUpvotes={this.refreshUpvotes.bind(this)}
+          upvotes={this.state.upvotes}
+        />
       </div>
     );
   }

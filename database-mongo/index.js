@@ -54,23 +54,34 @@ const userSchema = mongoose.Schema({
   ],
 });
 
+const upVoteSchema = mongoose.Schema({
+  categoryId: String,
+  courseId: String,
+  userId: String,
+});
+
 const Category = mongoose.model('Category', categorySchema);
 const User = mongoose.model('User', userSchema);
+const Upvote = mongoose.model('Upvote', upVoteSchema);
 
 /*
 FUNCTION LEGEND:
-  - CATEGORY:
-    retrieveCategory
-    retrieveCategories
-    insertNewCategory
-  - COURSE:
-    retrieveCourse
-    retrieveCourses
-    insertNewCourse
-  - USER:
-    retrieveUser
-    retrieveUsers
-    insertNewUser
+  CATEGORY:
+    - retrieveCategory
+    - retrieveCategories
+    - insertNewCategory
+  COURSE:
+    - retrieveCourse
+    - retrieveCourses
+    - insertNewCourse
+  USER:
+    - retrieveUser
+    - retrieveUsers
+    - insertNewUser
+  UPVOTE:
+    - addUpVote
+    - removeUpVote
+    - retrieveUpvotes
 */
 
 module.exports.retrieveCategory = categoryId =>
@@ -136,7 +147,40 @@ module.exports.retrieveUsers = userEmail =>
     .catch(err => console.log(err));
 
 module.exports.insertNewUser = newUser =>
-  new User(newUser)
+  User.findOne({
+    email: newUser.email,
+  })
+    .then(user => console.log(user.email, ' allready exists'))
+    .catch(() => {
+      new User(newUser)
+        .save()
+        .then(() => console.log('New user sucessfully added!'))
+        .catch(err => console.log(err));
+    });
+
+module.exports.addUpVote = (upVote) => {
+  new Upvote(upVote)
     .save()
-    .then(() => console.log('New user added!'))
-    .catch(err => console.log('user may allready exist'));
+    .then(result => console.log(`Added ${JSON.stringify(result)}`))
+    .catch(err => console.log(err));
+};
+
+module.exports.removeUpVote = (upVote) => {
+  Upvote.deleteMany(upVote)
+    .then(result => console.log(`Removed ${JSON.stringify(result)}`))
+    .catch(err => console.log(err));
+};
+
+module.exports.retrieveUpVotes = (categoryId, courseId, userId) => {
+  const query = {};
+  if (categoryId) query.categoryId = categoryId;
+  if (courseId) query.courseId = courseId;
+  if (userId) query.userId = userId;
+  return Upvote.find(query)
+    .then(result => result)
+    .catch(err => err);
+};
+// new User(newUser)
+//   .save()
+//   .then(() => console.log('New user added!'))
+//   .catch(err => console.log('user may allready exist'));

@@ -61,23 +61,33 @@ app.post('/api/logout', isLoggedIn, (req, res) => {
 
 /*
 ROUTE LEGEND:
-  STATIC '/': Serves up static files and index.html.
-  CATEGORIES GET '/api/categories': List of all categories.
-  CATEGORY POST '/api/categories': Add a new cateogry.
-  COURSES GET '/api/categories/:id/courses': List of all courses for an individual category.
-  COURSE GET '/api/categories/:id/courses/:courseId': Detailed information about a specific course.
-  COURSE POST '/api/categories/:id/courses': Add a new course to a category.
-  USER GET '/api/users': Returns a list of each user document.
-  USER GET '/api/users/:id': Returns a specific user's information.
-  USER POST '/api/users': Adds a new user to the database.
+  STATIC:
+    - GET '/': Serves up static files and index.html.
+  CATEGORY:
+    - GET '/api/categories': List of all categories.
+    - GET '/api/categories/:id': Detail view of category.
+    - POST '/api/categories': Add a new cateogry.
+  COURSE:
+    - GET '/api/categories/:id/courses': List of all courses for an individual category.
+    - GET '/api/categories/:id/courses/:courseId': Detailed information about a specific course.
+    - POST '/api/categories/:id/courses': Add a new course to a category.
+  USER:
+    - GET '/api/users': Returns a list of each user document.
+    - GET '/api/users/:id': Returns a specific user's information.
+    - POST '/api/users': Adds a new user to the database.
+  UPVOTE:
+    - POST '/api/upvote': Adds an upvote.
+    - DELETE '/api/upvote': Removes an upvote.
+    - PATCH '/api/upvotes': Retrieves upvotes. Send in the fields you want to filter by.
+    - PATCH '/api/upvote': Processes the upvote request.
 */
 
-// STATIC '/': Serves up static files and index.html.
+// GET '/': Serves up static files and index.html.
 app.use(express.static(`${__dirname}/../react-client/dist`));
 app.get('/', (req, res) => {
   res.sendFile(path.join(`${__dirname}/../react-client/src/index.html`));
 });
-// CATEGORIES GET '/api/categories': List of all categories.
+// GET '/api/categories': List of all categories.
 app.get('/api/categories', (req, res) => {
   new Promise((resolve, reject) => {
     resolve(db.retrieveCategories());
@@ -88,7 +98,7 @@ app.get('/api/categories', (req, res) => {
       res.status(500).end();
     });
 });
-// CATEGORY GET '/api/categories/id': List of all categories.
+// GET '/api/categories/id': List of all categories.
 app.get('/api/categories/:id', (req, res) => {
   const categoryId = req.params.id;
   new Promise((resolve, reject) => {
@@ -102,7 +112,7 @@ app.get('/api/categories/:id', (req, res) => {
       res.status(500).end();
     });
 });
-// CATEGORY POST '/api/categories': Add a new cateogry.
+// POST '/api/categories': Add a new cateogry.
 app.post('/api/categories', (req, res) => {
   const categoryToInsert = req.body;
 
@@ -115,7 +125,7 @@ app.post('/api/categories', (req, res) => {
       res.status(500).end();
     });
 });
-// COURSE GET '/api/categories/:id/courses': List of all courses for an individual category.
+// GET '/api/categories/:id/courses': List of all courses for an individual category.
 app.get('/api/categories/:id/courses', (req, res) => {
   const categoryToRetrieveCourses = req.params.id;
   new Promise((resolve, reject) => {
@@ -127,7 +137,7 @@ app.get('/api/categories/:id/courses', (req, res) => {
       res.status(500).end();
     });
 });
-// COURSE GET '/api/categories/:id/courses/:courseId': Detailed information about a specific course.
+// GET '/api/categories/:id/courses/:courseId': Detailed information about a specific course.
 app.get('/api/categories/:category/courses/:course', (req, res) => {
   new Promise((resolve, reject) => {
     resolve(db.retrieveCourse(req.params.category));
@@ -147,7 +157,7 @@ app.get('/api/categories/:category/courses/:course', (req, res) => {
       res.status(500).end();
     });
 });
-// COURSE POST '/api/categories/:id/courses': Add a new course to a category.
+// POST '/api/categories/:id/courses': Add a new course to a category.
 app.post('/api/categories/:id/courses', (req, res) => {
   const categoryToInsertCourse = req.params.id;
   console.log(req.body);
@@ -162,7 +172,7 @@ app.post('/api/categories/:id/courses', (req, res) => {
       res.status(500).end();
     });
 });
-// USER GET '/api/users': Returns a list of each user document.
+// GET '/api/users': Returns a list of each user document.
 app.get('/api/users', (req, res) => {
   new Promise((resolve, reject) => {
     resolve(db.retrieveUsers());
@@ -173,7 +183,7 @@ app.get('/api/users', (req, res) => {
       res.status(500).end();
     });
 });
-// USER GET '/api/users/:id': Returns a specific user's information.
+// GET '/api/users/:id': Returns a specific user's information.
 app.get('/api/users/:id', (req, res) => {
   const userToRetrieve = req.params.id;
 
@@ -181,6 +191,117 @@ app.get('/api/users/:id', (req, res) => {
     resolve(db.retrieveUser(userToRetrieve));
   })
     .then(user => res.status(200).json(user))
+    .catch((err) => {
+      console.log(err);
+      res.status(500).end();
+    });
+});
+
+// POST '/api/upvote': Adds an upvote.
+app.post('/api/upvote', (req, res) => {
+  new Promise((resolve, reject) => {
+    resolve(db.addUpVote(req.body));
+  })
+    .then((addedUpVote) => {
+      console.log('Added successfully.', addedUpVote);
+      // res.status(201).json(addedUpVote);
+    })
+    .catch((err) => {
+      console.log(err);
+      // res.status(500).end();
+    });
+});
+
+// DELETE '/api/upvote': Removes an upvote.
+app.delete('/api/upvote', (req, res) => {
+  new Promise((resolve, reject) => {
+    resolve(db.removeUpVote(req.body));
+  })
+    .then((removedUpVote) => {
+      console.log('Removed successfully.');
+      // res.status(201).end();
+    })
+    .catch((err) => {
+      console.log(err);
+      // res.status(500).end();
+    });
+});
+
+// PATCH '/api/upvotes': Retrieves upvotes. Send in the fields you want to filter by.
+app.patch('/api/upvotes', (req, res) => {
+  new Promise((resolve, reject) => {
+    resolve(db.retrieveUpVotes(req.body.categoryId, req.body.courseId, req.body.userId));
+  })
+    .then((upVotes) => {
+      // console.log(req.body);
+      // console.log(JSON.stringify(upVotes));
+      res.status(200).json(upVotes);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).end();
+    });
+});
+
+// PATCH '/api/upvote': Processes the upvote request.
+app.patch('/api/upvote', (req, res) => {
+  const upVote = {
+    categoryId: req.body.categoryId,
+    courseId: req.body.courseId,
+    userId: req.body.userId,
+  };
+  new Promise((resolve, reject) => {
+    resolve(db.retrieveUpVotes(req.body.categoryId, req.body.courseId, req.body.userId));
+  })
+    .then((result) => {
+      console.group('> New Query:');
+      console.log(result);
+      console.log(`Query result: ${result[0]}`);
+      console.groupEnd();
+      if (result[0]) {
+        new Promise((resolve, reject) => {
+          resolve(db.removeUpVote(upVote));
+        })
+          .then(() => {
+            console.log('Removed successfully.');
+            new Promise((resolve, reject) => {
+              resolve(db.retrieveUpVotes(req.body.categoryId, req.body.courseId, req.body.userId));
+            })
+              .then((newCount) => {
+                console.log('New count: ', newCount.length);
+                res.status(201).json(newCount.length);
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+          })
+          .catch((err) => {
+            console.log(err);
+            res.status(500).end();
+          });
+      } else {
+        new Promise((resolve, reject) => {
+          resolve(db.addUpVote(upVote));
+        })
+          .then(() => {
+            console.log('Added successfully.');
+            new Promise((resolve, reject) => {
+              resolve(db.retrieveUpVotes(upVote.categoryId, upVote.courseId, upVote.userId));
+            })
+              .then((newCount) => {
+                console.log('New count: ', newCount);
+                res.status(201).json(newCount.length);
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+          })
+          .catch((err) => {
+            console.log(err);
+            res.status(500).end();
+          });
+      }
+    })
     .catch((err) => {
       console.log(err);
       res.status(500).end();
