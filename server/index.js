@@ -16,7 +16,8 @@ app.use(bodyParser.urlencoded({
 /*-------------------------------------------------------------------
           Authorization! :)
 -------------------------------------------------------------------*/
-
+// specifies cookie length and secret for creating cookies.
+// the secret should be in a git ignore file
 app.use(session({
   secret: 'shouldbestoredinakey',
   resave: true,
@@ -24,6 +25,7 @@ app.use(session({
   cookie: { maxAge: 12 * 60 * 60 * 1000 },
 }));
 
+// passport magic don't touch. 
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -35,16 +37,19 @@ const isLoggedIn = (req, res, next) => {
   res.status(401).end('You must log in to do that!');
 };
 
+// passport route that uses signup stragegy
 app.post('/api/signup', passport.authenticate('local-signup'), (req, res) => {
   console.log(req.user, ' was successfully created');
   res.status(201).json(req.user);
 });
 
+// passport route that uses login stragegy
 app.post('/api/login', passport.authenticate('local-login'), (req, res) => {
   console.log(req.user, ' was successfully logged in');
   res.status(201).json(req.user);
 });
 
+// ends session disables cookie logs you out.
 app.post('/api/logout', isLoggedIn, (req, res) => {
   req.logout();
   console.log('Successfully logged out');
