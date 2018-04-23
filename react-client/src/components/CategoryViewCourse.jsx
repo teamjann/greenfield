@@ -8,11 +8,22 @@ class CategoryViewCourse extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      upVoteCount: 0,
       isClicked: false,
       // downVoteCount = 0
+      upvoteCount: this.props.upvoteCount || 0,
+      // upVotes: this.props.upVotes || [],
     };
   }
+  componentDidMount() {
+    // console.group('Course Component Mounted:');
+    // console.log(`Upvotes : ${JSON.stringify(this.state.upVotes)}`);
+    // console.groupEnd();
+    // this.updateUpvotes();
+  }
+
+  // updateUpvotes(newUpvotes) {
+  //   this.setState({ upVotes: newUpvotes });
+  // }
 
   render() {
     return (
@@ -42,8 +53,12 @@ class CategoryViewCourse extends React.Component {
           {/* <button className="btn btn-primary btn-icon btn-icon-mini btn-round text-center">
             <i className="fas fa-chevron-up" />
           </button> */}
-          <Upvote handleUpvoteRequest={this.props.handleUpvoteRequest} />
-          <span className="card-text text-light ml-2">Upvote Count: {this.state.upVoteCount}</span>
+          <Upvote
+            categoryId={this.props.category._id}
+            courseId={this.props.course.id}
+            refreshUpvotes={this.props.refreshUpvotes}
+            upvoteCount={this.state.upvoteCount || 0}
+          />
         </div>
       </div>
     );

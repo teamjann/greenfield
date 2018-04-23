@@ -11,7 +11,13 @@ const CategoryView = props => (
           category={props.category}
           course={course}
           key={i}
-          handleUpvoteRequest={props.handleUpvoteRequest}
+          upvoteCount={
+            props.upvotes
+              ? props.upvotes.filter(upvote => upvote.courseId === JSON.stringify(course.id)).length // console.log('props.upvotes in category view: ', props.upvotes)
+              : 0 // console.log('No upvotes in category view props.')
+          }
+          refreshUpvotes={props.refreshUpvotes}
+          // log={console.log(course.id)}
         />
       ))}
   </div>

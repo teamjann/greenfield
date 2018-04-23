@@ -203,12 +203,12 @@ app.post('/api/upvote', (req, res) => {
     resolve(db.addUpVote(req.body));
   })
     .then((addedUpVote) => {
-      console.log('Added successfully.');
-      res.status(201).end();
+      console.log('Added successfully.', addedUpVote);
+      // res.status(201).json(addedUpVote);
     })
     .catch((err) => {
       console.log(err);
-      res.status(500).end();
+      // res.status(500).end();
     });
 });
 
@@ -219,11 +219,11 @@ app.delete('/api/upvote', (req, res) => {
   })
     .then((removedUpVote) => {
       console.log('Removed successfully.');
-      res.status(201).end();
+      // res.status(201).end();
     })
     .catch((err) => {
       console.log(err);
-      res.status(500).end();
+      // res.status(500).end();
     });
 });
 
@@ -232,7 +232,11 @@ app.patch('/api/upvotes', (req, res) => {
   new Promise((resolve, reject) => {
     resolve(db.retrieveUpVotes(req.body.categoryId, req.body.courseId, req.body.userId));
   })
-    .then(upVotes => res.status(200).json(upVotes))
+    .then((upVotes) => {
+      // console.log(req.body);
+      // console.log(JSON.stringify(upVotes));
+      res.status(200).json(upVotes);
+    })
     .catch((err) => {
       console.log(err);
       res.status(500).end();
@@ -250,28 +254,47 @@ app.patch('/api/upvote', (req, res) => {
     resolve(db.retrieveUpVotes(req.body.categoryId, req.body.courseId, req.body.userId));
   })
     .then((result) => {
+      console.group('> New Query:');
+      console.log(result);
       console.log(`Query result: ${result[0]}`);
+      console.groupEnd();
       if (result[0]) {
-        console.log('This upvote already exists.');
         new Promise((resolve, reject) => {
           resolve(db.removeUpVote(upVote));
         })
           .then(() => {
             console.log('Removed successfully.');
-            res.status(201).end();
+            new Promise((resolve, reject) => {
+              resolve(db.retrieveUpVotes(req.body.categoryId, req.body.courseId, req.body.userId));
+            })
+              .then((newCount) => {
+                console.log('New count: ', newCount.length);
+                res.status(201).json(newCount.length);
+              })
+              .catch((err) => {
+                console.log(err);
+              });
           })
           .catch((err) => {
             console.log(err);
             res.status(500).end();
           });
       } else {
-        console.log('This upvote does not exist.');
         new Promise((resolve, reject) => {
           resolve(db.addUpVote(upVote));
         })
           .then(() => {
             console.log('Added successfully.');
-            res.status(201).end();
+            new Promise((resolve, reject) => {
+              resolve(db.retrieveUpVotes(upVote.categoryId, upVote.courseId, upVote.userId));
+            })
+              .then((newCount) => {
+                console.log('New count: ', newCount);
+                res.status(201).json(newCount.length);
+              })
+              .catch((err) => {
+                console.log(err);
+              });
           })
           .catch((err) => {
             console.log(err);

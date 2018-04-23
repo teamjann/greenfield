@@ -16,6 +16,7 @@ class App extends React.Component {
       signupModalTriggered: false,
       loginModalTriggered: false,
       currentUser: {},
+      // upVotes: 'None stored in state.',
       // categories: [
       //   {
       //     _id: 1,
@@ -55,12 +56,13 @@ class App extends React.Component {
     this.logInUser = this.logInUser.bind(this);
     this.logOutUser = this.logOutUser.bind(this);
 
-    this.handleUpvoteRequest = this.handleUpvoteRequest.bind(this);
+    this.refreshUpvotes = this.refreshUpvotes.bind(this);
     this.getCategoryInfo = this.getCategoryInfo.bind(this);
   }
 
   componentDidMount() {
     this.getAllCategories();
+    this.getInitialUpvotes();
   }
 
   handleLoginClick() {
@@ -122,6 +124,10 @@ class App extends React.Component {
       .then(() => {
         this.getCategoryInfo(this.state.categoriesList[1]._id);
       })
+      .then(() => {
+        // console.log('Awaiting dynamic data.');
+        // this.getCourseUpvotes();
+      })
       .catch(err => console.log(err));
   }
 
@@ -172,9 +178,58 @@ class App extends React.Component {
       })
       .catch(err => console.log(err));
   }
-
-  handleUpvoteRequest(upVote) {
-    console.log('OOOOOOOEEE!!! You sent a upvote request! ', JSON.stringify(upVote));
+  // CUP
+  // getUpvotesForCategory(category = this.state.categoriesList[1]._id) {
+  //   // console.log(`Category to search: ${category}`);
+  //   axios
+  //     .patch('/api/upvotes', {
+  //       categoryId: category,
+  //     })
+  //     .then((response) => {
+  //       // console.log('getresponseForCategory called. Results: ', response);
+  //       this.setUpvotes(response.data, () => {
+  //         // console.log('getUpvotesForCategory set upvotes');
+  //       });
+  //     })
+  //     .catch((err) => {
+  //       console.log(`Failed to get the upvotes for ${category}`);
+  //       console.log('Error: ', err);
+  //     });
+  // }
+  // getCourseUpvotes() {
+  //   const upvotesToRefresh = {
+  //     categoryId: this.state.categoriesList[1]._id,
+  //   };
+  //   console.log('Input into getCourseUpvotes', upvotesToRefresh);
+  //   axios
+  //     .patch('/api/upvotes', upvotesToRefresh)
+  //     .then((repsonse) => {
+  //       console.log('getCourseUpvotes returned: ', repsonse.data);
+  //       this.setState(
+  //         {
+  //           upvotes: repsonse.data,
+  //         },
+  //         () => {
+  //           console.log('Set results to this.state.upvotes', this.state.upvotes);
+  //         },
+  //       );
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // }
+  refreshUpvotes(upVotesToRefresh) {
+    axios
+      .patch('/api/upvotes', upVotesToRefresh)
+      .then((response) => {
+        this.setState({ upvotes: response.data }, () => {
+          console.log('Upvotes set in App level state: ', this.state.upvotes);
+        });
+      })
+      .catch(err => console.log(err));
+  }
+  getInitialUpvotes() {
+    this.refreshUpvotes({ categoryId: '5ad7c0dffac8270c7ae8f3aa' });
   }
 
   render() {
@@ -220,7 +275,8 @@ class App extends React.Component {
         />
         <CategoryView
           category={this.state.currentCategory}
-          handleUpvoteRequest={this.handleUpvoteRequest}
+          refreshUpvotes={this.refreshUpvotes.bind(this)}
+          upvotes={this.state.upvotes}
         />
       </div>
     );
