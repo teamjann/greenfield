@@ -238,8 +238,6 @@ app.patch('/api/upvotes', (req, res) => {
     resolve(db.retrieveUpVotes(req.body.categoryId, req.body.courseId, req.body.userId));
   })
     .then((upVotes) => {
-      // console.log(req.body);
-      // console.log(JSON.stringify(upVotes));
       res.status(200).json(upVotes);
     })
     .catch((err) => {
@@ -260,10 +258,6 @@ app.patch('/api/upvote', isLoggedIn, (req, res) => {
     resolve(db.retrieveUpVotes(req.body.categoryId, req.body.courseId, req.body.userId));
   })
     .then((result) => {
-      // console.group('> New Query:');
-      // console.log(result);
-      // console.log(`Query result: ${result[0]}`);
-      // console.groupEnd();
       if (result[0]) {
         new Promise((resolve, reject) => {
           resolve(db.removeUpVote(upVote));
