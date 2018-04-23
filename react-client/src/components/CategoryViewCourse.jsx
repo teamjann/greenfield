@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Link } from 'react-router-dom';
+import slugify from 'slugify';
 import CourseDetailView from './CourseDetailView.jsx';
 
 class CategoryViewCourse extends React.Component {
@@ -15,10 +16,11 @@ class CategoryViewCourse extends React.Component {
 
   render() {
     return (
+      // pathname: `/${slugify(`${this.props.course.name}`)}`,
       <div className="card">
         <Link
           to={{
-            pathname: `/courses/${this.props.course.name}`,
+            pathname: '/course',
             state: {
               course: this.props.course,
             },

@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Switch, Route, Router } from 'react-router-dom';
+import { IndexRoute, Switch, Route, Router } from 'react-router-dom';
 import axios from 'axios';
 import Navigation from './components/Navigation.jsx';
 import CategoryView from './components/CategoryView.jsx';
@@ -127,10 +127,11 @@ class App extends React.Component {
   getCategoryInfo(categoryID) {
     axios
       .get(`/api/categories/${categoryID}`)
-      .then(res =>
+      .then((res) => {
         this.setState({
           currentCategory: res.data,
-        }))
+        });
+      })
       .catch(err => console.log(err));
   }
 
@@ -222,9 +223,9 @@ class App extends React.Component {
 ReactDOM.render(
   <Router history={history}>
     <Switch>
-      <Route exact path="/" component={App} />
-      <Route path="/course*" component={CourseDetailView} />
-      {/* <Route path="/courses" component={CategoryView} /> */}
+      <Route path=":category/courses" component={CategoryView} />
+      <Route path="/course" component={CourseDetailView} />
+      <Route path="/" component={App} />
     </Switch>
   </Router>,
   document.getElementById('app'),

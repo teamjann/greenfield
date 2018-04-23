@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from '../index.jsx';
 import UserModal from './UserModal.jsx';
-
+import { Link } from 'react-router-dom';
 import {
   UncontrolledDropdown,
   DropdownToggle,
@@ -111,15 +111,21 @@ class Navigation extends React.Component {
                   Categories
                 </DropdownToggle>
                 <DropdownMenu>
-                  {this.props.categories.map(category => (
-                    <DropdownItem
-                      key={category.name}
-                      value={category._id}
-                      onClick={this.onDropdownChange}
-                    >
-                      {category.name}
-                    </DropdownItem>
-                  ))}
+                  {this.props &&
+                    this.props.categories &&
+                    this.props.categories.map(category => (
+                      <Link
+                        to={{
+                          pathname: `/${category.name}/courses/`,
+                          state: { category },
+                        }}
+                        key={category.name}
+                      >
+                        <DropdownItem value={category._id} onClick={this.onDropdownChange}>
+                          {category.name}
+                        </DropdownItem>
+                      </Link>
+                    ))}
                 </DropdownMenu>
               </Dropdown>
               {logInLogOutNav}
