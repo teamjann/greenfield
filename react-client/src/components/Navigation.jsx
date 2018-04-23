@@ -50,7 +50,22 @@ class Navigation extends React.Component {
   }
 
   onDropdownChange(event) {
-    this.props.changeCategory(event.target.value);
+    const category = event.target.value;
+    new Promise((resolve, reject) => {
+      resolve(this.props.changeCategory(category));
+    })
+      .then(() => {
+        console.log('Change category fired.');
+      })
+      .catch(err => console.log(err));
+    new Promise((resolve, reject) => {
+      resolve(this.props.refreshUpvotes({ categoryId: category }));
+    })
+      .then(() => {
+        console.log('Refreshed upvotes.');
+      })
+      .catch(err => console.log(err));
+    // event.target.value
   }
 
   render() {

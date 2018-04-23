@@ -244,20 +244,21 @@ app.patch('/api/upvotes', (req, res) => {
 });
 
 // PATCH '/api/upvote': Processes the upvote request.
-app.patch('/api/upvote', (req, res) => {
+app.patch('/api/upvote', isLoggedIn, (req, res) => {
   const upVote = {
     categoryId: req.body.categoryId,
     courseId: req.body.courseId,
     userId: req.body.userId,
   };
+  console.log(upVote);
   new Promise((resolve, reject) => {
     resolve(db.retrieveUpVotes(req.body.categoryId, req.body.courseId, req.body.userId));
   })
     .then((result) => {
-      console.group('> New Query:');
-      console.log(result);
-      console.log(`Query result: ${result[0]}`);
-      console.groupEnd();
+      // console.group('> New Query:');
+      // console.log(result);
+      // console.log(`Query result: ${result[0]}`);
+      // console.groupEnd();
       if (result[0]) {
         new Promise((resolve, reject) => {
           resolve(db.removeUpVote(upVote));
@@ -289,7 +290,7 @@ app.patch('/api/upvote', (req, res) => {
               resolve(db.retrieveUpVotes(upVote.categoryId, upVote.courseId, upVote.userId));
             })
               .then((newCount) => {
-                console.log('New count: ', newCount);
+                console.log('New count: ', newCount.length);
                 res.status(201).json(newCount.length);
               })
               .catch((err) => {
