@@ -135,22 +135,16 @@ class App extends React.Component {
   }
 
   refreshUpvotes(upVotesToRefresh) {
-    // console.log('Input to refreshUpvotes: ', upVotesToRefresh);
     axios
       .patch('/api/upvotes', upVotesToRefresh)
       .then((response) => {
-        console.log('repsonse.data: ', response.data);
         const newUpvoteData = {};
         response.data.map((upvote) => {
-          // console.log(upvote.courseId);
-          // newUpvoteData[upvote.courseId] += 1;
           newUpvoteData[upvote.courseId]
             ? (newUpvoteData[upvote.courseId] = newUpvoteData[upvote.courseId] + 1)
             : (newUpvoteData[upvote.courseId] = 1);
         });
-        console.log('New upvote data: ', newUpvoteData);
         this.setState({ upvotes: newUpvoteData }, () => {
-          // console.log('Upvotes set in App level state: ', this.state.upvotes);
         });
       })
       .catch(err => console.log(err));
@@ -173,7 +167,7 @@ class App extends React.Component {
         />
         <CategoryView
           category={this.state.currentCategory}
-          refreshUpvotes={this.refreshUpvotes.bind(this)}
+          refreshUpvotes={this.refreshUpvotes}
           username={this.state.currentUser}
           upvotes={this.state.upvotes}
         />

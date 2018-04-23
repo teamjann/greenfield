@@ -6,8 +6,6 @@ class Upvote extends React.Component {
     super(props);
     this.state = {
       canClick: true,
-      // upvoteCount: this.props.upvoteCount || 0,
-      // upvotesForThisCourse: this.props.upvoteCount,
       categoryId: this.props.categoryId,
       courseId: this.props.courseId,
     };
@@ -15,17 +13,14 @@ class Upvote extends React.Component {
   componentDidMount() {}
 
   handleUpvoteClick() {
-    console.group('New upvote click trigger:');
-    // console.log('categoryId: ', this.state.categoryId);
-    // console.log('courseId: ', this.state.courseId);
+    // Is the user logged in? Username only fills when user is logged in.
     if (this.props.username !== '') {
+      // Can the button be clicked? Used to prevent spamming.
       if (this.state.canClick) {
-        // console.log('Allowed to click: ', this.state.canClick);
+        // Disallow clicking until the upvote request has completed.
         this.setState({ canClick: false }, () => {
-          // console.log('Clicking disabled. this.state.canClick: ', this.state.canClick);
-          // console.log('Request to process upvote.');
+          // Request that the upvote is toggled.
           new Promise((resolve, reject) => {
-            console.log(this.props.username);
             resolve(axios
               .patch('/api/upvote', {
                 categoryId: this.props.categoryId,
@@ -33,22 +28,20 @@ class Upvote extends React.Component {
                 userId: this.props.username,
               })
               .then((response) => {
-                console.log('Upvote process response:', response.data);
+                // Once the upvote request has ben fullfilled, allow clicking.
                 this.setState({ canClick: true }, () => {
-                  this.props.refreshUpvotes({ categoryId: this.props.categoryId }); // console.log('Allow clicking again. this.state.canClick: ', this.state.canClick);
+                  // Then refresh the upvote data in app level state. refreshUpvotes has been bound to app level.
+                  this.props.refreshUpvotes({ categoryId: this.props.categoryId });
                 });
               })
               .catch((err) => {
                 console.log(err);
               }));
           })
-            .then((data) => {
-              // console.log('Completed upvote process.', data);
-            })
-            .catch((err) => {
-              // console.log('Request failure. ', err);
-            });
+            .then((data) => {})
+            .catch((err) => {});
         });
+        // User is spamming the upvote button faster than the request can be processed.
       } else console.log('Can not click yet.');
     }
     console.groupEnd();

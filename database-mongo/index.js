@@ -104,20 +104,21 @@ module.exports.insertNewCategory = (newCategory) => {
     .catch(err => console.log(err));
 };
 
-module.exports.retrieveCourse = (categoryId, courseId) =>
-  Category.findOne({
-    _id: categoryId,
-  })
-    .then(category => category.courses)
-    .catch(err => console.log(err));
+//
+// module.exports.retrieveCourse = (categoryId, courseId) =>
+//   Category.findOne({
+//     _id: categoryId,
+//   })
+//     .then(category => category.courses)
+//     .catch(err => console.log(err));
 
-module.exports.retrieveCourses = categoryId =>
-  Category.findOne({
-    _id: categoryId,
-  })
-    .select('courses')
-    .then(allCourses => allCourses)
-    .catch(err => console.log(err));
+// module.exports.retrieveCourses = categoryId =>
+//   Category.findOne({
+//     _id: categoryId,
+//   })
+//     .select('courses')
+//     .then(allCourses => allCourses)
+//     .catch(err => console.log(err));
 
 module.exports.insertNewCourse = (courseToBeAdded, categoryId) =>
   Category.findOneAndUpdate(
@@ -130,7 +131,6 @@ module.exports.insertNewCourse = (courseToBeAdded, categoryId) =>
       },
     },
   )
-    // .save()
     .then(() => console.log('New course successfully added!'))
     .catch(err => console.log(err));
 
@@ -180,7 +180,3 @@ module.exports.retrieveUpVotes = (categoryId, courseId, userId) => {
     .then(result => result)
     .catch(err => err);
 };
-// new User(newUser)
-//   .save()
-//   .then(() => console.log('New user added!'))
-//   .catch(err => console.log('user may allready exist'));
