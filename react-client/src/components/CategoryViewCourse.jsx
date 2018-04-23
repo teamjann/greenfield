@@ -15,12 +15,7 @@ class CategoryViewCourse extends React.Component {
       // upVotes: this.props.upVotes || [],
     };
   }
-  componentDidMount() {
-    // console.group('Course Component Mounted:');
-    // console.log(`Upvotes : ${JSON.stringify(this.state.upVotes)}`);
-    // console.groupEnd();
-    // this.updateUpvotes();
-  }
+  componentDidMount() {}
 
   // updateUpvotes(newUpvotes) {
   //   this.setState({ upVotes: newUpvotes });

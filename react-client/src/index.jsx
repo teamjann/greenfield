@@ -13,43 +13,8 @@ class App extends React.Component {
     this.state = {
       categoriesList: [],
       currentCategory: {},
-      signupModalTriggered: false,
-      loginModalTriggered: false,
       currentUser: '',
-      // categories: [
-      //   {
-      //     _id: 1,
-      //     name: 'React',
-      //     courses: [
-      //       {
-      //         _id: 1,
-      //         name: 'Reactify',
-      //         upvotes: 100,
-      //         description: {
-      //           createdOn: '01.01.2001',
-      //           instructor: 'Nick Fray',
-      //           price: 8,
-      //           videoUrl: 'https://www.youtube.com/embed/7mgvfGc7ZyU',
-      //           text:
-      //             "Today we're add some simple React components, while we also initialize the use of Watchify, Browserify and Reactify. Of course all while using Gulp as well! We will lay the basis of our UI, and add some placeholders for later on.",
-      //         },
-      //         courseUrl: 'https://www.udemy.com/understand-javascript/',
-      //       },
-      //     ],
-      //   },
-      // ],
-      // users: [
-      //   {
-      //     _id: 1,
-      //     email: 'johncrogers@test.com',
-      //     password: '1234',
-      //     coursesUpvoted: [],
-      //   },
-      // ],
     };
-
-    this.handleSignupClick = this.handleSignupClick.bind(this);
-    this.handleLoginClick = this.handleLoginClick.bind(this);
 
     this.addCurrentUser = this.addCurrentUser.bind(this);
     this.logInUser = this.logInUser.bind(this);
@@ -64,13 +29,6 @@ class App extends React.Component {
     this.getInitialUpvotes();
   }
 
-  handleLoginClick() {
-    this.setState({ loginModalTriggered: true, signupModalTriggered: false });
-  }
-
-  handleSignupClick() {
-    this.setState({ signupModalTriggered: true });
-  }
   /*
   -------------------------------------------------------------------
   Authorization! :)
@@ -202,36 +160,6 @@ class App extends React.Component {
   }
 
   render() {
-    // TURN ME ON WHEN WORKING ON MODAL
-    // if (this.state.signupModalTriggered) {
-    //   return (
-    //     <div className="container">
-    //       <Nav>
-    //         <Navigation
-    //           handleSignupClick={this.handleSignupClick}
-    //           handleLoginClick={this.handleLoginClick}
-    //           categories={this.state.categories}
-    //         />
-    //         {/* <SignupModal addCurrentUser={this.addCurrentUser} /> */}
-    //       </Nav>
-    //     </div>
-    //   );
-    // } else if (this.state.loginModalTriggered) {
-    //   return (
-    //     <div className="container">
-    //       <Nav>
-    //         <Navigation
-    //           handleSignupClick={this.handleSignupClick}
-    //           handleLoginClick={this.handleLoginClick}
-    //           categories={this.state.categories}
-    //         />
-    //         {/* <LoginModal users={this.state.users} addCurrentUser={this.addCurrentUser} /> */}
-    //       </Nav>
-    //     </div>
-    //   );
-    // }
-
-    // The props here NEED TO BE CHANGED!
     return (
       <div>
         <Navigation

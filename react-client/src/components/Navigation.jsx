@@ -10,9 +10,6 @@ import {
   DropdownItem,
   Dropdown,
   Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
   Button,
 } from 'reactstrap';
 
@@ -155,28 +152,3 @@ class Navigation extends React.Component {
 }
 
 export default Navigation;
-
-// <Nav>
-//           <ul>
-//             <li>
-//               <a href="#">Home</a>
-//             </li>
-//             <li>
-//               <select placeholder="select a category">
-//                 {this.props.categories.map(category => <option>{category.name}</option>)}
-//               </select>
-//             </li>
-//             <li>
-//               <button onClick={this.props.handleLoginClick}>
-//                 <Link to="/login"> Log In </Link>
-//               </button>
-//             </li>
-//             <li>
-//               <button onClick={this.props.handleSignupClick}>
-//                 <Link to="/signup">Sign Up</Link>
-//               </button>
-//             </li>
-//             <li>
-//               <button>Log Out</button>
-//             </li>
-//           </ul>
