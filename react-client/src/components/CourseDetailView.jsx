@@ -10,6 +10,8 @@ class CourseDetailView extends React.Component {
   }
 
   componentDidMount() {
+    console.log('course detail showing');
+
     const { course } = this.props.location.state;
   }
 
