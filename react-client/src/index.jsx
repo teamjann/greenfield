@@ -15,8 +15,7 @@ class App extends React.Component {
       currentCategory: {},
       signupModalTriggered: false,
       loginModalTriggered: false,
-      currentUser: {},
-      // upVotes: 'None stored in state.',
+      currentUser: '',
       // categories: [
       //   {
       //     _id: 1,

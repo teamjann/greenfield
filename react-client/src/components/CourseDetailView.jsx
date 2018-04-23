@@ -41,7 +41,7 @@ class CourseDetailView extends React.Component {
         <a href={this.props.location.state.course.courseUrl}>
           {this.props.location.state.course.courseUrl}
         </a>
-        <p>Description: {this.props.location.state.course.description.text}</p>
+        <p>Description: {this.props.location.state.course.description.description}</p>
       </div>
     );
   }
