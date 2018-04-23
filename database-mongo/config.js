@@ -1,16 +1,19 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
-const bodyParser = require('body-parser');
-const bcrypt = require('bcrypt');
-
-const saltRounds = 10;
 const db = require('./index');
 
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
+
+
 module.exports = function (passport) {
+
+  // puts user session info in a cookie
   passport.serializeUser((user, done) => {
     done(null, user);
   });
 
+  // confirms user cookie is legit
   passport.deserializeUser((user, done) => {
     done(null, user);
   });
@@ -19,6 +22,7 @@ module.exports = function (passport) {
   passport.use(
     'local-signup',
     new LocalStrategy(async (username, password, cb) => {
+      // hashes password and stores it
       bcrypt.hash(password, saltRounds, async (err, hash) => {
         if (err) {
           cb(err, null);
@@ -40,6 +44,7 @@ module.exports = function (passport) {
     new LocalStrategy(async (username, password, cb) => {
       const userData = await db.retrieveUser(username);
       if (userData) {
+        // unhashes stored password and compares to user input
         bcrypt.compare(password, userData.password, (err, res) => {
           if (err) {
             cb(err, null);
@@ -55,3 +60,5 @@ module.exports = function (passport) {
     }),
   );
 };
+
+// further strategy could be added for O-auth... signing in with google facebook ect.
