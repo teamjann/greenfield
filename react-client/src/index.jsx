@@ -15,7 +15,7 @@ class App extends React.Component {
       currentCategory: {},
       signupModalTriggered: false,
       loginModalTriggered: false,
-      currentUser: {},
+      currentUser: '',
       // categories: [
       //   {
       //     _id: 1,
