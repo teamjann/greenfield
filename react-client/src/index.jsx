@@ -124,10 +124,7 @@ class App extends React.Component {
       .then(() => {
         this.getCategoryInfo(this.state.categoriesList[1]._id);
       })
-      .then(() => {
-        // console.log('Awaiting dynamic data.');
-        // this.getCourseUpvotes();
-      })
+      .then(() => {})
       .catch(err => console.log(err));
   }
 
@@ -179,46 +176,7 @@ class App extends React.Component {
       })
       .catch(err => console.log(err));
   }
-  // CUP
-  // getUpvotesForCategory(category = this.state.categoriesList[1]._id) {
-  //   // console.log(`Category to search: ${category}`);
-  //   axios
-  //     .patch('/api/upvotes', {
-  //       categoryId: category,
-  //     })
-  //     .then((response) => {
-  //       // console.log('getresponseForCategory called. Results: ', response);
-  //       this.setUpvotes(response.data, () => {
-  //         // console.log('getUpvotesForCategory set upvotes');
-  //       });
-  //     })
-  //     .catch((err) => {
-  //       console.log(`Failed to get the upvotes for ${category}`);
-  //       console.log('Error: ', err);
-  //     });
-  // }
-  // getCourseUpvotes() {
-  //   const upvotesToRefresh = {
-  //     categoryId: this.state.categoriesList[1]._id,
-  //   };
-  //   console.log('Input into getCourseUpvotes', upvotesToRefresh);
-  //   axios
-  //     .patch('/api/upvotes', upvotesToRefresh)
-  //     .then((repsonse) => {
-  //       console.log('getCourseUpvotes returned: ', repsonse.data);
-  //       this.setState(
-  //         {
-  //           upvotes: repsonse.data,
-  //         },
-  //         () => {
-  //           console.log('Set results to this.state.upvotes', this.state.upvotes);
-  //         },
-  //       );
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // }
+
   refreshUpvotes(upVotesToRefresh) {
     axios
       .patch('/api/upvotes', upVotesToRefresh)
