@@ -167,7 +167,7 @@ module.exports.addUpVote = (upVote) => {
 
 module.exports.removeUpVote = (upVote) => {
   Upvote.deleteMany(upVote)
-    .then(result => console.log(`Removed ${JSON.stringify(result)}`))
+    .then((result) => {})
     .catch(err => console.log(err));
 };
 

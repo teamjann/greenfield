@@ -10,9 +10,6 @@ import {
   DropdownItem,
   Dropdown,
   Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
   Button,
 } from 'reactstrap';
 
@@ -50,7 +47,22 @@ class Navigation extends React.Component {
   }
 
   onDropdownChange(event) {
-    this.props.changeCategory(event.target.value);
+    const category = event.target.value;
+    new Promise((resolve, reject) => {
+      resolve(this.props.changeCategory(category));
+    })
+      .then(() => {
+        console.log('Change category fired.');
+      })
+      .catch(err => console.log(err));
+    new Promise((resolve, reject) => {
+      resolve(this.props.refreshUpvotes({ categoryId: category }));
+    })
+      .then(() => {
+        console.log('Refreshed upvotes.');
+      })
+      .catch(err => console.log(err));
+    // event.target.value
   }
 
   render() {
@@ -140,28 +152,3 @@ class Navigation extends React.Component {
 }
 
 export default Navigation;
-
-// <Nav>
-//           <ul>
-//             <li>
-//               <a href="#">Home</a>
-//             </li>
-//             <li>
-//               <select placeholder="select a category">
-//                 {this.props.categories.map(category => <option>{category.name}</option>)}
-//               </select>
-//             </li>
-//             <li>
-//               <button onClick={this.props.handleLoginClick}>
-//                 <Link to="/login"> Log In </Link>
-//               </button>
-//             </li>
-//             <li>
-//               <button onClick={this.props.handleSignupClick}>
-//                 <Link to="/signup">Sign Up</Link>
-//               </button>
-//             </li>
-//             <li>
-//               <button>Log Out</button>
-//             </li>
-//           </ul>

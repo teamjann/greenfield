@@ -11,16 +11,11 @@ class CategoryViewCourse extends React.Component {
     this.state = {
       isClicked: false,
       // downVoteCount = 0
-      upvoteCount: this.props.upvoteCount || 0,
+      // upvoteCount: this.props.upvoteCount || 0,
       // upVotes: this.props.upVotes || [],
     };
   }
-  componentDidMount() {
-    // console.group('Course Component Mounted:');
-    // console.log(`Upvotes : ${JSON.stringify(this.state.upVotes)}`);
-    // console.groupEnd();
-    // this.updateUpvotes();
-  }
+  componentDidMount() {}
 
   // updateUpvotes(newUpvotes) {
   //   this.setState({ upVotes: newUpvotes });
@@ -59,7 +54,8 @@ class CategoryViewCourse extends React.Component {
             categoryId={this.props.category._id}
             courseId={this.props.course.id}
             refreshUpvotes={this.props.refreshUpvotes}
-            upvoteCount={this.state.upvoteCount || 0}
+            username={this.props.username}
+            upvotes={this.props.upvotes}
           />
         </div>
       </div>
