@@ -115,6 +115,7 @@ class Navigation extends React.Component {
                     this.props.categories &&
                     this.props.categories.map(category => (
                       <Link
+                        className="text-primary"
                         to={{
                           pathname: `/${category.name}/courses/`,
                           state: { category },

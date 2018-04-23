@@ -1,5 +1,5 @@
 import React from 'react';
-import { ModalHeader, Modal, ModalBody, ModalFooter, Button } from 'reactstrap';
+import { ModalHeader, Modal, ModalBody, ModalFooter, Button, UncontrolledAlert } from 'reactstrap';
 
 class UserModal extends React.Component {
   constructor(props) {
@@ -9,6 +9,8 @@ class UserModal extends React.Component {
       password: '',
       secondPassword: '',
       modalState: this.props.modalClicked,
+      alertText: '',
+      alertColor: 'text-success',
     };
 
     this.handleSignup = this.handleSignup.bind(this);
@@ -31,12 +33,16 @@ class UserModal extends React.Component {
             password: '',
             secondPassword: '',
             modalState: 'Login',
+            alertText: ' Created! Please Login',
+            alertColor: 'text-success',
           });
-          window.alert('Please Login');
         })
         .catch(err => console.log(err));
     } else {
-      window.alert('The passwords need to match and need to be at least 2 characters long!');
+      this.setState({
+        alertText: ' The passwords need to match!',
+        alertColor: 'text-danger',
+      });
     }
   }
 
@@ -45,15 +51,30 @@ class UserModal extends React.Component {
       resolve(this.props.logInUser({ username: this.state.email, password: this.state.password }));
     })
       .then(() => {
-        this.setState({
-          email: '',
-          password: '',
-          secondPassword: '',
-          modalState: 'Login',
-        });
-        this.props.toggleModal();
+        setTimeout(() => {
+          if (this.props.currentUser) {
+            this.setState({
+              email: '',
+              password: '',
+              secondPassword: '',
+              modalState: 'Login',
+            });
+            this.props.toggleModal();
+          } else {
+            this.setState({
+              alertText: ' Invalid username/password',
+              alertColor: 'text-danger',
+            });
+          }
+        }, 300);
       })
-      .catch(err => console.log(err));
+      .catch((err) => {
+        this.setState({
+          alertText: ': There was an error logging in, please try again',
+          alertColor: 'text-danger',
+        });
+        console.log(err);
+      });
   }
 
   handleChangeEmail(e) {
@@ -80,7 +101,12 @@ class UserModal extends React.Component {
     if (this.state.modalState === 'Sign Up') {
       return (
         <div>
-          <ModalHeader toggle={this.props.toggleModal}> Sign Up</ModalHeader>
+          <ModalHeader toggle={this.props.toggleModal}>
+            Sign Up
+            <span style={{ fontWeight: 'bold' }} className={this.state.alertColor}>
+              {this.state.alertText}
+            </span>
+          </ModalHeader>
           <ModalBody>
             <form>
               <div className="form-group">
@@ -136,7 +162,12 @@ class UserModal extends React.Component {
 
     return (
       <div>
-        <ModalHeader toggle={this.props.toggleModal}>Login</ModalHeader>
+        <ModalHeader toggle={this.props.toggleModal}>
+          Login
+          <span style={{ fontWeight: 'bold' }} className={this.state.alertColor}>
+            {this.state.alertText}
+          </span>
+        </ModalHeader>
         <ModalBody>
           <form>
             <div className="form-group">
