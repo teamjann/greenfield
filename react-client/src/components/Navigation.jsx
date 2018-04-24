@@ -1,6 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import App from '../index.jsx';
 import UserModal from './UserModal.jsx';
 import { Link } from 'react-router-dom';
 import {
@@ -62,7 +60,6 @@ class Navigation extends React.Component {
         console.log('Refreshed upvotes.');
       })
       .catch(err => console.log(err));
-    // event.target.value
   }
 
   render() {
