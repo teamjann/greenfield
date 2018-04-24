@@ -1,8 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { Link } from 'react-router-dom';
-import slugify from 'slugify';
-import CourseDetailView from './CourseDetailView.jsx';
 import Upvote from './Upvote.jsx';
 
 class CategoryViewCourse extends React.Component {
@@ -10,20 +7,12 @@ class CategoryViewCourse extends React.Component {
     super(props);
     this.state = {
       isClicked: false,
-      // downVoteCount = 0
-      // upvoteCount: this.props.upvoteCount || 0,
-      // upVotes: this.props.upVotes || [],
     };
   }
   componentDidMount() {}
 
-  // updateUpvotes(newUpvotes) {
-  //   this.setState({ upVotes: newUpvotes });
-  // }
-
   render() {
     return (
-      // pathname: `/${slugify(`${this.props.course.name}`)}`,
       <div className="card">
         <Link
           to={{
@@ -47,9 +36,6 @@ class CategoryViewCourse extends React.Component {
         </Link>
 
         <div className="card-footer bg-secondary">
-          {/* <button className="btn btn-primary btn-icon btn-icon-mini btn-round text-center">
-            <i className="fas fa-chevron-up" />
-          </button> */}
           <Upvote
             categoryId={this.props.category._id}
             courseId={this.props.course.id}

@@ -96,43 +96,46 @@ class App extends React.Component {
       .catch(err => console.log(err));
   }
 
-  getCoursesforCategory(category) {
-    axios
-      .get(`/api/categories/${category._id}/courses`)
-      .then(res =>
-        this.setState({
-          currentCourses: res.data,
-        }))
-      .catch(err => console.log(err));
-  }
+  // Route not used- get courses within category
+  // getCoursesforCategory(category) {
+  //   axios
+  //     .get(`/api/categories/${category._id}/courses`)
+  //     .then(res =>
+  //       this.setState({
+  //         currentCourses: res.data,
+  //       }))
+  //     .catch(err => console.log(err));
+  // }
 
-  getSpecificCourse(category, course) {
-    axios
-      .get(`/api/categories/${category._id}/courses/${course.id}`)
-      .then(res =>
-        this.setState({
-          currentCourse: res.data,
-        }))
-      .catch(err => console.log(err));
-  }
+  // ROUTE NOT USED- user to get specific course details
+  // getSpecificCourse(category, course) {
+  //   axios
+  //     .get(`/api/categories/${category._id}/courses/${course.id}`)
+  //     .then(res =>
+  //       this.setState({
+  //         currentCourse: res.data,
+  //       }))
+  //     .catch(err => console.log(err));
+  // }
 
-  createNewCategory(category) {
-    axios
-      .post('/api/categories', { newCategory: category })
-      .then((res) => {
-        this.getAllCategories();
-      })
-      .catch(err => console.log(err));
-  }
+  // ROUTES NOT USED- Can be used to insert category or course
+  // createNewCategory(category) {
+  //   axios
+  //     .post('/api/categories', { newCategory: category })
+  //     .then((res) => {
+  //       this.getAllCategories();
+  //     })
+  //     .catch(err => console.log(err));
+  // }
 
-  createNewCourse(category, course) {
-    axios
-      .post(`/api/categories/${category._id}/courses`, { newCourse: course })
-      .then((res) => {
-        this.getCoursesforCategory(category);
-      })
-      .catch(err => console.log(err));
-  }
+  // createNewCourse(category, course) {
+  //   axios
+  //     .post(`/api/categories/${category._id}/courses`, { newCourse: course })
+  //     .then((res) => {
+  //       this.getCoursesforCategory(category);
+  //     })
+  //     .catch(err => console.log(err));
+  // }
 
   refreshUpvotes(upVotesToRefresh) {
     axios
@@ -144,8 +147,7 @@ class App extends React.Component {
             ? (newUpvoteData[upvote.courseId] = newUpvoteData[upvote.courseId] + 1)
             : (newUpvoteData[upvote.courseId] = 1);
         });
-        this.setState({ upvotes: newUpvoteData }, () => {
-        });
+        this.setState({ upvotes: newUpvoteData }, () => {});
       })
       .catch(err => console.log(err));
   }

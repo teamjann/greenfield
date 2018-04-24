@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import history from '../history';
 
 class CourseDetailView extends React.Component {
@@ -10,8 +9,6 @@ class CourseDetailView extends React.Component {
   }
 
   componentDidMount() {
-    console.log('course detail showing');
-
     const { course } = this.props.location.state;
   }
 
